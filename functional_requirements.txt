@@ -1,0 +1,27 @@
+# Functional Requirements
+
+## Public site
+- Landing page
+- Portfolio and services
+- Contact form
+- WhatsApp link
+- Email link
+
+## Admin dashboard
+- Supabase Auth login
+- View and update enquiries
+- Create projects and access codes
+- Upload and view documents
+
+## Client access
+- Single code entry page
+- Read-only document list
+- Generic error for invalid codes
+
+## Non-functional
+- Mobile responsive
+- Fast landing page
+- Minimal admin UI
+- Secrets in environment variables
+- Random access codes
+- Privacy notice on the contact form

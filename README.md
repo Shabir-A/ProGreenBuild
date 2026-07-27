@@ -1,2 +1,3 @@
-# github-demo
-demo repo to learn github repo
+# ProGreenBuild
+
+Minimal Next.js app for Vercel.

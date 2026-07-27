@@ -1,0 +1,19 @@
+# User Journeys
+
+## Visitor
+- Finds the site.
+- Views portfolio and services.
+- Contacts the business by form, WhatsApp, or email.
+
+## Admin
+- Logs in through Supabase Auth.
+- Reviews enquiries.
+- Updates enquiry status.
+- Creates projects and access codes.
+- Uploads and manages documents.
+
+## Client
+- Receives an access code.
+- Enters the code on the document page.
+- Views and downloads assigned documents.
+- Cannot upload or edit anything.

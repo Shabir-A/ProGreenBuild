@@ -1,0 +1,7 @@
+# Reno App Plan
+
+- Next.js app on Vercel.
+- Supabase for database, auth, and storage.
+- Public site, enquiry form, admin dashboard, and client document access.
+- No client login, chat, payment, or approval workflow yet.
+- Build in phases: marketing site, enquiry funnel, admin dashboard, client access, polish.
