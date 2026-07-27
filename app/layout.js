@@ -1,6 +1,8 @@
+import './globals.css';
+
 export const metadata = {
-  title: 'Reno App v2',
-  description: 'Minimal Next.js scaffold for Vercel deployment.'
+  title: 'Pro Green Build',
+  description: 'Pro Green Build landing page for Singapore home renovation.'
 };
 
 export default function RootLayout({ children }) {
