@@ -1,7 +1,27 @@
-# Reno App Plan
+# Pro Green Build - Plan
 
-- Next.js app on Vercel.
-- Supabase for database, auth, and storage.
-- Public site, enquiry form, admin dashboard, and client document access.
-- No client login, chat, payment, or approval workflow yet.
-- Build in phases: marketing site, enquiry funnel, admin dashboard, client access, polish.
+## Technology Stack
+- Next.js app on Vercel
+- Supabase for auth, database, and image storage
+- Tailwind CSS for styling
+
+## Core Features
+- Public marketing site with portfolio and services
+- Admin dashboard with protected login
+- Gallery management (image uploads)
+- Email configuration for enquiries
+- Contact form for customer enquiries
+
+## Phases
+1. Marketing site + UI design (COMPLETE)
+2. Admin authentication (TODO)
+3. Gallery image management (TODO)
+4. Contact form + email settings (TODO)
+5. Polish and deploy to Vercel (TODO)
+
+## Out of Scope
+- Client document sharing or access codes
+- Project creation and management
+- Payment processing
+- Chat or approval workflows
+- Client login portals
