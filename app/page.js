@@ -134,22 +134,22 @@ export default function Home() {
                         <a href="#contact" className="glass-button glass-button--chip glass-button--primary px-2.5 py-1.5 text-[0.7rem] sm:px-4 sm:py-2.5 sm:text-sm">Get in touch</a>
                     </header>
 
-                    <div className="grid flex-1 items-center gap-6 py-4 sm:gap-10 sm:py-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12 lg:py-20">
+                    <div className="grid flex-1 items-center gap-4 py-0 sm:gap-6 sm:py-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:py-12">
                         <div className="max-w-2xl">
-                            <span className="mb-3 inline-flex text-[10px] font-semibold uppercase tracking-[0.24em] text-[#6f8456] sm:mb-6 sm:text-xs sm:tracking-[0.36em]">
-                                Competitive pricing, done well
-                            </span>
+                            <p className="mb-2 text-[0.7rem] font-medium uppercase tracking-[0.28em] text-[#6f8456] sm:mb-4 sm:text-xs sm:tracking-[0.32em]">
+                                Singapore Renovations
+                            </p>
 
-                            <h1 className="text-3xl font-semibold tracking-[-0.04em] text-[#1c3624] sm:text-6xl sm:tracking-[-0.06em] lg:text-7xl">
+                            <h1 className="text-5xl font-bold tracking-[-0.03em] text-[#1c3624] sm:text-6xl sm:tracking-[-0.04em] lg:text-7xl">
                                 Pro Green Build
                             </h1>
 
-                            {/* Headline options:
-                  1. Competitive renovation pricing without compromise.
-                  2. Better renovation pricing for homes that deserve more.
-                  3. Competitive pricing, polished finishes, and a smoother build. */}
-                            <p className="mt-3 max-w-xl text-sm leading-6 text-[#5d4a3b] sm:mt-6 sm:text-xl sm:leading-8">
-                                Competitive pricing for Singapore homes, with a smooth process and a polished finish.
+                            <p className="mt-2 text-lg font-medium text-[#6f8456] sm:mt-4 sm:text-2xl">
+                                Competitive pricing, polished finish.
+                            </p>
+
+                            <p className="mt-3 max-w-xl text-sm leading-6 text-[#5d4a3b] sm:mt-5 sm:text-base sm:leading-7">
+                                We deliver renovation work that feels calm, looks warm, and stays grounded in sensible pricing.
                             </p>
 
                             <div className="mt-6 flex flex-wrap gap-3 sm:mt-8">
@@ -300,15 +300,15 @@ export default function Home() {
                     <div className="mt-2 h-px w-20 bg-[linear-gradient(90deg,#6f8456,#c4a26a,#7b5232)] sm:mt-4 sm:w-28" />
                 </div>
 
-                <div className="mt-4 grid gap-2.5 sm:mt-8 sm:gap-4 md:grid-cols-2 xl:grid-cols-3">
+                <div className="mt-4 grid gap-3 sm:mt-8 sm:gap-5 md:grid-cols-2 xl:grid-cols-3">
                     {services.map(([title, description]) => (
                         <div
                             key={title}
-                            className="rounded-[1rem] border border-[#4a2e1c]/35 bg-[linear-gradient(180deg,rgba(101,67,42,0.9),rgba(72,46,29,0.94))] p-3 shadow-[0_22px_70px_-44px_rgba(20,12,6,0.7)] backdrop-blur-xl sm:rounded-[1.8rem] sm:p-5"
+                            className="rounded-[0.9rem] bg-white/25 p-4 backdrop-blur-sm sm:rounded-[1.2rem] sm:p-6"
                         >
-                            <div className="h-px w-8 bg-[linear-gradient(90deg,#c4a26a,#e8cfa8,#c4a26a)] sm:w-12" />
-                            <p className="mt-2 text-sm font-semibold text-[#f7f1e6] sm:mt-4 sm:text-lg">{title}</p>
-                            <p className="mt-1 text-xs leading-5 text-[#e0c8a8] sm:mt-2 sm:text-sm sm:leading-7">{description}</p>
+                            <div className="h-0.5 w-6 bg-[#6f8456] sm:w-8" />
+                            <p className="mt-3 text-sm font-semibold text-[#2c2118] sm:mt-4 sm:text-base">{title}</p>
+                            <p className="mt-2 text-xs leading-5 text-[#5d4a3b] sm:mt-3 sm:text-sm sm:leading-6">{description}</p>
                         </div>
                     ))}
                 </div>
