@@ -4,6 +4,65 @@
   color-scheme: light;
 }
 
+/* Windows 95 style button for admin interface */
+.win95-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem 0.75rem;
+  background: linear-gradient(180deg, #dfdfdf 0%, #bfbfbf 100%);
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  color: #000000;
+  font-family: "MS Sans Serif", Arial, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 400;
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+  transition: border-color 100ms ease;
+}
+
+.win95-button:hover:not(:disabled) {
+  background: linear-gradient(180deg, #e8e8e8 0%, #c8c8c8 100%);
+}
+
+.win95-button:active:not(:disabled) {
+  border-color: #808080 #ffffff #ffffff #808080;
+  background: linear-gradient(180deg, #bfbfbf 0%, #dfdfdf 100%);
+}
+
+.win95-button:focus-visible {
+  outline: 1px dashed #000000;
+  outline-offset: -4px;
+}
+
+.win95-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* File input styling */
+.win95-file-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.win95-file-input-wrapper input[type="file"] {
+  display: none;
+}
+
+.win95-file-input-wrapper label.win95-button {
+  margin: 0;
+  padding: 0.4rem 0.75rem;
+}
+
+.win95-file-text {
+  font-size: 0.875rem;
+  color: #666666;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -125,23 +184,26 @@ body {
 .marquee-strip {
   overflow-x: auto;
   overflow-y: hidden;
-  scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
+  cursor: grab;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.marquee-strip::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.marquee-strip:active {
+  cursor: grabbing;
 }
 
 .marquee-track {
   display: flex;
   width: max-content;
   gap: 1rem;
-  animation: marquee-scroll 26s linear infinite;
-}
-
-.marquee-strip:hover .marquee-track {
-  animation-play-state: paused;
-}
-
-.marquee-strip:active .marquee-track {
-  animation-play-state: paused;
 }
 
 @media (max-width: 640px) {
@@ -151,21 +213,26 @@ body {
   }
 }
 
-@keyframes marquee-scroll {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-
 .testimonial-progress {
   transform-origin: left;
   animation: testimonial-countdown 5600ms linear forwards;
 }
 
 @keyframes testimonial-countdown {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+
+.process-progress {
+  transform-origin: left;
+  animation: process-countdown 4600ms linear forwards;
+}
+
+@keyframes process-countdown {
   from {
     transform: scaleX(1);
   }
