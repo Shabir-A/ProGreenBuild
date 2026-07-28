@@ -1,164 +1,170 @@
-# ProGreenBuild — Admin Dashboard & Renovation Portfolio
+# ProGreenBuild Admin Dashboard & Renovation Portfolio
 
 A modern web application for ProGreen Build to showcase their portfolio and manage client enquiries through a secure admin dashboard.
 
-##  Features
+## Features
 
 ### Public Site
-- **Hero Section** — Eye-catching header with company branding and CTA
-- **Our Process Carousel** — 4-stage renovation workflow with progress indicator
-- **Gallery** — Auto-scrolling portfolio showcase of completed projects
-- **Services Grid** — Core offerings and specialties
-- **Testimonials** — Rotating client reviews with auto-play
-- **About Section** — Company story and values
-- **Contact Options** — Email enquiry form, WhatsApp, and phone links
+- Hero section with company branding and CTA
+- 4-stage renovation process carousel with progress indicator
+- Auto-scrolling portfolio gallery of completed projects
+- Services grid listing core offerings and specialties
+- Rotating client testimonials with auto-play
+- About section with company story and values
+- Contact options: email enquiry form, WhatsApp, and phone links
+- Mobile responsive design across all breakpoints
+- Success notification on enquiry submission
 
 ### Admin Dashboard
-- **Secure Login** — Email + password authentication (Supabase Auth)
-- **Logo Management** — Upload and update company branding
-- **Process Stages** — Upload images for 4 renovation stages (Floor Plan → Finished Result)
-- **Gallery Management** — Add/remove portfolio images with captions
-- **Contact Settings** — Update WhatsApp/phone number for client outreach
-- **Boring UI** — Minimal, no-frills Windows 95 style interface
+- Secure email/password login (Supabase Auth)
+- Logo upload and management
+- Process stage image uploads (4 stages: Floor Plan to Finished Result)
+- Gallery image management (add/remove with captions)
+- Contact settings (WhatsApp/phone number)
+- Enquiry management (view, update status, delete with confirmation)
+- Windows 95 style minimalist interface
 
 ### Data Features
-- Gallery images pulled from Supabase (not hardcoded)
+- Gallery images pulled from Supabase
 - Process stage images from database
-- Dynamic contact number (no hardcoding)
-- Enquiry form stores submissions to database
-- Email delivery via Resend
+- Dynamic contact number configuration
+- Enquiry submissions logged to database
+- Email delivery via Resend API
+- Rate limiting on enquiry submissions (5 per minute per IP)
+- Input validation for emails and form fields
 
-## 🛠️ Tech Stack
+## Tech Stack
 
-- **Frontend** — Next.js 16 (App Router), React 19, TypeScript
-- **Styling** — Tailwind CSS 4
-- **Auth** — Supabase Auth (email/password)
-- **Database** — Supabase PostgreSQL with Row-Level Security
-- **Storage** — Supabase Storage (images)
-- **Email** — Resend API
-- **Hosting** — Vercel
+- Frontend: Next.js 16 (App Router), React 19, TypeScript
+- Styling: Tailwind CSS 4
+- Auth: Supabase Auth (email/password)
+- Database: Supabase PostgreSQL with Row-Level Security
+- Storage: Supabase Storage for images
+- Email: Resend API
+- Hosting: Vercel
 
 ### Prerequisites
-- Node.js 18+ 
+- Node.js 18+
 - Supabase project
 - Vercel account (optional, for deployment)
 
 ### Installation
 
-1. **Clone the repo**
+1. Clone the repo
    ```bash
    git clone https://github.com/yourusername/progreenbuild.git
    cd progreenbuild
    ```
 
-2. **Install dependencies**
+2. Install dependencies
    ```bash
    npm install
    ```
 
-3. **Set up environment variables**
+3. Set up environment variables
    ```bash
    cp .env.local.example .env.local
    ```
-   
    Fill in:
-   - `NEXT_PUBLIC_SUPABASE_URL` — Your Supabase project URL
-   - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` — Supabase anon key
-   - `RESEND_API_KEY` — Resend email API key
+   - NEXT_PUBLIC_SUPABASE_URL: Your Supabase project URL
+   - NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: Supabase anon key
+   - RESEND_API_KEY: Resend email API key
+   - ENQUIRY_RECEIVING_EMAIL: Admin email for enquiry notifications
 
-4. **Set up Supabase**
-   - Run the SQL schema: `supabase/schema.sql`
-   - Run the migration: `supabase/migration_add_logo_and_stages.sql`
+4. Set up Supabase
+   - Run the SQL migration: supabase/migration_add_enquiries.sql
    - Create an admin user in Supabase Auth dashboard
 
-5. **Run locally**
+5. Run locally
    ```bash
    npm run dev
    ```
    Open http://localhost:3000
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 app/
-├── page.js                    # Public homepage (server component)
-├── HomeClient.js              # Homepage (client component)
-├── layout.js                  # Root layout
-├── globals.css                # Global styles + animations
+├── page.js                    Public homepage (server component)
+├── HomeClient.js              Homepage (client component)
+├── layout.js                  Root layout
+├── globals.css                Global styles and animations
 ├── api/
-│   └── enquiry/route.js       # Email enquiry endpoint
+│   └── enquiry/route.js       Email enquiry endpoint with rate limiting
 └── admin/
-    ├── page.js                # Admin dashboard (server)
-    ├── Dashboard.js           # Admin UI (client)
-    ├── LoginForm.js           # Login page
-    └── actions.js             # Server actions (auth, uploads)
+    ├── page.js                Admin dashboard (server)
+    ├── Dashboard.js           Admin UI (client)
+    ├── LoginForm.js           Login page
+    └── actions.js             Server actions (auth, uploads, enquiry management)
 
-middleware.js                  # Auth middleware for /admin routes
+middleware.js                  Auth middleware for /admin routes
 supabase/
-├── schema.sql                 # Initial database schema
-└── migration_add_logo_and_stages.sql  # Add logo + process stages
+└── migration_add_enquiries.sql Database schema for enquiries table
 
 utils/
 └── supabase/
-    ├── client.js              # Supabase client (browser)
-    └── server.js              # Supabase client (server)
+    ├── client.js              Supabase client (browser)
+    └── server.js              Supabase client (server)
 ```
-## 🔐 Authentication & Security
 
-- **Admin Routes Protected** — `/admin/*` requires valid Supabase session
-- **RLS Policies** — Database rows restricted by auth role
-- **File Upload Validation** — Type (JPG/PNG) and size (5MB max) checks
-- **No Hardcoded Secrets** — All keys in `.env.local` (git-ignored)
-- **httpOnly Cookies** — Session tokens safe from XSS
+## Authentication & Security
+
+- Admin routes protected: `/admin/*` requires valid Supabase session
+- Row-level security policies on all database tables
+- File upload validation: type (JPG/PNG) and size (5MB max)
+- Environment variables for secrets (.env.local, git-ignored)
+- Session tokens stored in httpOnly cookies
+- Email input validation (trim, lowercase, RFC 5321 compliance)
+- Rate limiting on enquiry submissions (5 per minute per IP)
+- Exception handling on login and form submission
 
 ### Create Admin Account
-1. Go to Supabase dashboard → Authentication → Users
+1. Go to Supabase dashboard, Authentication, Users
 2. Click "Add user"
-3. Enter email + password (don't enable public sign-ups)
-4. Log in at `/admin`
+3. Enter email and password (disable public sign-ups)
+4. Log in at /admin
 
-
-## 📊 Database Schema
+## Database Schema
 
 ### Tables
-- **`site_settings`** — Single row with phone number, logo URL
-- **`gallery_items`** — Portfolio images with captions
-- **`process_stages`** — 4 hardcoded renovation stages with images
-- **`enquiries`** — Logged submissions from the public enquiry form, with a `status` admins can update (`pending_reply`, `awaiting_customer`, `converted`, `closed`). See `supabase/migration_add_enquiries.sql`.
+- site_settings: Phone number, logo URL
+- gallery_items: Portfolio images with captions
+- process_stages: 4 renovation stages with images
+- enquiries: Enquiry submissions with status tracking (pending_reply, awaiting_customer, converted, closed)
 
 ### Storage Buckets
-- **`gallery`** — Public portfolio images
-- **`site-assets`** — Logo + process stage images
+- gallery: Public portfolio images
+- site-assets: Logo and process stage images
 
+## Admin Workflow
 
-## 📝 Admin Workflow
+1. Visit /admin (redirects to login if not authenticated)
+2. Review enquiries: view, update status, delete with confirmation
+3. Upload logo: max 5MB JPG/PNG, appears in hero
+4. Upload process stages: 2x2 grid, one image per stage
+5. Add gallery images: portfolio showcase with required captions
+6. Set contact number: WhatsApp and phone link (digits only)
+7. Log out: clears session
 
-1. **Visit** `/admin` (redirects to login if not authenticated)
-2. **Review Enquiries** — Update status per enquiry, delete test/spam entries (with confirmation)
-3. **Upload Logo** — Max 5MB JPG/PNG, appears in hero section
-4. **Upload Process Stages** — 2×2 grid, one image per stage (Floor Plan → Finished Result)
-5. **Add Gallery Images** — Portfolio showcase, required caption per image
-6. **Set Contact Number** — WhatsApp + phone link, digits only
-7. **Log out** — Clears session
+## Deployment
 
+Push to GitHub. Vercel auto-deploys.
 
-## 🚢 Deployment
-
-Push to GitHub → Vercel auto-deploys
-
-**Before deploying:**
-1. Add env vars to Vercel project settings
+Before deploying:
+1. Add environment variables to Vercel project settings
 2. Ensure Supabase RLS policies are active
 3. Test admin login on staging
-4. Verify email delivery with test enquiry
+4. Test enquiry form and email delivery
 
+## Email Integration
 
-## 📧 Email Integration
+Enquiry form submissions send to configured email via Resend. Email address is configured in Resend API settings (not editable via app).
 
-Enquiry form sends to configured email via Resend. Currently hardcoded to admin's Resend account email. To change:
-- Update `ENQUIRY_RECEIVING_EMAIL` in Supabase `site_settings` table (future enhancement)
-- Or update `.env.local` and re-deploy
+Form includes:
+- Client-side validation (required fields)
+- Server-side email format validation
+- Success notification (green toast, 4 seconds)
+- Error handling with user-friendly messages
 
-
-## 👤 Author
+## Author
 Shabir Ali
