@@ -140,32 +140,14 @@ body {
   animation-play-state: paused;
 }
 
-/* Mobile: disable auto-scroll, enable manual scrolling */
-@media (max-width: 640px) {
-  .marquee-strip {
-    overflow-x: auto;
-    overflow-y: hidden;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-    scroll-snap-type: x mandatory;
-  }
-
-  .marquee-track {
-    animation: none;
-    gap: 0.75rem;
-    padding: 0.25rem;
-  }
-
-  .marquee-strip article {
-    scroll-snap-align: center;
-    scroll-snap-stop: auto;
-  }
+.marquee-strip:active .marquee-track {
+  animation-play-state: paused;
 }
 
-/* Desktop: auto-scroll animation */
-@media (min-width: 641px) {
-  .marquee-strip {
-    overflow: hidden;
+@media (max-width: 640px) {
+  .marquee-track {
+    gap: 0.75rem;
+    padding: 0.25rem;
   }
 }
 

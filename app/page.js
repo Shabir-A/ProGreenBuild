@@ -44,7 +44,9 @@ export default function Home() {
     const [testimonialIndex, setTestimonialIndex] = useState(0);
     const [testimonialTick, setTestimonialTick] = useState(0);
     const [showEnquiryForm, setShowEnquiryForm] = useState(false);
-    const [formPhase, setFormPhase] = useState('idle'); // 'idle' | 'hiding' | 'flying'
+    const [formPhase, setFormPhase] = useState('idle'); // 'idle' | 'sending' | 'hiding' | 'flying'
+    const [enquiryFields, setEnquiryFields] = useState({ name: '', email: '', enquiryType: '', message: '' });
+    const [submitError, setSubmitError] = useState('');
 
     useEffect(() => {
         const timer = window.setTimeout(() => {
@@ -68,16 +70,50 @@ export default function Home() {
     const closeEnquiryForm = () => {
         setShowEnquiryForm(false);
         setFormPhase('idle');
+        setSubmitError('');
+        setEnquiryFields({ name: '', email: '', enquiryType: '', message: '' });
     };
 
-    const handleSendEnquiry = () => {
-        setFormPhase('hiding');
-        window.setTimeout(() => {
-            setFormPhase('flying');
+    const handleEnquiryFieldChange = (field) => (event) => {
+        setEnquiryFields((prev) => ({ ...prev, [field]: event.target.value }));
+    };
+
+    const handleSendEnquiry = async (event) => {
+        event.preventDefault();
+
+        if (!enquiryFields.name || !enquiryFields.email || !enquiryFields.enquiryType) {
+            setSubmitError('Please fill in your name, email, and enquiry type.');
+            return;
+        }
+
+        setSubmitError('');
+        setFormPhase('sending');
+
+        try {
+            const response = await fetch('/api/enquiry', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(enquiryFields),
+            });
+            const data = await response.json();
+
+            if (!response.ok) {
+                setSubmitError(data.error || 'Something went wrong. Please try again.');
+                setFormPhase('idle');
+                return;
+            }
+
+            setFormPhase('hiding');
             window.setTimeout(() => {
-                closeEnquiryForm();
-            }, ICON_FLY_DURATION);
-        }, FIELDS_FADE_DURATION);
+                setFormPhase('flying');
+                window.setTimeout(() => {
+                    closeEnquiryForm();
+                }, ICON_FLY_DURATION);
+            }, FIELDS_FADE_DURATION);
+        } catch {
+            setSubmitError('Something went wrong. Please check your connection and try again.');
+            setFormPhase('idle');
+        }
     };
 
     return (
@@ -165,7 +201,7 @@ export default function Home() {
                 </div>
 
                 <div className="relative overflow-hidden rounded-[1rem] border border-[#6f8456]/22 bg-[linear-gradient(180deg,rgba(255,251,244,0.5),rgba(223,236,208,0.52),rgba(231,220,197,0.42))] shadow-[0_30px_100px_-58px_rgba(54,39,23,0.92)] backdrop-blur-2xl sm:rounded-[2.1rem]">
-                    <div className="relative aspect-[16/9] min-h-[12rem] overflow-hidden sm:min-h-[24rem] lg:min-h-[24rem]">
+                    <div className="relative h-[12rem] overflow-hidden sm:h-[20rem] lg:h-[22rem]">
                         {processStages.map((stage, index) => (
                             <div
                                 key={stage.label}
@@ -413,17 +449,26 @@ export default function Home() {
                         <h3 className="text-xl font-semibold text-[#2d2118] sm:text-2xl">Send us an enquiry</h3>
                         <p className="mt-1 text-xs text-[#6f5843] sm:text-sm">We'll get back to you shortly</p>
 
-                        <form className="mt-4 sm:mt-6">
+                        <form className="mt-4 sm:mt-6" onSubmit={handleSendEnquiry}>
                             <div
                                 className={`space-y-3 overflow-hidden transition-all duration-[450ms] ease-in sm:space-y-4 ${formPhase !== 'idle' ? 'max-h-0 opacity-0' : 'max-h-[40rem] opacity-100'
                                     }`}
                             >
+                                {submitError && (
+                                    <p className="rounded-[0.6rem] border border-red-300 bg-red-50 px-3 py-2 text-xs text-red-700">
+                                        {submitError}
+                                    </p>
+                                )}
+
                                 {/* Name */}
                                 <div>
                                     <label className="text-xs font-semibold text-[#6f8456] sm:text-sm">Name *</label>
                                     <input
                                         type="text"
                                         placeholder="Your name"
+                                        value={enquiryFields.name}
+                                        onChange={handleEnquiryFieldChange('name')}
+                                        required
                                         className="mt-1 w-full rounded-[0.8rem] border border-[#6f8456]/20 bg-white/50 px-3 py-2 text-sm text-[#2f241b] placeholder-[#8d7b6e] backdrop-blur-sm transition focus:border-[#6f8456]/50 focus:outline-none focus:ring-2 focus:ring-[#6f8456]/20 sm:px-4 sm:py-2.5 sm:text-base"
                                     />
                                 </div>
@@ -434,6 +479,9 @@ export default function Home() {
                                     <input
                                         type="email"
                                         placeholder="your.email@example.com"
+                                        value={enquiryFields.email}
+                                        onChange={handleEnquiryFieldChange('email')}
+                                        required
                                         className="mt-1 w-full rounded-[0.8rem] border border-[#6f8456]/20 bg-white/50 px-3 py-2 text-sm text-[#2f241b] placeholder-[#8d7b6e] backdrop-blur-sm transition focus:border-[#6f8456]/50 focus:outline-none focus:ring-2 focus:ring-[#6f8456]/20 sm:px-4 sm:py-2.5 sm:text-base"
                                     />
                                 </div>
@@ -441,7 +489,12 @@ export default function Home() {
                                 {/* Enquiry Type */}
                                 <div>
                                     <label className="text-xs font-semibold text-[#6f8456] sm:text-sm">Enquiry type *</label>
-                                    <select className="mt-1 w-full rounded-[0.8rem] border border-[#6f8456]/20 bg-white/50 px-3 py-2 text-sm text-[#2f241b] backdrop-blur-sm transition focus:border-[#6f8456]/50 focus:outline-none focus:ring-2 focus:ring-[#6f8456]/20 sm:px-4 sm:py-2.5 sm:text-base">
+                                    <select
+                                        value={enquiryFields.enquiryType}
+                                        onChange={handleEnquiryFieldChange('enquiryType')}
+                                        required
+                                        className="mt-1 w-full rounded-[0.8rem] border border-[#6f8456]/20 bg-white/50 px-3 py-2 text-sm text-[#2f241b] backdrop-blur-sm transition focus:border-[#6f8456]/50 focus:outline-none focus:ring-2 focus:ring-[#6f8456]/20 sm:px-4 sm:py-2.5 sm:text-base"
+                                    >
                                         <option value="">Select an enquiry type</option>
                                         <option value="general">General Renovation Enquiry</option>
                                         <option value="bathroom">Bathroom Modification</option>
@@ -459,6 +512,8 @@ export default function Home() {
                                     <textarea
                                         placeholder="Tell us more about your project... (optional)"
                                         rows={5}
+                                        value={enquiryFields.message}
+                                        onChange={handleEnquiryFieldChange('message')}
                                         className="mt-1 w-full rounded-[0.8rem] border border-[#6f8456]/20 bg-white/50 px-3 py-2 text-sm text-[#2f241b] placeholder-[#8d7b6e] backdrop-blur-sm transition focus:border-[#6f8456]/50 focus:outline-none focus:ring-2 focus:ring-[#6f8456]/20 sm:px-4 sm:py-2.5 sm:text-base"
                                     />
                                 </div>
@@ -467,17 +522,16 @@ export default function Home() {
                             {/* Send Button / Mail icon */}
                             <div className={`flex justify-center ${formPhase === 'idle' ? 'mt-4 sm:mt-6' : 'mt-2'}`}>
                                 <button
-                                    type="button"
-                                    onClick={handleSendEnquiry}
+                                    type="submit"
                                     disabled={formPhase !== 'idle'}
-                                    className={`glass-button glass-button--primary flex items-center justify-center overflow-hidden font-semibold transition-all duration-500 ease-in ${formPhase === 'idle'
+                                    className={`glass-button glass-button--primary flex items-center justify-center overflow-hidden font-semibold transition-all duration-500 ease-in ${formPhase === 'idle' || formPhase === 'sending'
                                             ? 'w-full rounded-[999px] px-4 py-2.5 sm:py-3'
                                             : 'h-12 w-12 rounded-full px-0 py-0'
                                         } ${formPhase === 'flying' ? 'translate-x-[600px] opacity-0' : 'translate-x-0 opacity-100'}`}
                                 >
-                                    {formPhase === 'idle' ? (
-                                        'Send enquiry'
-                                    ) : (
+                                    {formPhase === 'idle' && 'Send enquiry'}
+                                    {formPhase === 'sending' && 'Sending...'}
+                                    {(formPhase === 'hiding' || formPhase === 'flying') && (
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5 shrink-0">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                         </svg>
