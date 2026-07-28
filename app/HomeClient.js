@@ -403,7 +403,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
 
             {/* TESTIMONIALS & ABOUT - SIDE BY SIDE */}
             <section className="mx-auto max-w-7xl px-3 py-6 sm:px-6 sm:py-14 lg:px-8">
-                <div className="grid grid-cols-2 gap-3 sm:gap-5 sm:rounded-[2.25rem] sm:p-8">
+                <div className="grid grid-cols-2 gap-3 sm:gap-5 sm:rounded-[2.25rem] sm:p-8 items-stretch">
                     {/* LEFT: TESTIMONIALS */}
                     <div className="rounded-[1.2rem] border border-[#6f8456]/22 bg-[linear-gradient(180deg,rgba(250,246,238,0.6),rgba(227,237,214,0.7),rgba(236,223,206,0.46))] p-3 shadow-[0_30px_90px_-55px_rgba(54,39,23,0.9)] backdrop-blur-2xl sm:rounded-[2.25rem] sm:p-8">
                         <p className="text-[0.65rem] font-semibold uppercase tracking-[0.32em] text-[#6f8456] sm:text-xs sm:tracking-[0.35em]">Testimonials</p>

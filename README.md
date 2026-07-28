@@ -124,6 +124,7 @@ utils/
 - **`site_settings`** — Single row with phone number, logo URL
 - **`gallery_items`** — Portfolio images with captions
 - **`process_stages`** — 4 hardcoded renovation stages with images
+- **`enquiries`** — Logged submissions from the public enquiry form, with a `status` admins can update (`pending_reply`, `awaiting_customer`, `converted`, `closed`). See `supabase/migration_add_enquiries.sql`.
 
 ### Storage Buckets
 - **`gallery`** — Public portfolio images
@@ -133,11 +134,12 @@ utils/
 ## 📝 Admin Workflow
 
 1. **Visit** `/admin` (redirects to login if not authenticated)
-2. **Upload Logo** — Max 5MB JPG/PNG, appears in hero section
-3. **Upload Process Stages** — 2×2 grid, one image per stage (Floor Plan → Finished Result)
-4. **Add Gallery Images** — Portfolio showcase, required caption per image
-5. **Set Contact Number** — WhatsApp + phone link, digits only
-6. **Log out** — Clears session
+2. **Review Enquiries** — Update status per enquiry, delete test/spam entries (with confirmation)
+3. **Upload Logo** — Max 5MB JPG/PNG, appears in hero section
+4. **Upload Process Stages** — 2×2 grid, one image per stage (Floor Plan → Finished Result)
+5. **Add Gallery Images** — Portfolio showcase, required caption per image
+6. **Set Contact Number** — WhatsApp + phone link, digits only
+7. **Log out** — Clears session
 
 
 ## 🚢 Deployment

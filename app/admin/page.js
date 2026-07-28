@@ -12,7 +12,7 @@ export default async function AdminPage() {
         return <LoginForm />;
     }
 
-    const [{ data: galleryItems }, { data: settingsRow }, { data: processStagesData }] = await Promise.all([
+    const [{ data: galleryItems }, { data: settingsRow }, { data: processStagesData }, { data: enquiries }] = await Promise.all([
         supabase
             .from('gallery_items')
             .select('id, image_url, storage_path, caption')
@@ -22,6 +22,10 @@ export default async function AdminPage() {
             .from('process_stages')
             .select('id, stage_name, image_url')
             .order('id', { ascending: true }),
+        supabase
+            .from('enquiries')
+            .select('id, name, email, enquiry_type, message, status, created_at')
+            .order('created_at', { ascending: false }),
     ]);
 
     return (
@@ -30,6 +34,7 @@ export default async function AdminPage() {
             whatsappNumber={settingsRow?.whatsapp_number ?? ''}
             logo={settingsRow?.logo_url ?? ''}
             processStages={processStagesData ?? []}
+            enquiries={enquiries ?? []}
         />
     );
 }

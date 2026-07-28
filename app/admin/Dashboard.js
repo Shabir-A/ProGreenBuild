@@ -2,20 +2,49 @@
 
 import { useActionState, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import { addGalleryImage, deleteGalleryImage, logout, updateWhatsappNumber, updateLogo, updateProcessStage } from './actions';
+import {
+    addGalleryImage,
+    deleteEnquiry,
+    deleteGalleryImage,
+    logout,
+    updateEnquiryStatus,
+    updateLogo,
+    updateProcessStage,
+    updateWhatsappNumber,
+} from './actions';
 
 const initialUploadState = { error: null, success: false };
 const initialNumberState = { error: null, success: false };
 const initialLogoState = { error: null, success: false };
 const initialStageState = { error: null, success: false };
 
-export default function Dashboard({ galleryItems, whatsappNumber, logo, processStages }) {
+const ENQUIRY_TYPE_LABELS = {
+    general: 'General Renovation Enquiry',
+    bathroom: 'Bathroom Modification',
+    kitchen: 'Kitchen Refit',
+    'living-room': 'Living Room Renovation',
+    'new-home': 'New Home Handover Inspection',
+    resale: 'Resale Property Inspection',
+    other: 'Other',
+};
+
+const ENQUIRY_STATUS_OPTIONS = [
+    { value: 'pending_reply', label: 'Pending Reply from Pro Green Build' },
+    { value: 'awaiting_customer', label: 'Awaiting Customer Response' },
+    { value: 'converted', label: 'Converted to Client' },
+    { value: 'closed', label: 'Closed - Not Converted' },
+];
+
+export default function Dashboard({ galleryItems, whatsappNumber, logo, processStages, enquiries }) {
     const [uploadFormKey, setUploadFormKey] = useState(0);
     const [uploadState, uploadAction, uploadPending] = useActionState(addGalleryImage, initialUploadState);
     const [numberState, numberAction, numberPending] = useActionState(updateWhatsappNumber, initialNumberState);
     const [logoState, logoAction, logoPending] = useActionState(updateLogo, initialLogoState);
     const [stageStates, setStageStates] = useState({});
     const [deletingId, setDeletingId] = useState(null);
+    const [enquiryStatusPendingId, setEnquiryStatusPendingId] = useState(null);
+    const [deletingEnquiryId, setDeletingEnquiryId] = useState(null);
+    const [enquiryErrors, setEnquiryErrors] = useState({});
     const [fileSelected, setFileSelected] = useState(false);
     const [uploadSubmitted, setUploadSubmitted] = useState(false);
     const [logoFileSelected, setLogoFileSelected] = useState(false);
@@ -49,6 +78,21 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
         setDeletingId(id);
         await deleteGalleryImage(id, storagePath);
         setDeletingId(null);
+    };
+
+    const handleEnquiryStatusChange = async (id, status) => {
+        setEnquiryStatusPendingId(id);
+        const result = await updateEnquiryStatus(id, status);
+        setEnquiryErrors((prev) => ({ ...prev, [id]: result?.error ?? null }));
+        setEnquiryStatusPendingId(null);
+    };
+
+    const handleDeleteEnquiry = async (id) => {
+        if (!window.confirm('Delete this enquiry? This cannot be undone.')) return;
+        setDeletingEnquiryId(id);
+        const result = await deleteEnquiry(id);
+        setEnquiryErrors((prev) => ({ ...prev, [id]: result?.error ?? null }));
+        setDeletingEnquiryId(null);
     };
 
     const handleFileChange = (e) => {
@@ -98,6 +142,66 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
                         </button>
                     </form>
                 </div>
+
+                {/* ENQUIRIES SECTION */}
+                <section className="mb-12">
+                    <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-600 mb-4">Enquiries</h2>
+
+                    {enquiries.length === 0 ? (
+                        <p className="text-sm text-gray-500">No enquiries yet.</p>
+                    ) : (
+                        <ul className="space-y-3">
+                            {enquiries.map((item) => (
+                                <li key={item.id} className="border border-gray-300 p-3">
+                                    <div className="flex items-start justify-between gap-2 mb-1">
+                                        <p className="text-sm font-medium">{item.name}</p>
+                                        <p className="whitespace-nowrap text-xs text-gray-500">
+                                            {new Date(item.created_at).toLocaleDateString('en-SG', {
+                                                day: 'numeric',
+                                                month: 'short',
+                                                year: 'numeric',
+                                            })}
+                                        </p>
+                                    </div>
+                                    <p className="text-xs text-gray-600">{item.email}</p>
+                                    <p className="mb-2 text-xs text-gray-600">
+                                        {ENQUIRY_TYPE_LABELS[item.enquiry_type] ?? item.enquiry_type}
+                                    </p>
+                                    {item.message && (
+                                        <p className="mb-2 whitespace-pre-wrap text-xs text-gray-700">{item.message}</p>
+                                    )}
+
+                                    {enquiryErrors[item.id] && (
+                                        <p className="mb-2 text-xs text-red-700">{enquiryErrors[item.id]}</p>
+                                    )}
+
+                                    <div className="flex items-center gap-2">
+                                        <select
+                                            value={item.status}
+                                            disabled={enquiryStatusPendingId === item.id}
+                                            onChange={(e) => handleEnquiryStatusChange(item.id, e.target.value)}
+                                            className="flex-1 border border-gray-300 px-2 py-1 text-xs"
+                                        >
+                                            {ENQUIRY_STATUS_OPTIONS.map((option) => (
+                                                <option key={option.value} value={option.value}>
+                                                    {option.label}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <button
+                                            type="button"
+                                            onClick={() => handleDeleteEnquiry(item.id)}
+                                            disabled={deletingEnquiryId === item.id}
+                                            className="win95-button text-xs"
+                                        >
+                                            {deletingEnquiryId === item.id ? 'Deleting...' : 'Delete'}
+                                        </button>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                </section>
 
                 {/* LOGO SECTION */}
                 <section className="mb-12">

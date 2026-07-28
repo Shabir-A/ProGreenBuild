@@ -1,4 +1,5 @@
 import { Resend } from 'resend';
+import { createClient } from '../../../utils/supabase/server';
 
 const ENQUIRY_TYPE_LABELS = {
     general: 'General Renovation Enquiry',
@@ -24,12 +25,30 @@ export async function POST(request) {
         return Response.json({ error: 'Name, email, and enquiry type are required.' }, { status: 400 });
     }
 
+    const trimmedEmail = email.toString().trim().toLowerCase();
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailPattern.test(email)) {
+    if (!emailPattern.test(trimmedEmail)) {
         return Response.json({ error: 'Please provide a valid email address.' }, { status: 400 });
     }
 
+    if (trimmedEmail.length > 254) {
+        return Response.json({ error: 'Email address is too long.' }, { status: 400 });
+    }
+
     const enquiryLabel = ENQUIRY_TYPE_LABELS[enquiryType] ?? enquiryType;
+
+    const supabase = await createClient();
+    const { error: insertError } = await supabase.from('enquiries').insert({
+        name: name.toString().trim(),
+        email: trimmedEmail,
+        enquiry_type: enquiryType,
+        message: message?.toString().trim() || null,
+    });
+
+    if (insertError) {
+        // Don't block the enquiry email on a logging failure — email delivery is the critical path.
+        console.error('Failed to log enquiry:', insertError.message);
+    }
 
     if (!process.env.RESEND_API_KEY) {
         return Response.json({ error: 'Email service is not configured.' }, { status: 500 });
@@ -40,11 +59,11 @@ export async function POST(request) {
         const { error } = await resend.emails.send({
             from: 'Pro Green Build <onboarding@resend.dev>',
             to: process.env.ENQUIRY_RECEIVING_EMAIL,
-            replyTo: email,
+            replyTo: trimmedEmail,
             subject: `New enquiry: ${enquiryLabel}`,
             text: [
-                `Name: ${name}`,
-                `Email: ${email}`,
+                `Name: ${name.toString().trim()}`,
+                `Email: ${trimmedEmail}`,
                 `Enquiry type: ${enquiryLabel}`,
                 '',
                 'Message:',

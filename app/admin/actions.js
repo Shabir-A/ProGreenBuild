@@ -6,6 +6,7 @@ import { createClient } from '../../utils/supabase/server';
 
 const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png'];
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+const ENQUIRY_STATUSES = ['pending_reply', 'awaiting_customer', 'converted', 'closed'];
 
 async function requireUser(supabase) {
     const { data } = await supabase.auth.getUser();
@@ -20,15 +21,20 @@ export async function login(_prevState, formData) {
         return { error: 'Enter your email and password.' };
     }
 
-    const supabase = await createClient();
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    try {
+        const supabase = await createClient();
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
 
-    if (error) {
-        return { error: 'Invalid email or password.' };
+        if (error) {
+            return { error: 'Invalid email or password.' };
+        }
+
+        revalidatePath('/admin');
+        redirect('/admin');
+    } catch (err) {
+        console.error('Login error:', err);
+        return { error: 'Something went wrong. Please try again.' };
     }
-
-    revalidatePath('/admin');
-    redirect('/admin');
 }
 
 export async function logout() {
@@ -108,6 +114,46 @@ export async function deleteGalleryImage(id, storagePath) {
 
     revalidatePath('/admin');
     revalidatePath('/');
+    return { success: true };
+}
+
+export async function updateEnquiryStatus(id, status) {
+    const supabase = await createClient();
+    const user = await requireUser(supabase);
+    if (!user) {
+        return { error: 'Not authorized.' };
+    }
+
+    if (!ENQUIRY_STATUSES.includes(status)) {
+        return { error: 'Invalid status.' };
+    }
+
+    const { error } = await supabase
+        .from('enquiries')
+        .update({ status, updated_at: new Date().toISOString() })
+        .eq('id', id);
+
+    if (error) {
+        return { error: 'Could not update status. Please try again.' };
+    }
+
+    revalidatePath('/admin');
+    return { success: true };
+}
+
+export async function deleteEnquiry(id) {
+    const supabase = await createClient();
+    const user = await requireUser(supabase);
+    if (!user) {
+        return { error: 'Not authorized.' };
+    }
+
+    const { error } = await supabase.from('enquiries').delete().eq('id', id);
+    if (error) {
+        return { error: 'Could not delete the enquiry. Please try again.' };
+    }
+
+    revalidatePath('/admin');
     return { success: true };
 }
 
