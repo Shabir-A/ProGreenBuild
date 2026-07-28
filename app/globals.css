@@ -185,3 +185,21 @@ body {
   }
 }
 
+.service-card {
+  position: relative;
+  isolation: isolate;
+}
+
+.service-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(232, 207, 168, 0.9), rgba(196, 162, 106, 0.5), rgba(123, 82, 50, 0.7), rgba(232, 207, 168, 0.9));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+

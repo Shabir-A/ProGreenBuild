@@ -121,35 +121,28 @@ export default function Home() {
             {/* HERO */}
             <section className="relative isolate">
                 <div className="absolute inset-x-0 top-0 -z-10 h-[38rem] bg-[radial-gradient(circle_at_top_left,_rgba(111,132,86,0.5),_rgba(111,132,86,0)_38%),radial-gradient(circle_at_70%_20%,_rgba(111,132,86,0.18),_rgba(111,132,86,0)_24%),radial-gradient(circle_at_85%_10%,_rgba(123,82,50,0.28),_rgba(123,82,50,0)_26%),linear-gradient(180deg,rgba(255,253,248,0.94),rgba(255,253,248,0))]" />
-                <div className="mx-auto flex min-h-screen max-w-7xl flex-col px-3 pb-8 pt-4 sm:px-6 sm:pb-16 sm:pt-6 lg:px-8 lg:pb-16 lg:pt-8">
+                <div className="mx-auto flex max-w-7xl flex-col px-3 pb-4 pt-4 sm:px-6 sm:pb-8 sm:pt-6 lg:px-8 lg:pb-10 lg:pt-8">
                     <header className="flex items-center justify-between gap-2 sm:gap-4">
                         <div className="flex items-center gap-2 sm:gap-3">
                             <div className="flex h-9 w-9 items-center justify-center rounded-full border border-white/70 bg-[linear-gradient(180deg,rgba(111,132,86,0.98),rgba(196,162,106,0.92),rgba(123,82,50,0.92))] shadow-[0_20px_60px_-30px_rgba(83,58,34,0.72)] backdrop-blur-xl sm:h-11 sm:w-11">
                                 <span className="text-[0.65rem] font-semibold tracking-[0.3em] text-[#f7f1e6] sm:text-sm">PGB</span>
                             </div>
-                            <div className="hidden sm:block">
-                                <p className="text-[0.6rem] uppercase tracking-[0.32em] text-[#6f8456] sm:text-[0.7rem] sm:tracking-[0.38em]">Singapore renovation</p>
-                            </div>
                         </div>
                         <a href="#contact" className="glass-button glass-button--chip glass-button--primary px-2.5 py-1.5 text-[0.7rem] sm:px-4 sm:py-2.5 sm:text-sm">Get in touch</a>
                     </header>
 
-                    <div className="grid flex-1 items-center gap-4 py-0 sm:gap-6 sm:py-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:py-12">
+                    <div className="grid items-center gap-6 py-3 sm:gap-10 sm:py-5 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12 lg:py-6">
                         <div className="max-w-2xl">
                             <p className="mb-2 text-[0.7rem] font-medium uppercase tracking-[0.28em] text-[#6f8456] sm:mb-4 sm:text-xs sm:tracking-[0.32em]">
                                 Singapore Renovations
                             </p>
 
                             <h1 className="text-5xl font-bold tracking-[-0.03em] text-[#1c3624] sm:text-6xl sm:tracking-[-0.04em] lg:text-7xl">
-                                Pro Green Build
+                                ProGreenBuild
                             </h1>
 
                             <p className="mt-2 text-lg font-medium text-[#6f8456] sm:mt-4 sm:text-2xl">
-                                Competitive pricing, polished finish.
-                            </p>
-
-                            <p className="mt-3 max-w-xl text-sm leading-6 text-[#5d4a3b] sm:mt-5 sm:text-base sm:leading-7">
-                                We deliver renovation work that feels calm, looks warm, and stays grounded in sensible pricing.
+                                Quality Workmanship. Honest Pricing.
                             </p>
 
                             <div className="mt-6 flex flex-wrap gap-3 sm:mt-8">
@@ -295,20 +288,21 @@ export default function Home() {
                 <div className="max-w-2xl">
                     <p className="text-[0.65rem] font-semibold uppercase tracking-[0.32em] text-[#6f8456] sm:text-xs sm:tracking-[0.35em]">Services</p>
                     <h2 className="mt-1.5 text-xl font-semibold tracking-[-0.03em] text-[#2c2118] sm:mt-3 sm:text-4xl sm:tracking-[-0.05em] lg:text-4xl">
-                        Everything YOU need for a smooth renovation, and more.
+                        Everything you need for a smooth renovation, and more.
                     </h2>
                     <div className="mt-2 h-px w-20 bg-[linear-gradient(90deg,#6f8456,#c4a26a,#7b5232)] sm:mt-4 sm:w-28" />
                 </div>
 
-                <div className="mt-4 grid gap-3 sm:mt-8 sm:gap-5 md:grid-cols-2 xl:grid-cols-3">
+                <div className="mt-4 grid grid-cols-3 gap-1.5 sm:mt-8 sm:gap-5">
                     {services.map(([title, description]) => (
                         <div
                             key={title}
-                            className="rounded-[0.9rem] bg-white/25 p-4 backdrop-blur-sm sm:rounded-[1.2rem] sm:p-6"
+                            className="service-card flex aspect-square flex-col overflow-hidden rounded-[0.6rem] bg-[linear-gradient(150deg,rgba(247,234,208,0.95),rgba(232,207,168,0.85),rgba(196,162,106,0.6))] p-1.5 shadow-[0_10px_28px_-20px_rgba(123,82,50,0.6)] backdrop-blur-md sm:aspect-auto sm:rounded-[1.4rem] sm:p-6"
                         >
-                            <div className="h-0.5 w-6 bg-[#6f8456] sm:w-8" />
-                            <p className="mt-3 text-sm font-semibold text-[#2c2118] sm:mt-4 sm:text-base">{title}</p>
-                            <p className="mt-2 text-xs leading-5 text-[#5d4a3b] sm:mt-3 sm:text-sm sm:leading-6">{description}</p>
+                            <div className="pointer-events-none absolute -right-6 -top-6 hidden h-20 w-20 rounded-full bg-[#e8cfa8]/50 blur-2xl sm:block" />
+                            <div className="relative h-0.5 w-4 shrink-0 rounded-full bg-[linear-gradient(90deg,#7b5232,#c4a26a,#e8cfa8)] sm:h-1 sm:w-8" />
+                            <p className="relative mt-1 text-[0.65rem] font-semibold leading-[1.15] text-[#3f2a16] sm:mt-4 sm:text-base">{title}</p>
+                            <p className="relative mt-1 line-clamp-3 text-[0.55rem] leading-[1.2] text-[#6f5843] sm:mt-3 sm:line-clamp-none sm:text-sm sm:leading-6">{description}</p>
                         </div>
                     ))}
                 </div>
