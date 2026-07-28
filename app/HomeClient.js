@@ -42,6 +42,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
     const [formPhase, setFormPhase] = useState('idle'); // 'idle' | 'sending' | 'hiding' | 'flying'
     const [enquiryFields, setEnquiryFields] = useState({ name: '', email: '', enquiryType: '', message: '' });
     const [submitError, setSubmitError] = useState('');
+    const [showSuccessMessage, setShowSuccessMessage] = useState(false);
     const marqueeRef = useRef(null);
     const marqueeSetWidthRef = useRef(0);
     const marqueePausedRef = useRef(false);
@@ -133,6 +134,11 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
         setEnquiryFields({ name: '', email: '', enquiryType: '', message: '' });
     };
 
+    const showSuccessToast = () => {
+        setShowSuccessMessage(true);
+        window.setTimeout(() => setShowSuccessMessage(false), 4000);
+    };
+
     const handleEnquiryFieldChange = (field) => (event) => {
         setEnquiryFields((prev) => ({ ...prev, [field]: event.target.value }));
     };
@@ -165,6 +171,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
             setFormPhase('hiding');
             window.setTimeout(() => {
                 setFormPhase('flying');
+                showSuccessToast();
                 window.setTimeout(() => {
                     closeEnquiryForm();
                 }, ICON_FLY_DURATION);
@@ -401,9 +408,9 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                 </div>
             </section>
 
-            {/* TESTIMONIALS & ABOUT - SIDE BY SIDE */}
+            {/* TESTIMONIALS & ABOUT */}
             <section className="mx-auto max-w-7xl px-3 py-6 sm:px-6 sm:py-14 lg:px-8">
-                <div className="grid grid-cols-2 gap-3 sm:gap-5 sm:rounded-[2.25rem] sm:p-8 items-stretch">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-5 sm:rounded-[2.25rem] sm:p-8 items-stretch">
                     {/* LEFT: TESTIMONIALS */}
                     <div className="rounded-[1.2rem] border border-[#6f8456]/22 bg-[linear-gradient(180deg,rgba(250,246,238,0.6),rgba(227,237,214,0.7),rgba(236,223,206,0.46))] p-3 shadow-[0_30px_90px_-55px_rgba(54,39,23,0.9)] backdrop-blur-2xl sm:rounded-[2.25rem] sm:p-8">
                         <p className="text-[0.65rem] font-semibold uppercase tracking-[0.32em] text-[#6f8456] sm:text-xs sm:tracking-[0.35em]">Testimonials</p>
@@ -620,6 +627,20 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                                 </button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Success Toast */}
+            {showSuccessMessage && (
+                <div className="fixed bottom-4 left-4 right-4 z-50 mx-auto max-w-sm animate-in fade-in slide-in-from-bottom-4 duration-300">
+                    <div className="rounded-lg bg-[#6f8456] px-4 py-3 text-white shadow-lg sm:px-6 sm:py-4">
+                        <div className="flex items-center gap-3">
+                            <svg className="h-5 w-5 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" />
+                            </svg>
+                            <p className="text-sm font-medium">Thank you! We've received your enquiry and will be in touch soon.</p>
+                        </div>
                     </div>
                 </div>
             )}

@@ -1,6 +1,38 @@
 import { Resend } from 'resend';
 import { createClient } from '../../../utils/supabase/server';
 
+const rateLimitStore = new Map();
+const RATE_LIMIT_WINDOW = 60 * 1000;
+const RATE_LIMIT_MAX = 5;
+
+function getClientIp(request) {
+    return (
+        request.headers.get('x-forwarded-for')?.split(',')[0].trim() ||
+        request.headers.get('x-real-ip') ||
+        request.headers.get('cf-connecting-ip') ||
+        '127.0.0.1'
+    );
+}
+
+function checkRateLimit(ip) {
+    const now = Date.now();
+    const record = rateLimitStore.get(ip);
+
+    if (!record) {
+        rateLimitStore.set(ip, [now]);
+        return true;
+    }
+
+    const recentRequests = record.filter((time) => now - time < RATE_LIMIT_WINDOW);
+    if (recentRequests.length >= RATE_LIMIT_MAX) {
+        return false;
+    }
+
+    recentRequests.push(now);
+    rateLimitStore.set(ip, recentRequests);
+    return true;
+}
+
 const ENQUIRY_TYPE_LABELS = {
     general: 'General Renovation Enquiry',
     bathroom: 'Bathroom Modification',
@@ -12,6 +44,14 @@ const ENQUIRY_TYPE_LABELS = {
 };
 
 export async function POST(request) {
+    const clientIp = getClientIp(request);
+    if (!checkRateLimit(clientIp)) {
+        return Response.json(
+            { error: 'Too many requests. Please wait before sending another enquiry.' },
+            { status: 429 }
+        );
+    }
+
     let body;
     try {
         body = await request.json();
