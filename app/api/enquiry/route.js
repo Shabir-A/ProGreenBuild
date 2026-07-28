@@ -1,7 +1,5 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 const ENQUIRY_TYPE_LABELS = {
     general: 'General Renovation Enquiry',
     bathroom: 'Bathroom Modification',
@@ -33,7 +31,12 @@ export async function POST(request) {
 
     const enquiryLabel = ENQUIRY_TYPE_LABELS[enquiryType] ?? enquiryType;
 
+    if (!process.env.RESEND_API_KEY) {
+        return Response.json({ error: 'Email service is not configured.' }, { status: 500 });
+    }
+
     try {
+        const resend = new Resend(process.env.RESEND_API_KEY);
         const { error } = await resend.emails.send({
             from: 'Pro Green Build <onboarding@resend.dev>',
             to: process.env.ENQUIRY_RECEIVING_EMAIL,
