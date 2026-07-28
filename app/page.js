@@ -35,6 +35,8 @@ const testimonials = [
 
 const TESTIMONIAL_DURATION = 5600;
 const PROCESS_DURATION = 4600;
+const FIELDS_FADE_DURATION = 450;
+const ICON_FLY_DURATION = 650;
 
 export default function Home() {
     const [processIndex, setProcessIndex] = useState(0);
@@ -42,7 +44,7 @@ export default function Home() {
     const [testimonialIndex, setTestimonialIndex] = useState(0);
     const [testimonialTick, setTestimonialTick] = useState(0);
     const [showEnquiryForm, setShowEnquiryForm] = useState(false);
-    const [enquiryFormSubmitted, setEnquiryFormSubmitted] = useState(false);
+    const [formPhase, setFormPhase] = useState('idle'); // 'idle' | 'hiding' | 'flying'
 
     useEffect(() => {
         const timer = window.setTimeout(() => {
@@ -62,6 +64,21 @@ export default function Home() {
 
     const activeProcess = processStages[processIndex];
     const activeTestimonial = testimonials[testimonialIndex];
+
+    const closeEnquiryForm = () => {
+        setShowEnquiryForm(false);
+        setFormPhase('idle');
+    };
+
+    const handleSendEnquiry = () => {
+        setFormPhase('hiding');
+        window.setTimeout(() => {
+            setFormPhase('flying');
+            window.setTimeout(() => {
+                closeEnquiryForm();
+            }, ICON_FLY_DURATION);
+        }, FIELDS_FADE_DURATION);
+    };
 
     return (
         <main className="overflow-hidden text-[#2f241b]">
@@ -83,11 +100,11 @@ export default function Home() {
 
                     <div className="grid flex-1 items-center gap-6 py-4 sm:gap-10 sm:py-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12 lg:py-20">
                         <div className="max-w-2xl">
-                            <span className="glass-button glass-button--chip mb-3 inline-flex text-[9px] uppercase tracking-[0.20em] text-white sm:mb-6 sm:text-xs sm:tracking-[0.36em]">
+                            <span className="mb-3 inline-flex text-[10px] font-semibold uppercase tracking-[0.24em] text-[#6f8456] sm:mb-6 sm:text-xs sm:tracking-[0.36em]">
                                 Competitive pricing, done well
                             </span>
 
-                            <h1 className="text-3xl font-semibold tracking-[-0.04em] text-[#22402a] sm:text-6xl sm:tracking-[-0.06em] lg:text-7xl">
+                            <h1 className="text-3xl font-semibold tracking-[-0.04em] text-[#1c3624] sm:text-6xl sm:tracking-[-0.06em] lg:text-7xl">
                                 Pro Green Build
                             </h1>
 
@@ -95,7 +112,7 @@ export default function Home() {
                   1. Competitive renovation pricing without compromise.
                   2. Better renovation pricing for homes that deserve more.
                   3. Competitive pricing, polished finishes, and a smoother build. */}
-                            <p className="mt-3 max-w-xl text-sm leading-6 text-[#4f5f49] sm:mt-6 sm:text-xl sm:leading-8">
+                            <p className="mt-3 max-w-xl text-sm leading-6 text-[#5d4a3b] sm:mt-6 sm:text-xl sm:leading-8">
                                 Competitive pricing for Singapore homes, with a smooth process and a polished finish.
                             </p>
 
@@ -110,22 +127,22 @@ export default function Home() {
                             <div className="rounded-[1rem] border border-[#6f8456]/18 bg-[linear-gradient(180deg,rgba(255,252,247,0.72),rgba(226,239,213,0.58),rgba(233,224,205,0.52))] p-2 shadow-[0_35px_90px_-45px_rgba(58,42,27,0.88)] backdrop-blur-2xl sm:rounded-[2rem] sm:p-3">
                                 <div className="rounded-[0.85rem] border border-[#6f8456]/14 bg-[linear-gradient(180deg,rgba(255,252,247,0.74),rgba(230,240,218,0.86),rgba(244,236,222,0.76))] p-2 sm:rounded-[1.7rem] sm:p-4">
                                     <div className="grid gap-2 sm:grid-cols-2 sm:gap-3">
-                                        <div className="rounded-[0.8rem] border border-[#c4a26a]/30 bg-[linear-gradient(180deg,rgba(255,251,244,0.9),rgba(233,225,210,0.92))] p-2.5 shadow-[0_18px_60px_-40px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:col-span-2 sm:rounded-[1.4rem] sm:p-4">
-                                            <p className="text-[8px] uppercase tracking-[0.24em] text-[#6f8456] sm:text-xs sm:tracking-[0.35em]">Project approach</p>
-                                            <p className="mt-1.5 text-sm font-semibold tracking-[-0.02em] text-[#2f241b] sm:mt-3 sm:text-2xl sm:tracking-[-0.04em]">
+                                        <div className="rounded-[0.8rem] border border-[#4a2e1c]/40 bg-[linear-gradient(180deg,rgba(101,67,42,0.92),rgba(70,45,28,0.95))] p-2.5 shadow-[0_18px_60px_-40px_rgba(20,12,6,0.6)] backdrop-blur-xl sm:col-span-2 sm:rounded-[1.4rem] sm:p-4">
+                                            <p className="text-[8px] uppercase tracking-[0.24em] text-[#e8cfa8] sm:text-xs sm:tracking-[0.35em]">Project approach</p>
+                                            <p className="mt-1.5 text-sm font-semibold tracking-[-0.02em] text-[#f7f1e6] sm:mt-3 sm:text-2xl sm:tracking-[-0.04em]">
                                                 Clear communication, seamless execution.
                                             </p>
-                                            <div className="mt-2 h-px w-16 bg-[linear-gradient(90deg,#6f8456,#c4a26a,#7b5232)] sm:mt-4 sm:w-24" />
+                                            <div className="mt-2 h-px w-16 bg-[linear-gradient(90deg,#c4a26a,#e8cfa8,#c4a26a)] sm:mt-4 sm:w-24" />
                                         </div>
 
-                                        <div className="rounded-[0.8rem] border border-[#6f8456]/24 bg-[linear-gradient(180deg,rgba(228,239,214,0.92),rgba(235,226,210,0.84))] p-2.5 backdrop-blur-xl sm:rounded-[1.4rem] sm:p-4">
-                                            <p className="text-[0.7rem] text-[#725a45] sm:text-sm">Delivery style</p>
-                                            <p className="mt-1 text-xs font-semibold text-[#5a3f2b] sm:mt-2 sm:text-lg">Polished, purposeful, efficient.</p>
+                                        <div className="rounded-[0.8rem] border border-[#4a2e1c]/35 bg-[linear-gradient(180deg,rgba(95,60,38,0.88),rgba(75,48,30,0.9))] p-2.5 backdrop-blur-xl sm:rounded-[1.4rem] sm:p-4">
+                                            <p className="text-[0.7rem] text-[#e0c8a8] sm:text-sm">Delivery style</p>
+                                            <p className="mt-1 text-xs font-semibold text-[#f7f1e6] sm:mt-2 sm:text-lg">Polished, purposeful, efficient.</p>
                                         </div>
 
-                                        <div className="rounded-[0.8rem] border border-[#6f8456]/28 bg-[linear-gradient(180deg,rgba(221,233,207,0.94),rgba(240,233,220,0.8))] p-2.5 backdrop-blur-xl sm:rounded-[1.4rem] sm:p-4">
-                                            <p className="text-[0.7rem] text-[#725a45] sm:text-sm">Project feel</p>
-                                            <p className="mt-1 text-xs font-semibold text-[#5a3f2b] sm:mt-2 sm:text-lg">Practical, neat, value-driven.</p>
+                                        <div className="rounded-[0.8rem] border border-[#4a2e1c]/35 bg-[linear-gradient(180deg,rgba(90,57,37,0.9),rgba(72,46,29,0.92))] p-2.5 backdrop-blur-xl sm:rounded-[1.4rem] sm:p-4">
+                                            <p className="text-[0.7rem] text-[#e0c8a8] sm:text-sm">Project feel</p>
+                                            <p className="mt-1 text-xs font-semibold text-[#f7f1e6] sm:mt-2 sm:text-lg">Practical, neat, value-driven.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -251,11 +268,11 @@ export default function Home() {
                     {services.map(([title, description]) => (
                         <div
                             key={title}
-                            className="rounded-[1rem] border border-[#6f8456]/24 bg-[linear-gradient(180deg,rgba(255,251,244,0.8),rgba(228,239,214,0.84),rgba(236,224,206,0.58))] p-3 shadow-[0_22px_70px_-44px_rgba(64,45,24,0.85)] backdrop-blur-xl sm:rounded-[1.8rem] sm:p-5"
+                            className="rounded-[1rem] border border-[#4a2e1c]/35 bg-[linear-gradient(180deg,rgba(101,67,42,0.9),rgba(72,46,29,0.94))] p-3 shadow-[0_22px_70px_-44px_rgba(20,12,6,0.7)] backdrop-blur-xl sm:rounded-[1.8rem] sm:p-5"
                         >
-                            <div className="h-px w-8 bg-[linear-gradient(90deg,#6f8456,#c4a26a,#7b5232)] sm:w-12" />
-                            <p className="mt-2 text-sm font-semibold text-[#2b1f17] sm:mt-4 sm:text-lg">{title}</p>
-                            <p className="mt-1 text-xs leading-5 text-[#645040] sm:mt-2 sm:text-sm sm:leading-7">{description}</p>
+                            <div className="h-px w-8 bg-[linear-gradient(90deg,#c4a26a,#e8cfa8,#c4a26a)] sm:w-12" />
+                            <p className="mt-2 text-sm font-semibold text-[#f7f1e6] sm:mt-4 sm:text-lg">{title}</p>
+                            <p className="mt-1 text-xs leading-5 text-[#e0c8a8] sm:mt-2 sm:text-sm sm:leading-7">{description}</p>
                         </div>
                     ))}
                 </div>
@@ -293,7 +310,7 @@ export default function Home() {
                         </div>
                     </div>
 
-                    <div className="mt-4 grid gap-2.5 sm:mt-8 sm:gap-4 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
+                    <div className="mt-4 sm:mt-8">
                         <div className="rounded-[1rem] border border-[#6f8456]/18 bg-[linear-gradient(180deg,rgba(255,251,244,0.82),rgba(223,236,208,0.88),rgba(233,224,207,0.78))] p-3 shadow-[0_18px_50px_-36px_rgba(75,54,31,0.9)] backdrop-blur-xl sm:rounded-[1.75rem] sm:p-8">
                             <p className="text-base leading-[1.4] tracking-[-0.02em] text-[#2c2118] sm:text-3xl sm:leading-[1.55] sm:tracking-[-0.03em] lg:text-3xl">
                                 &ldquo;{activeTestimonial[0]}&rdquo;
@@ -307,29 +324,6 @@ export default function Home() {
                                     className="testimonial-progress h-full rounded-full bg-[linear-gradient(90deg,rgba(111,132,86,0.98),rgba(139,171,99,0.96),rgba(196,162,106,0.94))]"
                                 />
                             </div>
-                        </div>
-
-                        <div className="grid gap-2 sm:grid-cols-2 sm:gap-3 lg:grid-cols-1">
-                            {testimonials.map(([quote, name], index) => (
-                                <button
-                                    key={name}
-                                    type="button"
-                                    onClick={() => {
-                                        setTestimonialIndex(index);
-                                        setTestimonialTick((value) => value + 1);
-                                    }}
-                                    className={`glass-button glass-button--soft rounded-[0.85rem] border p-2.5 text-left sm:rounded-[1.4rem] sm:p-4 ${index === testimonialIndex
-                                            ? 'border-[#6f5843] bg-[rgba(101,67,42,0.35)] shadow-[0_18px_40px_-32px_rgba(66,46,22,0.85)]'
-                                            : 'border-[rgba(101,67,42,0.15)] bg-[linear-gradient(180deg,rgba(255,255,255,0.32),rgba(239,231,217,0.2))] shadow-[0_14px_32px_-28px_rgba(66,46,22,0.45)]'
-                                        }`}
-                                    aria-pressed={index === testimonialIndex}
-                                >
-                                    <p className="text-[0.7rem] text-[#5f4a3a] sm:text-sm">{quote}</p>
-                                    <p className="mt-1.5 text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-[#8d6e45] sm:mt-3 sm:text-xs sm:tracking-[0.28em]">
-                                        {name}
-                                    </p>
-                                </button>
-                            ))}
                         </div>
                     </div>
                 </div>
@@ -379,7 +373,7 @@ export default function Home() {
                             <div className="flex flex-col gap-2">
                                 <p className="text-[0.65rem] font-semibold uppercase tracking-[0.28em] text-[#6f8456] sm:text-xs">Get in touch</p>
                                 <div className="flex flex-wrap gap-2 text-[0.7rem] font-medium sm:gap-3 sm:text-sm">
-                                    <a href="tel:94526886" className="glass-button glass-button--chip px-2.5 py-1.5 sm:px-5 sm:py-3">Call: 9452 6886</a>
+                                    <a href="tel:+6594526886" className="glass-button glass-button--chip px-2.5 py-1.5 sm:px-5 sm:py-3">Call us</a>
                                     <button
                                         onClick={() => setShowEnquiryForm(true)}
                                         className="glass-button glass-button--chip px-2.5 py-1.5 sm:px-5 sm:py-3"
@@ -387,11 +381,15 @@ export default function Home() {
                                         Email enquiry
                                     </button>
                                     <a
-                                        href="https://wa.me/?text=Hey!%20I%20came%20across%20your%20website,%20would%20love%20to%20find%20out%20more"
+                                        href="https://wa.me/6594526886?text=Hey!%20I%20came%20across%20your%20website,%20would%20love%20to%20find%20out%20more"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="glass-button glass-button--chip px-2.5 py-1.5 sm:px-5 sm:py-3"
+                                        className="glass-button glass-button--chip inline-flex items-center gap-1.5 px-2.5 py-1.5 sm:px-5 sm:py-3"
                                     >
+                                        <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4 shrink-0" aria-hidden="true">
+                                            <path d="M17.472 14.382c-.297-.149-1.758-.868-2.03-.967-.273-.099-.472-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.372-.01-.571-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+                                            <path d="M12.001 2.003c-5.522 0-9.998 4.476-9.998 9.997 0 1.762.464 3.484 1.345 4.997l-1.44 4.97 5.099-1.335a9.965 9.965 0 004.994 1.337h.001c5.521 0 9.997-4.476 9.997-9.997 0-5.522-4.476-9.997-9.998-9.997zm0 18.312a8.29 8.29 0 01-4.234-1.156l-.303-.181-3.024.792.808-2.946-.198-.303a8.284 8.284 0 01-1.279-4.421c0-4.581 3.729-8.309 8.311-8.309 4.583 0 8.311 3.728 8.311 8.309-.001 4.582-3.729 8.309-8.312 8.215z" />
+                                        </svg>
                                         WhatsApp
                                     </a>
                                 </div>
@@ -404,81 +402,89 @@ export default function Home() {
             {/* ENQUIRY FORM MODAL */}
             {showEnquiryForm && (
                 <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-sm sm:items-center">
-                    <div className={`relative w-full max-w-md rounded-t-[1.5rem] border border-[#6f8456]/22 bg-[linear-gradient(180deg,rgba(255,251,244,0.98),rgba(226,239,213,0.96))] p-4 shadow-[0_30px_100px_-40px_rgba(54,39,23,0.95)] backdrop-blur-2xl transition-all duration-500 sm:rounded-[2rem] sm:p-8 ${enquiryFormSubmitted ? 'translate-y-full opacity-0' : 'translate-y-0 opacity-100'}`}>
-                        {!enquiryFormSubmitted ? (
-                            <>
-                                <button
-                                    onClick={() => setShowEnquiryForm(false)}
-                                    className="absolute right-3 top-3 text-[#6f8456] hover:text-[#2f241b] sm:right-4 sm:top-4"
-                                >
-                                    ✕
-                                </button>
+                    <div className="relative w-full max-w-md overflow-hidden rounded-t-[1.5rem] border border-[#6f8456]/22 bg-[linear-gradient(180deg,rgba(255,251,244,0.98),rgba(226,239,213,0.96))] p-4 shadow-[0_30px_100px_-40px_rgba(54,39,23,0.95)] backdrop-blur-2xl sm:rounded-[2rem] sm:p-8">
+                        <button
+                            onClick={closeEnquiryForm}
+                            className="absolute right-3 top-3 text-[#6f8456] hover:text-[#2f241b] sm:right-4 sm:top-4"
+                        >
+                            ✕
+                        </button>
 
-                                <h3 className="text-xl font-semibold text-[#2d2118] sm:text-2xl">Send us an enquiry</h3>
-                                <p className="mt-1 text-xs text-[#6f5843] sm:text-sm">We'll get back to you shortly</p>
+                        <h3 className="text-xl font-semibold text-[#2d2118] sm:text-2xl">Send us an enquiry</h3>
+                        <p className="mt-1 text-xs text-[#6f5843] sm:text-sm">We'll get back to you shortly</p>
 
-                                <form className="mt-4 space-y-3 sm:mt-6 sm:space-y-4">
-                                    {/* Name */}
-                                    <div>
-                                        <label className="text-xs font-semibold text-[#6f8456] sm:text-sm">Name *</label>
-                                        <input
-                                            type="text"
-                                            placeholder="Your name"
-                                            className="mt-1 w-full rounded-[0.8rem] border border-[#6f8456]/20 bg-white/50 px-3 py-2 text-sm text-[#2f241b] placeholder-[#8d7b6e] backdrop-blur-sm transition focus:border-[#6f8456]/50 focus:outline-none focus:ring-2 focus:ring-[#6f8456]/20 sm:px-4 sm:py-2.5 sm:text-base"
-                                        />
-                                    </div>
+                        <form className="mt-4 sm:mt-6">
+                            <div
+                                className={`space-y-3 overflow-hidden transition-all duration-[450ms] ease-in sm:space-y-4 ${formPhase !== 'idle' ? 'max-h-0 opacity-0' : 'max-h-[40rem] opacity-100'
+                                    }`}
+                            >
+                                {/* Name */}
+                                <div>
+                                    <label className="text-xs font-semibold text-[#6f8456] sm:text-sm">Name *</label>
+                                    <input
+                                        type="text"
+                                        placeholder="Your name"
+                                        className="mt-1 w-full rounded-[0.8rem] border border-[#6f8456]/20 bg-white/50 px-3 py-2 text-sm text-[#2f241b] placeholder-[#8d7b6e] backdrop-blur-sm transition focus:border-[#6f8456]/50 focus:outline-none focus:ring-2 focus:ring-[#6f8456]/20 sm:px-4 sm:py-2.5 sm:text-base"
+                                    />
+                                </div>
 
-                                    {/* Email */}
-                                    <div>
-                                        <label className="text-xs font-semibold text-[#6f8456] sm:text-sm">Email *</label>
-                                        <input
-                                            type="email"
-                                            placeholder="your.email@example.com"
-                                            className="mt-1 w-full rounded-[0.8rem] border border-[#6f8456]/20 bg-white/50 px-3 py-2 text-sm text-[#2f241b] placeholder-[#8d7b6e] backdrop-blur-sm transition focus:border-[#6f8456]/50 focus:outline-none focus:ring-2 focus:ring-[#6f8456]/20 sm:px-4 sm:py-2.5 sm:text-base"
-                                        />
-                                    </div>
+                                {/* Email */}
+                                <div>
+                                    <label className="text-xs font-semibold text-[#6f8456] sm:text-sm">Email *</label>
+                                    <input
+                                        type="email"
+                                        placeholder="your.email@example.com"
+                                        className="mt-1 w-full rounded-[0.8rem] border border-[#6f8456]/20 bg-white/50 px-3 py-2 text-sm text-[#2f241b] placeholder-[#8d7b6e] backdrop-blur-sm transition focus:border-[#6f8456]/50 focus:outline-none focus:ring-2 focus:ring-[#6f8456]/20 sm:px-4 sm:py-2.5 sm:text-base"
+                                    />
+                                </div>
 
-                                    {/* Enquiry Type */}
-                                    <div>
-                                        <label className="text-xs font-semibold text-[#6f8456] sm:text-sm">Enquiry type *</label>
-                                        <select className="mt-1 w-full rounded-[0.8rem] border border-[#6f8456]/20 bg-white/50 px-3 py-2 text-sm text-[#2f241b] backdrop-blur-sm transition focus:border-[#6f8456]/50 focus:outline-none focus:ring-2 focus:ring-[#6f8456]/20 sm:px-4 sm:py-2.5 sm:text-base">
-                                            <option value="">Select an enquiry type</option>
-                                            <option value="general">General Renovation Enquiry</option>
-                                            <option value="bathroom">Bathroom Modification</option>
-                                            <option value="kitchen">Kitchen Refit</option>
-                                            <option value="living-room">Living Room Renovation</option>
-                                            <option value="new-home">New Home Handover Inspection</option>
-                                            <option value="resale">Resale Property Inspection</option>
-                                            <option value="other">Other</option>
-                                        </select>
-                                    </div>
+                                {/* Enquiry Type */}
+                                <div>
+                                    <label className="text-xs font-semibold text-[#6f8456] sm:text-sm">Enquiry type *</label>
+                                    <select className="mt-1 w-full rounded-[0.8rem] border border-[#6f8456]/20 bg-white/50 px-3 py-2 text-sm text-[#2f241b] backdrop-blur-sm transition focus:border-[#6f8456]/50 focus:outline-none focus:ring-2 focus:ring-[#6f8456]/20 sm:px-4 sm:py-2.5 sm:text-base">
+                                        <option value="">Select an enquiry type</option>
+                                        <option value="general">General Renovation Enquiry</option>
+                                        <option value="bathroom">Bathroom Modification</option>
+                                        <option value="kitchen">Kitchen Refit</option>
+                                        <option value="living-room">Living Room Renovation</option>
+                                        <option value="new-home">New Home Handover Inspection</option>
+                                        <option value="resale">Resale Property Inspection</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
 
-                                    {/* Message */}
-                                    <div>
-                                        <label className="text-xs font-semibold text-[#6f8456] sm:text-sm">Message</label>
-                                        <textarea
-                                            placeholder="Tell us more about your project... (optional)"
-                                            rows={5}
-                                            className="mt-1 w-full rounded-[0.8rem] border border-[#6f8456]/20 bg-white/50 px-3 py-2 text-sm text-[#2f241b] placeholder-[#8d7b6e] backdrop-blur-sm transition focus:border-[#6f8456]/50 focus:outline-none focus:ring-2 focus:ring-[#6f8456]/20 sm:px-4 sm:py-2.5 sm:text-base"
-                                        />
-                                    </div>
-
-                                    {/* Send Button */}
-                                    <button
-                                        type="button"
-                                        onClick={() => setEnquiryFormSubmitted(true)}
-                                        className="glass-button glass-button--chip glass-button--primary mt-4 w-full px-4 py-2.5 font-semibold sm:mt-6 sm:py-3"
-                                    >
-                                        Send enquiry
-                                    </button>
-                                </form>
-                            </>
-                        ) : (
-                            <div className="flex flex-col items-center justify-center py-6">
-                                <div className="text-4xl text-[#6f8456]">✓</div>
-                                <p className="mt-2 text-center text-sm font-semibold text-[#2d2118] sm:text-base">Thanks for your enquiry!</p>
+                                {/* Message */}
+                                <div>
+                                    <label className="text-xs font-semibold text-[#6f8456] sm:text-sm">Message</label>
+                                    <textarea
+                                        placeholder="Tell us more about your project... (optional)"
+                                        rows={5}
+                                        className="mt-1 w-full rounded-[0.8rem] border border-[#6f8456]/20 bg-white/50 px-3 py-2 text-sm text-[#2f241b] placeholder-[#8d7b6e] backdrop-blur-sm transition focus:border-[#6f8456]/50 focus:outline-none focus:ring-2 focus:ring-[#6f8456]/20 sm:px-4 sm:py-2.5 sm:text-base"
+                                    />
+                                </div>
                             </div>
-                        )}
+
+                            {/* Send Button / Mail icon */}
+                            <div className={`flex justify-center ${formPhase === 'idle' ? 'mt-4 sm:mt-6' : 'mt-2'}`}>
+                                <button
+                                    type="button"
+                                    onClick={handleSendEnquiry}
+                                    disabled={formPhase !== 'idle'}
+                                    className={`glass-button glass-button--primary flex items-center justify-center overflow-hidden font-semibold transition-all duration-500 ease-in ${formPhase === 'idle'
+                                            ? 'w-full rounded-[999px] px-4 py-2.5 sm:py-3'
+                                            : 'h-12 w-12 rounded-full px-0 py-0'
+                                        } ${formPhase === 'flying' ? 'translate-x-[600px] opacity-0' : 'translate-x-0 opacity-100'}`}
+                                >
+                                    {formPhase === 'idle' ? (
+                                        'Send enquiry'
+                                    ) : (
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5 shrink-0">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                        </svg>
+                                    )}
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             )}
