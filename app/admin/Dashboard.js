@@ -68,6 +68,29 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
     const fileInputRef = useRef(null);
     const logoInputRef = useRef(null);
     const stageInputRefs = useRef({});
+    const inactivityTimerRef = useRef(null);
+
+    // Auto-logout after 15 minutes of inactivity
+    useEffect(() => {
+        const INACTIVITY_TIME = 15 * 60 * 1000; // 15 minutes in milliseconds
+
+        const resetInactivityTimer = () => {
+            if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current);
+            inactivityTimerRef.current = setTimeout(() => {
+                logout();
+            }, INACTIVITY_TIME);
+        };
+
+        const events = ['mousedown', 'keydown', 'scroll', 'touchstart'];
+        events.forEach(event => window.addEventListener(event, resetInactivityTimer));
+
+        resetInactivityTimer();
+
+        return () => {
+            events.forEach(event => window.removeEventListener(event, resetInactivityTimer));
+            if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current);
+        };
+    }, []);
 
     useEffect(() => {
         if (uploadState?.success) {

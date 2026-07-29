@@ -188,8 +188,9 @@ body {
   width: 2.4rem;
   height: 2.4rem;
   padding: 0;
-  background: linear-gradient(180deg, rgba(20, 61, 46, 0.75), rgba(13, 43, 32, 0.85));
-  border-color: rgba(13, 43, 32, 0.28);
+  background: linear-gradient(180deg, rgba(20, 61, 46, 0.55), rgba(20, 61, 46, 0.48));
+  border-color: rgba(20, 61, 46, 0.35);
+  box-shadow: 0 4px 12px -4px rgba(20, 61, 46, 0.2), inset 0 1px 0 rgba(100, 150, 120, 0.3);
 }
 
 @media (max-width: 640px) {
@@ -200,12 +201,12 @@ body {
 }
 
 .glass-button--selected {
-  border-color: rgba(58, 92, 66, 0.6);
-  background: linear-gradient(180deg, rgba(35, 78, 58, 0.95), rgba(20, 61, 46, 0.97));
+  border-color: rgba(36, 66, 107, 0.45);
+  background: linear-gradient(180deg, rgba(62, 102, 144, 0.70), rgba(36, 66, 107, 0.75));
   box-shadow:
-    0 22px 52px -30px rgba(8, 24, 18, 0.92),
-    inset 0 1px 0 rgba(80, 120, 96, 0.5),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.25);
+    0 6px 16px -6px rgba(36, 66, 107, 0.35),
+    inset 0 1px 0 rgba(120, 160, 200, 0.4),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.15);
   color: #faf8f4;
 }
 

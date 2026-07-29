@@ -236,8 +236,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
 
                         {/* Trust Badges */}
                         <div className="relative w-full sm:w-[24rem] lg:w-[27rem] flex flex-col gap-4 sm:gap-4 lg:gap-5">
-                            <div className="absolute -inset-4 -z-10 rounded-[1.5rem] bg-[radial-gradient(circle_at_top_right,_rgba(36,66,107,0.14),_rgba(36,66,107,0)_70%)]" />
-                            <div className="rounded-lg border border-[#143D2E]/0 border-t-2 border-t-[#24426B]/40 bg-[linear-gradient(135deg,rgba(20,61,46,0.07),rgba(20,61,46,0.03))] p-5 backdrop-blur-sm lg:p-7 w-full">
+                            <div className="overflow-hidden rounded-2xl bg-[linear-gradient(135deg,rgba(20,61,46,0.07),rgba(20,61,46,0.03))] p-5 shadow-[inset_0_3px_0_0_rgba(36,66,107,0.65),0_20px_60px_-30px_rgba(20,61,46,0.35)] backdrop-blur-sm lg:p-7 w-full">
                                 <div className="flex items-center gap-3 mb-4 lg:mb-5">
                                     <div className="rounded-full border-2 border-[#143D2E]/45 bg-white/60 p-2 lg:p-2.5 flex items-center justify-center h-12 w-12 lg:h-14 lg:w-14">
                                         <div className="relative h-8 w-8 lg:h-10 lg:w-10">
@@ -314,40 +313,41 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                             </div>
                         ))}
 
-                        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(27,19,11,0.08)_0%,rgba(27,19,11,0.14)_55%,rgba(27,19,11,0.62)_100%)]" />
+                        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(27,19,11,0.08)_0%,rgba(27,19,11,0.05)_55%,rgba(27,19,11,0.28)_100%)]" />
 
                         {/* Stage label */}
                         <div className="absolute left-2.5 top-2.5 z-10 glass-button glass-button--chip px-2.5 py-1 text-[8px] uppercase tracking-[0.20em] text-white sm:left-4 sm:top-4 sm:px-4 sm:py-2 sm:text-xs sm:tracking-[0.34em]">
                             Stage {processIndex + 1} of {stagesWithCaptions.length}
                         </div>
 
-                        {/* Bottom controls - repositioned for mobile */}
-                        <div className="absolute inset-x-0 bottom-0 z-10 flex flex-col gap-2 p-2.5 sm:flex-row sm:items-end sm:justify-between sm:gap-4 sm:p-5">
-                            <div className="max-w-md rounded-[0.8rem] border border-white/20 bg-white/16 px-2.5 py-2 text-white backdrop-blur-xl sm:rounded-[1.35rem] sm:px-4 sm:py-3">
-                                <p className="text-[0.55rem] uppercase tracking-[0.20em] text-white/70 sm:text-[0.7rem] sm:tracking-[0.34em]">{stagesWithCaptions[processIndex]?.label}</p>
-                                <p className="mt-1 text-[0.65rem] leading-4 text-white/90 sm:mt-2 sm:text-base sm:leading-6">{stagesWithCaptions[processIndex]?.caption}</p>
-                                <div className="mt-2 h-1 overflow-hidden rounded-full bg-white/30 sm:mt-3 sm:h-1.5">
-                                    <div
-                                        key={processTick}
-                                        className="process-progress h-full rounded-full bg-[linear-gradient(90deg,rgba(20,61,46,0.98),rgba(58,92,66,0.9),rgba(36,66,107,0.94))]"
-                                    />
-                                </div>
-                            </div>
+                        {/* Dots overlay bottom-right of image — reduced prominence on mobile */}
+                        <div className="absolute bottom-2.5 right-2.5 z-10 flex items-center gap-1 opacity-60 sm:bottom-4 sm:right-4 sm:gap-2 sm:opacity-100">
+                            {stagesWithCaptions.map((stage, index) => (
+                                <button
+                                    key={stage.label}
+                                    type="button"
+                                    onClick={() => {
+                                        setProcessIndex(index);
+                                        setProcessTick((value) => value + 1);
+                                    }}
+                                    className={`glass-button glass-button--dot ${index === processIndex ? 'glass-button--selected' : 'glass-button--soft'}`}
+                                    aria-label={`Show process stage ${index + 1}`}
+                                    aria-pressed={index === processIndex}
+                                />
+                            ))}
+                        </div>
+                    </div>
 
-                            <div className="flex items-center gap-1.5 self-end sm:gap-2">
-                                {stagesWithCaptions.map((stage, index) => (
-                                    <button
-                                        key={stage.label}
-                                        type="button"
-                                        onClick={() => {
-                                            setProcessIndex(index);
-                                            setProcessTick((value) => value + 1);
-                                        }}
-                                        className={`glass-button glass-button--dot ${index === processIndex ? 'glass-button--selected' : 'glass-button--soft'}`}
-                                        aria-label={`Show process stage ${index + 1}`}
-                                        aria-pressed={index === processIndex}
-                                    />
-                                ))}
+                    {/* Glass caption card below image — subtle overlap ties it to the photo, premium feel restored */}
+                    <div className="relative z-10 -mt-4 px-3 pb-3 sm:mt-0 sm:px-5 sm:pb-5 sm:pt-6">
+                        <div className="rounded-[1.2rem] border border-white/40 bg-[linear-gradient(165deg,rgba(255,253,250,0.82),rgba(248,246,242,0.68))] px-4 py-3.5 shadow-[0_24px_56px_-22px_rgba(20,61,46,0.32),inset_0_1px_1px_rgba(255,255,255,0.8),inset_0_-1px_2px_rgba(20,61,46,0.08)] backdrop-blur-lg sm:rounded-[1.35rem] sm:px-6 sm:py-5 sm:shadow-[0_20px_50px_-28px_rgba(20,61,46,0.25),inset_0_1px_1px_rgba(255,255,255,0.7)]">
+                            <p className="text-[0.55rem] uppercase tracking-[0.22em] font-medium text-[#143D2E]/65 sm:text-[0.7rem] sm:tracking-[0.36em]">{stagesWithCaptions[processIndex]?.label}</p>
+                            <p className="mt-1.5 text-[0.75rem] leading-5 text-[#2c2118] sm:mt-2.5 sm:text-base sm:leading-6 font-medium">{stagesWithCaptions[processIndex]?.caption}</p>
+                            <div className="mt-3 h-1 overflow-hidden rounded-full bg-[#143D2E]/10 sm:mt-4 sm:h-1.5">
+                                <div
+                                    key={processTick}
+                                    className="process-progress h-full rounded-full bg-[linear-gradient(90deg,rgba(20,61,46,0.98),rgba(58,92,66,0.9),rgba(36,66,107,0.94))]"
+                                />
                             </div>
                         </div>
                     </div>
@@ -475,7 +475,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                     <div className="rounded-[1.2rem] border border-[#143D2E]/22 bg-[linear-gradient(180deg,rgba(255,251,244,0.72),rgba(214,222,214,0.78),rgba(222,227,233,0.5))] p-3 shadow-[0_28px_80px_-50px_rgba(63,44,23,0.9)] backdrop-blur-xl sm:rounded-[2.25rem] sm:p-8">
                         <p className="text-[0.65rem] font-semibold uppercase tracking-[0.32em] text-[#143D2E] sm:text-xs sm:tracking-[0.35em]">About</p>
                         <h2 className="mt-1.5 text-lg font-semibold tracking-[-0.03em] text-[#2d2118] sm:mt-3 sm:text-2xl sm:tracking-[-0.05em]">
-                            10 years in business, focused on clear pricing and careful delivery.
+                            {getYearsInBusiness()} years in business, focused on clear pricing and careful delivery.
                         </h2>
                         <div className="mt-2 h-px w-16 bg-[linear-gradient(90deg,#143D2E,#7B4F2C,#24426B)] sm:mt-4 sm:w-20" />
                         <p className="mt-4 text-xs leading-5 text-[#5d4a3b] sm:mt-6 sm:text-sm sm:leading-6">
