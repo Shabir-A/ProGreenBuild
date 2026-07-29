@@ -586,6 +586,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                                         value={enquiryFields.name}
                                         onChange={handleEnquiryFieldChange('name')}
                                         required
+                                        maxLength={100}
                                         className="mt-1 w-full rounded-[0.8rem] border border-[#143D2E]/20 bg-white/50 px-3 py-2 text-sm text-[#2f241b] placeholder-[#8d7b6e] backdrop-blur-sm transition focus:border-[#143D2E]/50 focus:outline-none focus:ring-2 focus:ring-[#143D2E]/20 sm:px-4 sm:py-2.5 sm:text-base"
                                     />
                                 </div>
@@ -599,6 +600,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                                         value={enquiryFields.email}
                                         onChange={handleEnquiryFieldChange('email')}
                                         required
+                                        maxLength={254}
                                         className="mt-1 w-full rounded-[0.8rem] border border-[#143D2E]/20 bg-white/50 px-3 py-2 text-sm text-[#2f241b] placeholder-[#8d7b6e] backdrop-blur-sm transition focus:border-[#143D2E]/50 focus:outline-none focus:ring-2 focus:ring-[#143D2E]/20 sm:px-4 sm:py-2.5 sm:text-base"
                                     />
                                 </div>
@@ -631,6 +633,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                                         rows={5}
                                         value={enquiryFields.message}
                                         onChange={handleEnquiryFieldChange('message')}
+                                        maxLength={2000}
                                         className="mt-1 w-full rounded-[0.8rem] border border-[#143D2E]/20 bg-white/50 px-3 py-2 text-sm text-[#2f241b] placeholder-[#8d7b6e] backdrop-blur-sm transition focus:border-[#143D2E]/50 focus:outline-none focus:ring-2 focus:ring-[#143D2E]/20 sm:px-4 sm:py-2.5 sm:text-base"
                                     />
                                 </div>
