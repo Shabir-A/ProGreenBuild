@@ -60,6 +60,11 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
     const [uploadSubmitted, setUploadSubmitted] = useState(false);
     const [logoFileSelected, setLogoFileSelected] = useState(false);
     const [stageFileSelected, setStageFileSelected] = useState({});
+    const [showUploadSuccess, setShowUploadSuccess] = useState(false);
+    const [showLogoSuccess, setShowLogoSuccess] = useState(false);
+    const [showTestimonialSuccess, setShowTestimonialSuccess] = useState(false);
+    const [showSocialMediaSuccess, setShowSocialMediaSuccess] = useState(false);
+    const [showNumberSuccess, setShowNumberSuccess] = useState(false);
     const fileInputRef = useRef(null);
     const logoInputRef = useRef(null);
     const stageInputRefs = useRef({});
@@ -72,6 +77,9 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
             if (fileInputRef.current) {
                 fileInputRef.current.value = '';
             }
+            setShowUploadSuccess(true);
+            const timer = setTimeout(() => setShowUploadSuccess(false), 5000);
+            return () => clearTimeout(timer);
         }
     }, [uploadState]);
 
@@ -81,20 +89,37 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
             if (logoInputRef.current) {
                 logoInputRef.current.value = '';
             }
+            setShowLogoSuccess(true);
+            const timer = setTimeout(() => setShowLogoSuccess(false), 5000);
+            return () => clearTimeout(timer);
         }
     }, [logoState]);
 
     useEffect(() => {
         if (testimonialState?.success) {
             setTestimonialFormKey((key) => key + 1);
+            setShowTestimonialSuccess(true);
+            const timer = setTimeout(() => setShowTestimonialSuccess(false), 5000);
+            return () => clearTimeout(timer);
         }
     }, [testimonialState]);
 
     useEffect(() => {
         if (socialMediaState?.success) {
             setSocialMediaFormKey((key) => key + 1);
+            setShowSocialMediaSuccess(true);
+            const timer = setTimeout(() => setShowSocialMediaSuccess(false), 5000);
+            return () => clearTimeout(timer);
         }
     }, [socialMediaState]);
+
+    useEffect(() => {
+        if (numberState?.success) {
+            setShowNumberSuccess(true);
+            const timer = setTimeout(() => setShowNumberSuccess(false), 5000);
+            return () => clearTimeout(timer);
+        }
+    }, [numberState]);
 
     const handleDelete = async (id, storagePath) => {
         if (!window.confirm('Remove this image?')) return;
@@ -169,61 +194,138 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
     };
 
     return (
-        <div className="min-h-screen bg-white px-4 py-10 font-sans text-black">
-            <div className="mx-auto max-w-2xl">
-                <div className="flex items-center justify-between border-b border-gray-300 pb-4 mb-8">
-                    <h1 className="text-sm font-semibold uppercase tracking-wide text-gray-600">Admin</h1>
-                    <form action={logout}>
-                        <button type="submit" className="win95-button text-sm">
-                            Log out
-                        </button>
-                    </form>
+        <div className="min-h-screen bg-gray-50 px-4 py-8 font-sans text-black">
+            <div className="mx-auto max-w-3xl">
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 px-6 py-5 mb-10">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
+                        </div>
+                        <form action={logout}>
+                            <button type="submit" className="bg-gray-200 border border-gray-400 px-3 py-2 text-sm font-mono hover:bg-gray-300 cursor-pointer rounded text-sm px-6">
+                                Log out
+                            </button>
+                        </form>
+                    </div>
                 </div>
 
+                {/* ENQUIRIES SECTION - AT TOP */}
+                <section className="mb-10 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <div className="mb-5 pb-4 border-b border-gray-100">
+                        <h2 className="text-lg font-bold text-gray-900">Enquiries</h2>
+                        <p className="text-xs text-gray-500 mt-1 uppercase tracking-wide">Manage incoming enquiries</p>
+                    </div>
+
+                    {enquiries.length === 0 ? (
+                        <p className="text-sm text-gray-500 py-4">No enquiries yet.</p>
+                    ) : (
+                        <ul className="space-y-3">
+                            {enquiries.map((item) => (
+                                <li key={item.id} className="border border-gray-200 p-4 rounded-lg bg-gray-50 hover:bg-white transition">
+                                    <div className="flex items-start justify-between gap-2 mb-2">
+                                        <div>
+                                            <p className="text-sm font-semibold text-gray-900">{item.name}</p>
+                                            <p className="text-xs text-gray-500 mt-0.5">{item.email}</p>
+                                        </div>
+                                        <p className="whitespace-nowrap text-xs text-gray-400">
+                                            {new Date(item.created_at).toLocaleDateString('en-SG', {
+                                                day: 'numeric',
+                                                month: 'short',
+                                                year: 'numeric',
+                                            })}
+                                        </p>
+                                    </div>
+                                    <p className="mb-2 text-xs text-gray-600">
+                                        <span className="font-medium">Type:</span> {ENQUIRY_TYPE_LABELS[item.enquiry_type] ?? item.enquiry_type}
+                                    </p>
+                                    {item.message && (
+                                        <p className="mb-3 text-xs text-gray-700 bg-white p-2 rounded border border-gray-100 whitespace-pre-wrap">{item.message}</p>
+                                    )}
+
+                                    {enquiryErrors[item.id] && (
+                                        <p className="mb-2 text-xs text-red-600 bg-red-50 p-2 rounded">{enquiryErrors[item.id]}</p>
+                                    )}
+
+                                    <div className="flex items-center gap-2">
+                                        <select
+                                            value={item.status}
+                                            disabled={enquiryStatusPendingId === item.id}
+                                            onChange={(e) => handleEnquiryStatusChange(item.id, e.target.value)}
+                                            className="flex-1 border border-gray-200 rounded px-2 py-1.5 text-xs focus:outline-none focus:border-gray-400"
+                                        >
+                                            {ENQUIRY_STATUS_OPTIONS.map((option) => (
+                                                <option key={option.value} value={option.value}>
+                                                    {option.label}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <button
+                                            type="button"
+                                            onClick={() => handleDeleteEnquiry(item.id)}
+                                            disabled={deletingEnquiryId === item.id}
+                                            className="bg-red-200 border border-red-400 px-3 py-2 text-sm font-mono hover:bg-red-300 cursor-pointer rounded text-red-900"
+                                        >
+                                            {deletingEnquiryId === item.id ? 'Deleting...' : 'Delete'}
+                                        </button>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                </section>
+
                 {/* LOGO SECTION */}
-                <section className="mb-12">
-                    <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-600 mb-4">Logo</h2>
-                    <form action={logoAction} className="border border-gray-300 p-4">
-                        <label className="text-sm font-medium block mb-2">
-                            Logo image (JPG or PNG, max 5MB) *
-                        </label>
-                        <div className="win95-file-input-wrapper mb-4">
-                            <input
-                                ref={logoInputRef}
-                                type="file"
-                                name="logo"
-                                accept="image/jpeg,image/png"
-                                onChange={handleLogoFileChange}
-                                id="logo-input"
-                            />
-                            <label htmlFor="logo-input" className="win95-button">
-                                Choose File
+                <section className="mb-10 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <div className="mb-5 pb-4 border-b border-gray-100">
+                        <h2 className="text-lg font-bold text-gray-900">Logo</h2>
+                        <p className="text-xs text-gray-500 mt-1 uppercase tracking-wide">Update your site logo</p>
+                    </div>
+                    <form action={logoAction} className="space-y-4">
+                        <div>
+                            <label className="text-sm font-medium text-gray-900 block mb-2">
+                                Logo image (JPG or PNG, max 5MB) *
                             </label>
-                            <span className="win95-file-text">{logoFileSelected ? 'File selected' : ''}</span>
+                            <div className="win95-file-input-wrapper">
+                                <input
+                                    ref={logoInputRef}
+                                    type="file"
+                                    name="logo"
+                                    accept="image/jpeg,image/png"
+                                    onChange={handleLogoFileChange}
+                                    id="logo-input"
+                                />
+                                <label htmlFor="logo-input" className="bg-gray-200 border border-gray-400 px-3 py-2 text-sm font-mono hover:bg-gray-300 cursor-pointer rounded">
+                                    Choose File
+                                </label>
+                                <span className="win95-file-text text-xs text-gray-500">{logoFileSelected ? 'File selected' : ''}</span>
+                            </div>
                         </div>
                         {logo && (
-                            <div className="mb-4">
-                                <p className="text-xs text-gray-600 mb-2">Current logo:</p>
+                            <div className="p-3 bg-gray-50 rounded-lg border border-gray-200">
+                                <p className="text-xs font-medium text-gray-700 mb-2">Current logo:</p>
                                 <div className="relative h-16 w-16">
                                     <Image src={logo} alt="Logo" fill className="object-contain" sizes="64px" />
                                 </div>
                             </div>
                         )}
-                        {logoState?.error && <p className="mb-4 text-sm text-red-700">{logoState.error}</p>}
-                        {logoState?.success && <p className="mb-4 text-sm text-green-700">Logo updated.</p>}
+                        {logoState?.error && <p className="text-sm text-red-600 bg-red-50 p-3 rounded-lg">{logoState.error}</p>}
+                        {showLogoSuccess && <p className="text-sm text-green-600 bg-green-50 p-3 rounded-lg">Logo updated.</p>}
                         <button
                             type="submit"
                             disabled={logoPending}
-                            className="win95-button w-full"
+                            className="bg-gray-200 border border-gray-400 px-3 py-2 text-sm font-mono hover:bg-gray-300 cursor-pointer rounded w-full mt-4"
                         >
                             {logoPending ? 'Uploading...' : 'Update logo'}
                         </button>
                     </form>
                 </section>
 
-                {/* PROCESS STAGES SECTION - 2x2 GRID */}
-                <section className="mb-12">
-                    <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-600 mb-4">Process stages</h2>
+                {/* PROCESS STAGES SECTION */}
+                <section className="mb-10 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <div className="mb-5 pb-4 border-b border-gray-100">
+                        <h2 className="text-lg font-bold text-gray-900">Process Stages</h2>
+                        <p className="text-xs text-gray-500 mt-1 uppercase tracking-wide">Update renovation process images</p>
+                    </div>
                     <div className="grid grid-cols-2 gap-4">
                         {processStages.map((stage) => (
                             <form key={stage.id} action={handleStageSubmit(stage.id)} className="border border-gray-300 p-3">
@@ -241,7 +343,7 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
                                         onChange={handleStageFileChange(stage.id)}
                                         id={`stage-input-${stage.id}`}
                                     />
-                                    <label htmlFor={`stage-input-${stage.id}`} className="win95-button text-xs">
+                                    <label htmlFor={`stage-input-${stage.id}`} className="bg-gray-200 border border-gray-400 px-3 py-2 text-sm font-mono hover:bg-gray-300 cursor-pointer rounded text-xs">
                                         File
                                     </label>
                                 </div>
@@ -262,7 +364,7 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
                                 {stageStates[stage.id]?.success && <p className="mb-2 text-xs text-green-700">✓</p>}
                                 <button
                                     type="submit"
-                                    className="win95-button w-full text-xs"
+                                    className="bg-gray-200 border border-gray-400 px-3 py-2 text-sm font-mono hover:bg-gray-300 cursor-pointer rounded w-full text-xs"
                                 >
                                     Update
                                 </button>
@@ -272,12 +374,15 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
                 </section>
 
                 {/* GALLERY SECTION */}
-                <section className="mb-12">
-                    <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-600 mb-4">Gallery images</h2>
+                <section className="mb-10 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <div className="mb-5 pb-4 border-b border-gray-100">
+                        <h2 className="text-lg font-bold text-gray-900">Gallery Images</h2>
+                        <p className="text-xs text-gray-500 mt-1 uppercase tracking-wide">Manage renovation photos</p>
+                    </div>
 
-                    <form key={uploadFormKey} action={handleUploadSubmit} className="border border-gray-300 p-4 mb-4">
-                        <div className="mb-4">
-                            <label className="text-sm font-medium">
+                    <form key={uploadFormKey} action={handleUploadSubmit} className="space-y-4 mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                        <div>
+                            <label className="text-sm font-medium text-gray-900 block mb-1">
                                 Image (JPG or PNG, max 5MB) *
                             </label>
                             <input
@@ -287,12 +392,12 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
                                 accept="image/jpeg,image/png"
                                 required
                                 onChange={handleFileChange}
-                                className="mt-2 block w-full text-sm"
+                                className="block w-full text-sm border border-gray-300 rounded px-2 py-1"
                             />
                         </div>
 
-                        <div className="mb-4">
-                            <label className="text-sm font-medium">
+                        <div>
+                            <label className="text-sm font-medium text-gray-900 block mb-1">
                                 Caption *
                             </label>
                             <input
@@ -300,29 +405,32 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
                                 name="caption"
                                 required
                                 placeholder="e.g. Living Room"
-                                className="mt-2 block w-full border border-gray-300 px-2 py-1 text-sm"
+                                className="block w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-gray-400"
                             />
                         </div>
 
                         {uploadState?.error && uploadSubmitted && fileSelected && (
-                            <p className="mb-4 text-sm text-red-700">{uploadState.error}</p>
+                            <p className="text-sm text-red-600 bg-red-50 p-2 rounded">{uploadState.error}</p>
+                        )}
+                        {showUploadSuccess && (
+                            <p className="text-sm text-green-600 bg-green-50 p-2 rounded">Image added.</p>
                         )}
 
                         <button
                             type="submit"
                             disabled={uploadPending}
-                            className="win95-button w-full"
+                            className="bg-gray-200 border border-gray-400 px-3 py-2 text-sm font-mono hover:bg-gray-300 cursor-pointer rounded w-full"
                         >
                             {uploadPending ? 'Uploading...' : 'Add image'}
                         </button>
                     </form>
 
                     {galleryItems.length === 0 ? (
-                        <p className="text-sm text-gray-500">No images yet.</p>
+                        <p className="text-sm text-gray-500 py-4">No images yet.</p>
                     ) : (
-                        <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                        <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3">
                             {galleryItems.map((item) => (
-                                <li key={item.id} className="border border-gray-300 p-2">
+                                <li key={item.id} className="border border-gray-200 rounded-lg overflow-hidden bg-white hover:shadow-sm transition">
                                     <div className="relative h-24 w-full bg-gray-100">
                                         <Image
                                             src={item.image_url}
@@ -332,15 +440,17 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
                                             sizes="200px"
                                         />
                                     </div>
-                                    <p className="mt-1 truncate text-xs text-gray-700 font-medium">{item.caption}</p>
-                                    <button
-                                        type="button"
-                                        onClick={() => handleDelete(item.id, item.storage_path)}
-                                        disabled={deletingId === item.id}
-                                        className="win95-button mt-1 w-full text-xs"
-                                    >
-                                        {deletingId === item.id ? 'Removing...' : 'Remove'}
-                                    </button>
+                                    <div className="p-2">
+                                        <p className="truncate text-xs text-gray-700 font-medium">{item.caption}</p>
+                                        <button
+                                            type="button"
+                                            onClick={() => handleDelete(item.id, item.storage_path)}
+                                            disabled={deletingId === item.id}
+                                            className="bg-red-200 border border-red-400 px-3 py-2 text-sm font-medium hover:bg-red-300 cursor-pointer rounded mt-2 w-full text-red-900"
+                                        >
+                                            {deletingId === item.id ? 'Removing...' : 'Remove'}
+                                        </button>
+                                    </div>
                                 </li>
                             ))}
                         </ul>
@@ -348,12 +458,15 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
                 </section>
 
                 {/* TESTIMONIALS SECTION */}
-                <section className="mb-12">
-                    <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-600 mb-4">Testimonials</h2>
+                <section className="mb-10 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <div className="mb-5 pb-4 border-b border-gray-100">
+                        <h2 className="text-lg font-bold text-gray-900">Testimonials</h2>
+                        <p className="text-xs text-gray-500 mt-1 uppercase tracking-wide">Add client testimonials</p>
+                    </div>
 
-                    <form key={testimonialFormKey} action={testimonialAction} className="border border-gray-300 p-4 mb-4">
-                        <div className="mb-4">
-                            <label className="text-sm font-medium">
+                    <form key={testimonialFormKey} action={testimonialAction} className="space-y-4 mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                        <div>
+                            <label className="text-sm font-medium text-gray-900 block mb-1">
                                 Client Name *
                             </label>
                             <input
@@ -361,12 +474,12 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
                                 name="name"
                                 required
                                 placeholder="e.g. Jane Tan"
-                                className="mt-2 block w-full border border-gray-300 px-2 py-1 text-sm"
+                                className="block w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-gray-400"
                             />
                         </div>
 
-                        <div className="mb-4">
-                            <label className="text-sm font-medium">
+                        <div>
+                            <label className="text-sm font-medium text-gray-900 block mb-1">
                                 Testimonial Quote *
                             </label>
                             <textarea
@@ -375,36 +488,36 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
                                 placeholder="What did the client say?"
                                 rows={3}
                                 maxLength={500}
-                                className="mt-2 block w-full border border-gray-300 px-2 py-1 text-sm"
+                                className="block w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-gray-400"
                             />
                             <p className="mt-1 text-xs text-gray-500">Max 500 characters</p>
                         </div>
 
-                        {testimonialState?.error && <p className="mb-4 text-sm text-red-700">{testimonialState.error}</p>}
-                        {testimonialState?.success && <p className="mb-4 text-sm text-green-700">Testimonial added.</p>}
+                        {testimonialState?.error && <p className="text-sm text-red-600 bg-red-50 p-2 rounded">{testimonialState.error}</p>}
+                        {showTestimonialSuccess && <p className="text-sm text-green-600 bg-green-50 p-2 rounded">Testimonial added.</p>}
 
                         <button
                             type="submit"
                             disabled={testimonialPending}
-                            className="win95-button w-full"
+                            className="bg-gray-200 border border-gray-400 px-3 py-2 text-sm font-mono hover:bg-gray-300 cursor-pointer rounded w-full"
                         >
                             {testimonialPending ? 'Adding...' : 'Add testimonial'}
                         </button>
                     </form>
 
                     {testimonials.length === 0 ? (
-                        <p className="text-sm text-gray-500">No testimonials yet. Add your first one above.</p>
+                        <p className="text-sm text-gray-500 py-4">No testimonials yet. Add your first one above.</p>
                     ) : (
-                        <div className="space-y-2">
+                        <div className="space-y-3">
                             {testimonials.map((item) => (
-                                <div key={item.id} className="border border-gray-300 p-3">
-                                    <p className="text-sm font-medium">{item.name}</p>
-                                    <p className="mt-1 text-sm text-gray-700 italic">"{item.quote}"</p>
+                                <div key={item.id} className="border border-gray-200 rounded-lg p-4 bg-white hover:shadow-sm transition">
+                                    <p className="text-sm font-semibold text-gray-900">{item.name}</p>
+                                    <p className="mt-2 text-sm text-gray-700 italic">"{item.quote}"</p>
                                     <button
                                         type="button"
                                         onClick={() => handleDeleteTestimonial(item.id)}
                                         disabled={deletingTestimonialId === item.id}
-                                        className="win95-button mt-2 text-xs"
+                                        className="bg-red-200 border border-red-400 px-3 py-2 text-sm font-medium hover:bg-red-300 cursor-pointer rounded mt-3 text-red-900"
                                     >
                                         {deletingTestimonialId === item.id ? 'Deleting...' : 'Delete'}
                                     </button>
@@ -415,12 +528,15 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
                 </section>
 
                 {/* SOCIAL MEDIA LINKS SECTION */}
-                <section className="mb-12">
-                    <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-600 mb-4">Social media links</h2>
+                <section className="mb-10 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <div className="mb-5 pb-4 border-b border-gray-100">
+                        <h2 className="text-lg font-bold text-gray-900">Social Media Links</h2>
+                        <p className="text-xs text-gray-500 mt-1 uppercase tracking-wide">Add social media platforms</p>
+                    </div>
 
-                    <form key={socialMediaFormKey} action={socialMediaAction} className="border border-gray-300 p-4 mb-4">
-                        <div className="mb-4">
-                            <label className="text-sm font-medium">
+                    <form key={socialMediaFormKey} action={socialMediaAction} className="space-y-4 mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                        <div>
+                            <label className="text-sm font-medium text-gray-900 block mb-1">
                                 Platform name *
                             </label>
                             <input
@@ -428,12 +544,12 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
                                 name="title"
                                 required
                                 placeholder="e.g. Facebook, LinkedIn, Instagram"
-                                className="mt-2 block w-full border border-gray-300 px-2 py-1 text-sm"
+                                className="block w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-gray-400"
                             />
                         </div>
 
-                        <div className="mb-4">
-                            <label className="text-sm font-medium">
+                        <div>
+                            <label className="text-sm font-medium text-gray-900 block mb-1">
                                 URL *
                             </label>
                             <input
@@ -441,35 +557,35 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
                                 name="url"
                                 required
                                 placeholder="https://facebook.com/yourpage"
-                                className="mt-2 block w-full border border-gray-300 px-2 py-1 text-sm"
+                                className="block w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-gray-400"
                             />
                         </div>
 
-                        {socialMediaState?.error && <p className="mb-4 text-sm text-red-700">{socialMediaState.error}</p>}
-                        {socialMediaState?.success && <p className="mb-4 text-sm text-green-700">Social media link added.</p>}
+                        {socialMediaState?.error && <p className="text-sm text-red-600 bg-red-50 p-2 rounded">{socialMediaState.error}</p>}
+                        {showSocialMediaSuccess && <p className="text-sm text-green-600 bg-green-50 p-2 rounded">Social media link added.</p>}
 
                         <button
                             type="submit"
                             disabled={socialMediaPending}
-                            className="win95-button w-full"
+                            className="bg-gray-200 border border-gray-400 px-3 py-2 text-sm font-mono hover:bg-gray-300 cursor-pointer rounded w-full"
                         >
                             {socialMediaPending ? 'Adding...' : 'Add link'}
                         </button>
                     </form>
 
                     {socialMediaLinks.length === 0 ? (
-                        <p className="text-sm text-gray-500">No social media links yet. Add your first one above.</p>
+                        <p className="text-sm text-gray-500 py-4">No social media links yet. Add your first one above.</p>
                     ) : (
-                        <div className="space-y-2">
+                        <div className="space-y-3">
                             {socialMediaLinks.map((item) => (
-                                <div key={item.id} className="border border-gray-300 p-3">
-                                    <p className="text-sm font-medium">{item.title}</p>
-                                    <p className="mt-1 text-xs text-gray-600 truncate">{item.url}</p>
+                                <div key={item.id} className="border border-gray-200 rounded-lg p-4 bg-white hover:shadow-sm transition">
+                                    <p className="text-sm font-semibold text-gray-900">{item.title}</p>
+                                    <p className="mt-2 text-xs text-gray-600 truncate hover:text-clip">{item.url}</p>
                                     <button
                                         type="button"
                                         onClick={() => handleDeleteSocialMediaLink(item.id)}
                                         disabled={deletingSocialMediaId === item.id}
-                                        className="win95-button mt-2 text-xs"
+                                        className="bg-red-200 border border-red-400 px-3 py-2 text-sm font-medium hover:bg-red-300 cursor-pointer rounded mt-3 text-red-900"
                                     >
                                         {deletingSocialMediaId === item.id ? 'Deleting...' : 'Delete'}
                                     </button>
@@ -480,89 +596,34 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
                 </section>
 
                 {/* WHATSAPP / PHONE NUMBER SECTION */}
-                <section className="mb-12">
-                    <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-600 mb-4">WhatsApp / phone number</h2>
-                    <form action={numberAction} className="border border-gray-300 p-4">
-                        <label className="text-sm font-medium">
-                            Number with country code, digits only (e.g 6591118111)
-                        </label>
-                        <input
-                            type="text"
-                            name="whatsapp_number"
-                            defaultValue={whatsappNumber}
-                            placeholder="6591118111"
-                            className="mt-2 mb-4 block w-full border border-gray-300 px-2 py-1 text-sm"
-                        />
-                        {numberState?.error && <p className="mb-4 text-sm text-red-700">{numberState.error}</p>}
-                        {numberState?.success && <p className="mb-4 text-sm text-green-700">Saved.</p>}
+                <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <div className="mb-5 pb-4 border-b border-gray-100">
+                        <h2 className="text-lg font-bold text-gray-900">Contact Number</h2>
+                        <p className="text-xs text-gray-500 mt-1 uppercase tracking-wide">WhatsApp & phone number</p>
+                    </div>
+                    <form action={numberAction} className="space-y-4">
+                        <div>
+                            <label className="text-sm font-medium text-gray-900 block mb-1">
+                                Number with country code, digits only (e.g 6591118111)
+                            </label>
+                            <input
+                                type="text"
+                                name="whatsapp_number"
+                                defaultValue={whatsappNumber}
+                                placeholder="6591118111"
+                                className="block w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-gray-400"
+                            />
+                        </div>
+                        {numberState?.error && <p className="text-sm text-red-600 bg-red-50 p-2 rounded">{numberState.error}</p>}
+                        {showNumberSuccess && <p className="text-sm text-green-600 bg-green-50 p-2 rounded">Saved.</p>}
                         <button
                             type="submit"
                             disabled={numberPending}
-                            className="win95-button w-full"
+                            className="bg-gray-200 border border-gray-400 px-3 py-2 text-sm font-mono hover:bg-gray-300 cursor-pointer rounded w-full mt-2"
                         >
                             {numberPending ? 'Saving...' : 'Save number'}
                         </button>
                     </form>
-                </section>
-
-                {/* ENQUIRIES SECTION */}
-                <section className="mb-12">
-                    <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-600 mb-4">Enquiries</h2>
-
-                    {enquiries.length === 0 ? (
-                        <p className="text-sm text-gray-500">No enquiries yet.</p>
-                    ) : (
-                        <ul className="space-y-3">
-                            {enquiries.map((item) => (
-                                <li key={item.id} className="border border-gray-300 p-3">
-                                    <div className="flex items-start justify-between gap-2 mb-1">
-                                        <p className="text-sm font-medium">{item.name}</p>
-                                        <p className="whitespace-nowrap text-xs text-gray-500">
-                                            {new Date(item.created_at).toLocaleDateString('en-SG', {
-                                                day: 'numeric',
-                                                month: 'short',
-                                                year: 'numeric',
-                                            })}
-                                        </p>
-                                    </div>
-                                    <p className="text-xs text-gray-600">{item.email}</p>
-                                    <p className="mb-2 text-xs text-gray-600">
-                                        {ENQUIRY_TYPE_LABELS[item.enquiry_type] ?? item.enquiry_type}
-                                    </p>
-                                    {item.message && (
-                                        <p className="mb-2 whitespace-pre-wrap text-xs text-gray-700">{item.message}</p>
-                                    )}
-
-                                    {enquiryErrors[item.id] && (
-                                        <p className="mb-2 text-xs text-red-700">{enquiryErrors[item.id]}</p>
-                                    )}
-
-                                    <div className="flex items-center gap-2">
-                                        <select
-                                            value={item.status}
-                                            disabled={enquiryStatusPendingId === item.id}
-                                            onChange={(e) => handleEnquiryStatusChange(item.id, e.target.value)}
-                                            className="flex-1 border border-gray-300 px-2 py-1 text-xs"
-                                        >
-                                            {ENQUIRY_STATUS_OPTIONS.map((option) => (
-                                                <option key={option.value} value={option.value}>
-                                                    {option.label}
-                                                </option>
-                                            ))}
-                                        </select>
-                                        <button
-                                            type="button"
-                                            onClick={() => handleDeleteEnquiry(item.id)}
-                                            disabled={deletingEnquiryId === item.id}
-                                            className="win95-button text-xs"
-                                        >
-                                            {deletingEnquiryId === item.id ? 'Deleting...' : 'Delete'}
-                                        </button>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
-                    )}
                 </section>
             </div>
         </div>
