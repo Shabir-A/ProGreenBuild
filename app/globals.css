@@ -89,8 +89,8 @@ html {
 body {
   margin: 0;
   background:
-    radial-gradient(circle at top left, rgba(20, 61, 46, 0.28), transparent 26%),
-    radial-gradient(circle at 82% 14%, rgba(36, 66, 107, 0.16), transparent 26%),
+    radial-gradient(circle at top left, rgba(18, 105, 72, 0.4), transparent 28%),
+    radial-gradient(circle at 82% 14%, rgba(33, 90, 158, 0.3), transparent 28%),
     radial-gradient(circle at 20% 30%, rgba(123, 79, 44, 0.08), transparent 20%),
     radial-gradient(circle at 50% 100%, rgba(255, 253, 248, 0.96), transparent 34%),
     linear-gradient(180deg, #fffdf8 0%, #f7f4ee 26%, #f2f3ef 54%, #ece5d6 100%);
