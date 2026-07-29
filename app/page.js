@@ -1,8 +1,8 @@
-import { createClient } from '../utils/supabase/server';
+import { createClient } from '../utils/supabase/public';
 import HomeClient from './HomeClient';
 
 export default async function Page() {
-    const supabase = await createClient();
+    const supabase = createClient();
 
     const [{ data: galleryRows }, { data: settingsRow }, { data: processStagesData }, { data: testimonialRows }, { data: socialMediaRows }] = await Promise.all([
         supabase.from('gallery_items').select('image_url, caption').order('created_at', { ascending: true }),
