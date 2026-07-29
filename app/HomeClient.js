@@ -208,10 +208,10 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                                 </div>
                             )}
                         </div>
-                        <a href="#contact" className="glass-button glass-button--chip glass-button--primary px-2.5 py-1.5 text-[0.7rem] sm:px-4 sm:py-2.5 sm:text-sm">Get in touch</a>
+                        <a href="#contact" className="glass-button glass-button--chip glass-button--primary px-2.5 py-1.5 text-[0.7rem] sm:px-4 sm:py-2.5 sm:text-sm border-[#6f8456] hover:bg-[#6f8456]/10">Get in touch</a>
                     </header>
 
-                    <div className="items-center py-3 sm:py-5 lg:py-6">
+                    <div className="flex flex-col items-center gap-6 py-3 sm:flex-row sm:items-start sm:justify-between sm:py-5 lg:py-6">
                         <div className="max-w-2xl">
                             <p className="mb-2 text-[0.7rem] font-medium uppercase tracking-[0.28em] text-[#6f8456] sm:mb-4 sm:text-xs sm:tracking-[0.32em]">
                                 Singapore Renovations
@@ -225,6 +225,82 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                                 Quality Workmanship. Honest Pricing.
                             </p>
                         </div>
+
+                        {/* Trust Badges */}
+                        <div className="hidden sm:flex sm:flex-col sm:gap-4 lg:gap-5">
+                            <div className="rounded-lg border border-[#6f8456]/30 bg-[linear-gradient(135deg,rgba(111,132,86,0.08),rgba(111,132,86,0.04))] p-5 backdrop-blur-sm lg:p-6">
+                                <div className="flex items-center gap-3 mb-4 lg:mb-5">
+                                    <div className="rounded-lg border-2 border-[#6f8456]/40 bg-white/50 p-2 lg:p-2.5">
+                                        <div className="relative h-8 w-14 lg:h-10 lg:w-16">
+                                            <Image
+                                                src="/images/hdb-logo.png"
+                                                alt="HDB Logo"
+                                                fill
+                                                className="object-contain"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="rounded-lg border-2 border-[#6f8456]/40 bg-white/50 p-2 lg:p-2.5">
+                                        <div className="relative h-8 w-14 lg:h-10 lg:w-16">
+                                            <Image
+                                                src="/images/bca-logo.jpg"
+                                                alt="BCA Logo"
+                                                fill
+                                                className="object-contain"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#6f8456] mb-3 lg:text-sm lg:mb-4">Certified & Established</p>
+                                <div className="space-y-2.5 lg:space-y-3">
+                                    <div className="flex items-start gap-2.5">
+                                        <svg className="h-5 w-5 text-[#6f8456] shrink-0 mt-0.5 lg:h-6 lg:w-6" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                        </svg>
+                                        <div>
+                                            <p className="text-xs font-semibold text-[#6f8456] lg:text-sm">HDB Licensed</p>
+                                            <p className="text-[0.7rem] text-[#2f241b] mt-0.5 lg:text-xs">HB-05-6344F</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-start gap-2.5">
+                                        <svg className="h-5 w-5 text-[#6f8456] shrink-0 mt-0.5 lg:h-6 lg:w-6" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                        </svg>
+                                        <div>
+                                            <p className="text-xs font-semibold text-[#6f8456] lg:text-sm">BCA General Builder</p>
+                                            <p className="text-[0.7rem] text-[#2f241b] mt-0.5 lg:text-xs">GB2 Class 2</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-start gap-2.5">
+                                        <svg className="h-5 w-5 text-[#6f8456] shrink-0 mt-0.5 lg:h-6 lg:w-6" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                        </svg>
+                                        <div>
+                                            <p className="text-xs font-semibold text-[#6f8456] lg:text-sm">BCA General Building</p>
+                                            <p className="text-[0.7rem] text-[#2f241b] mt-0.5 lg:text-xs">CW01 (C3)</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-start gap-2.5">
+                                        <svg className="h-5 w-5 text-[#6f8456] shrink-0 mt-0.5 lg:h-6 lg:w-6" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                        </svg>
+                                        <div>
+                                            <p className="text-xs font-semibold text-[#6f8456] lg:text-sm">BCA Landscaping Specialist</p>
+                                            <p className="text-[0.7rem] text-[#2f241b] mt-0.5 lg:text-xs">FM03 (L1)</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-start gap-2.5">
+                                        <svg className="h-5 w-5 text-[#6f8456] shrink-0 mt-0.5 lg:h-6 lg:w-6" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                        </svg>
+                                        <div>
+                                            <p className="text-xs font-semibold text-[#6f8456] lg:text-sm">10+ Years in Business</p>
+                                            <p className="text-[0.7rem] text-[#2f241b] mt-0.5 lg:text-xs">Founded August 2016</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -237,7 +313,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                         <h2 className="mt-1.5 text-xl font-semibold tracking-[-0.03em] text-[#2c2118] sm:mt-3 sm:text-4xl sm:tracking-[-0.05em] lg:text-4xl">
                             From plan to handover, seen step by step.
                         </h2>
-                        <div className="mt-2 h-px w-20 bg-[linear-gradient(90deg,#6f8456,#c4a26a,#7b5232)] sm:mt-4 sm:w-28" />
+                        <div className="mt-2 h-1 w-20 bg-[linear-gradient(90deg,#6f8456,#1b7a7a,#6f8456)] rounded-full sm:mt-4 sm:w-28" />
                     </div>
                 </div>
 
@@ -307,7 +383,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                         <h2 className="mt-1.5 text-xl font-semibold tracking-[-0.03em] text-[#2c2118] sm:mt-3 sm:text-4xl sm:tracking-[-0.05em] lg:text-4xl">
                             A seamless view of the finished spaces.
                         </h2>
-                        <div className="mt-2 h-px w-20 bg-[linear-gradient(90deg,#6f8456,#c4a26a,#7b5232)] sm:mt-4 sm:w-28" />
+                        <div className="mt-2 h-1 w-20 bg-[linear-gradient(90deg,#6f8456,#1b7a7a,#6f8456)] rounded-full sm:mt-4 sm:w-28" />
                     </div>
                 </div>
 
@@ -436,7 +512,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                             <h2 className="mt-1.5 text-xl font-semibold tracking-[-0.03em] text-[#2d2118] sm:mt-3 sm:text-4xl sm:tracking-[-0.05em] lg:text-4xl">
                                 Ready when you are.
                             </h2>
-                            <div className="mt-2 h-px w-20 bg-[linear-gradient(90deg,#6f8456,#c4a26a,#7b5232)] sm:mt-4 sm:w-28" />
+                            <div className="mt-2 h-1 w-20 bg-[linear-gradient(90deg,#6f8456,#1b7a7a,#6f8456)] rounded-full sm:mt-4 sm:w-28" />
                         </div>
 
                         {/* Contact options and social media - side by side */}
@@ -617,36 +693,36 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
             )}
 
             {/* Footer - Legal Info */}
-            <footer className="border-t border-gray-200 bg-gray-50 px-3 py-8 sm:px-6 lg:px-8">
+            <footer className="border-t-2 border-[#6f8456]/30 bg-gradient-to-br from-gray-50 to-[#f0f8f4] px-3 py-8 sm:px-6 lg:px-8">
                 <div className="mx-auto max-w-7xl">
                     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
                         {/* Company Info */}
                         <div>
-                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-600">Company</p>
+                            <p className="text-xs font-semibold uppercase tracking-wide text-[#6f8456]">Company</p>
                             <div className="mt-3 space-y-1 text-xs text-gray-600">
-                                <p className="font-medium text-gray-900">PROGREENBUILD PTE. LTD.</p>
-                                <p>UEN: 202120698M</p>
+                                <p className="font-medium text-[#1b4d3e] border-l-3 border-[#6f8456] pl-2">PROGREENBUILD PTE. LTD.</p>
+                                <p>UEN: 201622535Z</p>
                                 <p>Singapore</p>
                             </div>
                         </div>
 
                         {/* Legal Links */}
                         <div>
-                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-600">Legal</p>
+                            <p className="text-xs font-semibold uppercase tracking-wide text-[#6f8456]">Legal</p>
                             <div className="mt-3 space-y-2">
-                                <a href="/privacy" className="text-xs text-gray-600 hover:text-gray-900">Privacy Policy</a>
+                                <a href="/privacy" className="text-xs text-gray-600 hover:text-[#6f8456] transition-colors">Privacy Policy</a>
                                 <br />
-                                <a href="/terms" className="text-xs text-gray-600 hover:text-gray-900">Terms & Conditions</a>
+                                <a href="/terms" className="text-xs text-gray-600 hover:text-[#6f8456] transition-colors">Terms & Conditions</a>
                             </div>
                         </div>
 
                         {/* Contact */}
                         <div>
-                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-600">Contact</p>
+                            <p className="text-xs font-semibold uppercase tracking-wide text-[#6f8456]">Contact</p>
                             <div className="mt-3 text-xs text-gray-600">
                                 <p>
-                                    <a href="mailto:contact@progreenbuild.com" className="hover:text-gray-900">
-                                        contact@progreenbuild.com
+                                    <a href="mailto:progreenbuild@gmail.com" className="hover:text-gray-900">
+                                        progreenbuild@gmail.com
                                     </a>
                                 </p>
                             </div>

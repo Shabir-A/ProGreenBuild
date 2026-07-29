@@ -80,8 +80,8 @@ export default function Terms() {
                         <p>If you have any questions about these Terms and Conditions, please contact us:</p>
                         <div className="mt-3 space-y-1 text-sm">
                             <p><span className="font-semibold">PROGREENBUILD PTE. LTD.</span></p>
-                            <p>UEN: 202120698M</p>
-                            <p>Email: <a href="mailto:contact@progreenbuild.com" className="text-[#6f8456] hover:underline">contact@progreenbuild.com</a></p>
+                            <p>UEN: 201622535Z</p>
+                            <p>Email: <a href="mailto:progreenbuild@gmail.com" className="text-[#6f8456] hover:underline">progreenbuild@gmail.com</a></p>
                         </div>
                     </section>
 
