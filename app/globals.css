@@ -215,6 +215,7 @@ body {
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
   cursor: grab;
+  user-select: none;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }

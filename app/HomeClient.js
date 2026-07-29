@@ -88,9 +88,14 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
         const el = marqueeRef.current;
         if (!el || !hasGalleryItems) return undefined;
 
+        // The animation drives a float offset of its own: reading scrollLeft back
+        // each frame loses sub-pixel steps, which stalls the marquee entirely.
+        let offset = 0;
+
         const measure = () => {
             marqueeSetWidthRef.current = el.scrollWidth / 3;
-            el.scrollLeft = marqueeSetWidthRef.current;
+            offset = marqueeSetWidthRef.current;
+            el.scrollLeft = offset;
         };
         measure();
 
@@ -103,11 +108,14 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
 
         function step(time) {
             if (lastTime === null) lastTime = time;
-            const delta = time - lastTime;
+            const delta = Math.min(time - lastTime, 100);
             lastTime = time;
 
-            if (!marqueePausedRef.current && marqueeSetWidthRef.current > 0) {
-                el.scrollLeft += SPEED_PX_PER_MS * delta;
+            const setWidth = marqueeSetWidthRef.current;
+            if (!marqueePausedRef.current && setWidth > 0) {
+                offset += SPEED_PX_PER_MS * delta;
+                if (offset > setWidth * 2) offset -= setWidth;
+                el.scrollLeft = offset;
             }
             frameId = window.requestAnimationFrame(step);
         }
@@ -115,18 +123,53 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
         const handleScroll = () => {
             const setWidth = marqueeSetWidthRef.current;
             if (!setWidth) return;
-            if (el.scrollLeft < setWidth * 0.5) {
-                el.scrollLeft += setWidth;
-            } else if (el.scrollLeft > setWidth * 1.5) {
-                el.scrollLeft -= setWidth;
+            // Only adopt positions the user scrolled to, not our own writes.
+            if (Math.abs(el.scrollLeft - offset) > 2) offset = el.scrollLeft;
+            if (offset < setWidth * 0.5) {
+                offset += setWidth;
+                el.scrollLeft = offset;
+            } else if (offset > setWidth * 1.5) {
+                offset -= setWidth;
+                el.scrollLeft = offset;
             }
         };
         el.addEventListener('scroll', handleScroll, { passive: true });
+
+        // Touch devices drag the strip natively; a mouse needs to be wired up.
+        let dragStartX = null;
+        let dragStartScroll = 0;
+
+        const handlePointerDown = (event) => {
+            if (event.pointerType !== 'mouse') return;
+            dragStartX = event.clientX;
+            dragStartScroll = el.scrollLeft;
+            el.setPointerCapture(event.pointerId);
+        };
+
+        const handlePointerMove = (event) => {
+            if (dragStartX === null) return;
+            event.preventDefault();
+            offset = dragStartScroll - (event.clientX - dragStartX);
+            el.scrollLeft = offset;
+        };
+
+        const endDrag = () => {
+            dragStartX = null;
+        };
+
+        el.addEventListener('pointerdown', handlePointerDown);
+        el.addEventListener('pointermove', handlePointerMove);
+        el.addEventListener('pointerup', endDrag);
+        el.addEventListener('pointercancel', endDrag);
 
         return () => {
             window.cancelAnimationFrame(frameId);
             window.removeEventListener('resize', handleResize);
             el.removeEventListener('scroll', handleScroll);
+            el.removeEventListener('pointerdown', handlePointerDown);
+            el.removeEventListener('pointermove', handlePointerMove);
+            el.removeEventListener('pointerup', endDrag);
+            el.removeEventListener('pointercancel', endDrag);
         };
     }, [hasGalleryItems, marqueeRepeats]);
 
@@ -136,6 +179,16 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
     const resumeMarquee = () => {
         marqueePausedRef.current = false;
     };
+
+    // A pointer released outside the strip would otherwise pause the marquee forever.
+    useEffect(() => {
+        window.addEventListener('pointerup', resumeMarquee);
+        window.addEventListener('touchend', resumeMarquee);
+        return () => {
+            window.removeEventListener('pointerup', resumeMarquee);
+            window.removeEventListener('touchend', resumeMarquee);
+        };
+    }, []);
 
     useEffect(() => {
         const timer = window.setTimeout(() => {
@@ -390,12 +443,12 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                     <div
                         ref={marqueeRef}
                         className="marquee-strip rounded-[1rem] border border-[#143D2E]/20 bg-[linear-gradient(180deg,rgba(245,240,230,0.38),rgba(214,222,214,0.48),rgba(222,227,233,0.3))] shadow-[0_30px_100px_-60px_rgba(54,39,23,0.9)] backdrop-blur-2xl sm:rounded-[2.1rem]"
-                        onMouseEnter={pauseMarquee}
-                        onMouseLeave={resumeMarquee}
                         onTouchStart={pauseMarquee}
                         onTouchEnd={resumeMarquee}
+                        onTouchCancel={resumeMarquee}
                         onPointerDown={pauseMarquee}
                         onPointerUp={resumeMarquee}
+                        onPointerCancel={resumeMarquee}
                     >
                         <div className="marquee-track py-2 sm:py-4">
                             {Array.from({ length: marqueeRepeats * 3 }, () => galleryItems).flat().map((item, index) => (
