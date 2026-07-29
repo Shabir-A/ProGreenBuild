@@ -187,7 +187,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
         <main className="overflow-hidden text-[#2f241b]">
             {/* HERO */}
             <section className="relative isolate">
-                <div className="absolute inset-x-0 top-0 -z-10 h-[38rem] bg-[radial-gradient(circle_at_top_left,_rgba(111,132,86,0.5),_rgba(111,132,86,0)_38%),radial-gradient(circle_at_70%_20%,_rgba(111,132,86,0.18),_rgba(111,132,86,0)_24%),radial-gradient(circle_at_85%_10%,_rgba(123,82,50,0.28),_rgba(123,82,50,0)_26%),linear-gradient(180deg,rgba(255,253,248,0.94),rgba(255,253,248,0))]" />
+                <div className="absolute inset-x-0 top-0 -z-10 h-[38rem] bg-[radial-gradient(circle_at_top_left,_rgba(111,132,86,0.48),_rgba(111,132,86,0)_42%),radial-gradient(circle_at_90%_12%,_rgba(30,94,140,0.46),_rgba(30,94,140,0)_36%),radial-gradient(circle_at_18%_35%,_rgba(201,162,78,0.14),_rgba(201,162,78,0)_22%),linear-gradient(180deg,rgba(255,253,248,0.94),rgba(255,253,248,0))]" />
                 <div className="mx-auto flex max-w-7xl flex-col px-3 pb-4 pt-4 sm:px-6 sm:pb-8 sm:pt-6 lg:px-8 lg:pb-10 lg:pt-8">
                     <header className="flex items-center justify-between gap-2 sm:gap-4">
                         <div className="flex items-center gap-2 sm:gap-3">
@@ -203,12 +203,12 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                                     />
                                 </div>
                             ) : (
-                                <div className="flex h-20 w-20 sm:h-28 sm:w-28 items-center justify-center rounded-full border border-white/70 bg-[linear-gradient(180deg,rgba(111,132,86,0.98),rgba(196,162,106,0.92),rgba(123,82,50,0.92))] shadow-[0_20px_60px_-30px_rgba(83,58,34,0.72)] backdrop-blur-xl">
+                                <div className="flex h-20 w-20 sm:h-28 sm:w-28 items-center justify-center rounded-full border border-white/70 bg-[linear-gradient(140deg,rgba(111,132,86,0.98),rgba(201,162,78,0.9),rgba(30,94,140,0.95))] shadow-[0_20px_60px_-30px_rgba(23,65,95,0.7)] backdrop-blur-xl">
                                     <span className="text-base font-semibold tracking-[0.3em] text-[#f7f1e6] sm:text-2xl">PGB</span>
                                 </div>
                             )}
                         </div>
-                        <a href="#contact" className="glass-button glass-button--chip glass-button--primary px-2.5 py-1.5 text-[0.7rem] sm:px-4 sm:py-2.5 sm:text-sm border-[#6f8456] hover:bg-[#6f8456]/10">Get in touch</a>
+                        <a href="#contact" className="glass-button glass-button--chip glass-button--primary px-2.5 py-1.5 text-[0.7rem] sm:px-4 sm:py-2.5 sm:text-sm">Get in touch</a>
                     </header>
 
                     <div className="flex flex-col items-center gap-6 py-3 sm:flex-row sm:items-start sm:justify-between sm:py-5 lg:py-6">
@@ -222,15 +222,16 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                             </h1>
 
                             <p className="mt-2 text-lg font-medium text-[#6f8456] sm:mt-4 sm:text-2xl">
-                                Quality Workmanship. Honest Pricing.
+                                Quality Renovations Without The Premium Price Tag.
                             </p>
                         </div>
 
                         {/* Trust Badges */}
-                        <div className="w-full sm:w-auto flex flex-col sm:flex-col gap-4 sm:gap-4 lg:gap-5">
-                            <div className="rounded-lg border border-[#6f8456]/30 bg-[linear-gradient(135deg,rgba(111,132,86,0.08),rgba(111,132,86,0.04))] p-5 backdrop-blur-sm lg:p-6 w-full">
+                        <div className="relative w-full sm:w-[24rem] lg:w-[27rem] flex flex-col gap-4 sm:gap-4 lg:gap-5">
+                            <div className="absolute -inset-4 -z-10 rounded-[1.5rem] bg-[radial-gradient(circle_at_top_right,_rgba(30,94,140,0.16),_rgba(30,94,140,0)_70%)]" />
+                            <div className="rounded-lg border border-[#6f8456]/30 bg-[linear-gradient(135deg,rgba(111,132,86,0.08),rgba(111,132,86,0.04))] p-5 backdrop-blur-sm lg:p-7 w-full">
                                 <div className="flex items-center gap-3 mb-4 lg:mb-5">
-                                    <div className="rounded-full border-2 border-[#6f8456]/40 bg-white/50 p-2 lg:p-2.5 flex items-center justify-center h-12 w-12 lg:h-14 lg:w-14">
+                                    <div className="rounded-full border-2 border-[#6f8456]/45 bg-white/50 p-2 lg:p-2.5 flex items-center justify-center h-12 w-12 lg:h-14 lg:w-14">
                                         <div className="relative h-8 w-8 lg:h-10 lg:w-10">
                                             <Image
                                                 src="/images/hdb-logo.png"
@@ -240,7 +241,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                                             />
                                         </div>
                                     </div>
-                                    <div className="rounded-full border-2 border-[#6f8456]/40 bg-white/50 p-2 lg:p-2.5 flex items-center justify-center h-12 w-12 lg:h-14 lg:w-14">
+                                    <div className="rounded-full border-2 border-[#1e5e8c]/45 bg-white/50 p-2 lg:p-2.5 flex items-center justify-center h-12 w-12 lg:h-14 lg:w-14">
                                         <div className="relative h-8 w-8 lg:h-10 lg:w-10">
                                             <Image
                                                 src="/images/bca-logo.jpg"
@@ -252,52 +253,27 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                                     </div>
                                 </div>
                                 <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#6f8456] mb-3 lg:text-sm lg:mb-4">Certified & Established</p>
-                                <div className="space-y-2.5 lg:space-y-3">
-                                    <div className="flex items-start gap-2.5">
-                                        <svg className="h-5 w-5 text-[#6f8456] shrink-0 mt-0.5 lg:h-6 lg:w-6" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                                        </svg>
-                                        <div>
-                                            <p className="text-xs font-semibold text-[#6f8456] lg:text-sm">HDB Licensed</p>
-                                            <p className="text-[0.7rem] text-[#2f241b] mt-0.5 lg:text-xs">HB-05-6344F</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start gap-2.5">
-                                        <svg className="h-5 w-5 text-[#6f8456] shrink-0 mt-0.5 lg:h-6 lg:w-6" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                                        </svg>
-                                        <div>
-                                            <p className="text-xs font-semibold text-[#6f8456] lg:text-sm">BCA General Builder</p>
-                                            <p className="text-[0.7rem] text-[#2f241b] mt-0.5 lg:text-xs">GB2 Class 2</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start gap-2.5">
-                                        <svg className="h-5 w-5 text-[#6f8456] shrink-0 mt-0.5 lg:h-6 lg:w-6" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                                        </svg>
-                                        <div>
-                                            <p className="text-xs font-semibold text-[#6f8456] lg:text-sm">BCA General Building</p>
-                                            <p className="text-[0.7rem] text-[#2f241b] mt-0.5 lg:text-xs">CW01 (C3)</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start gap-2.5">
-                                        <svg className="h-5 w-5 text-[#6f8456] shrink-0 mt-0.5 lg:h-6 lg:w-6" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                                        </svg>
-                                        <div>
-                                            <p className="text-xs font-semibold text-[#6f8456] lg:text-sm">BCA Landscaping Specialist</p>
-                                            <p className="text-[0.7rem] text-[#2f241b] mt-0.5 lg:text-xs">FM03 (L1)</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start gap-2.5">
-                                        <svg className="h-5 w-5 text-[#6f8456] shrink-0 mt-0.5 lg:h-6 lg:w-6" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                                        </svg>
-                                        <div>
-                                            <p className="text-xs font-semibold text-[#6f8456] lg:text-sm">10+ Years in Business</p>
-                                            <p className="text-[0.7rem] text-[#2f241b] mt-0.5 lg:text-xs">Founded August 2016</p>
-                                        </div>
-                                    </div>
+                                <div className="space-y-2.5 lg:space-y-3.5">
+                                    {[
+                                        { title: 'HDB Licensed', detail: 'HB-05-6344F' },
+                                        { title: 'BCA General Builder', detail: 'GB2 Class 2' },
+                                        { title: 'BCA General Building', detail: 'CW01 (C3)' },
+                                        { title: 'BCA Landscaping Specialist', detail: 'FM03 (L1)' },
+                                        { title: '10+ Years in Business', detail: 'Founded August 2016' },
+                                    ].map((item, index) => {
+                                        const accent = index % 2 === 0 ? '#6f8456' : '#1e5e8c';
+                                        return (
+                                            <div key={item.title} className="flex items-start gap-2.5">
+                                                <svg className="h-5 w-5 shrink-0 mt-0.5 lg:h-6 lg:w-6" style={{ color: accent }} fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                                </svg>
+                                                <div>
+                                                    <p className="text-xs font-semibold lg:text-sm" style={{ color: accent }}>{item.title}</p>
+                                                    <p className="text-[0.7rem] text-[#2f241b] mt-0.5 lg:text-xs">{item.detail}</p>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
                                 </div>
                             </div>
                         </div>
@@ -313,7 +289,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                         <h2 className="mt-1.5 text-xl font-semibold tracking-[-0.03em] text-[#2c2118] sm:mt-3 sm:text-4xl sm:tracking-[-0.05em] lg:text-4xl">
                             From plan to handover, seen step by step.
                         </h2>
-                        <div className="mt-2 h-1 w-20 bg-[linear-gradient(90deg,#6f8456,#1b7a7a,#6f8456)] rounded-full sm:mt-4 sm:w-28" />
+                        <div className="mt-2 h-1 w-20 bg-[linear-gradient(90deg,#6f8456,#1e5e8c,#6f8456)] rounded-full sm:mt-4 sm:w-28" />
                     </div>
                 </div>
 
@@ -350,7 +326,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                                 <div className="mt-2 h-1 overflow-hidden rounded-full bg-white/30 sm:mt-3 sm:h-1.5">
                                     <div
                                         key={processTick}
-                                        className="process-progress h-full rounded-full bg-[linear-gradient(90deg,rgba(111,132,86,0.98),rgba(139,171,99,0.96),rgba(196,162,106,0.94))]"
+                                        className="process-progress h-full rounded-full bg-[linear-gradient(90deg,rgba(111,132,86,0.98),rgba(139,171,99,0.9),rgba(30,94,140,0.94))]"
                                     />
                                 </div>
                             </div>
@@ -383,7 +359,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                         <h2 className="mt-1.5 text-xl font-semibold tracking-[-0.03em] text-[#2c2118] sm:mt-3 sm:text-4xl sm:tracking-[-0.05em] lg:text-4xl">
                             A seamless view of the finished spaces.
                         </h2>
-                        <div className="mt-2 h-1 w-20 bg-[linear-gradient(90deg,#6f8456,#1b7a7a,#6f8456)] rounded-full sm:mt-4 sm:w-28" />
+                        <div className="mt-2 h-1 w-20 bg-[linear-gradient(90deg,#6f8456,#1e5e8c,#6f8456)] rounded-full sm:mt-4 sm:w-28" />
                     </div>
                 </div>
 
@@ -412,9 +388,9 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                                         sizes="(max-width: 640px) 13rem, (max-width: 1024px) 18.5rem, 20.5rem"
                                     />
                                     <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(32,21,12,0.02)_40%,rgba(32,21,12,0.5)_100%)]" />
-                                    <div className="absolute inset-x-2 bottom-2 rounded-[0.6rem] border border-white/25 bg-[linear-gradient(180deg,rgba(123,82,50,0.54),rgba(111,132,86,0.32))] px-2 py-1 text-white backdrop-blur-xl sm:inset-x-3 sm:bottom-3 sm:rounded-[1rem] sm:px-3 sm:py-2">
+                                    <div className="absolute inset-x-2 bottom-2 rounded-[0.6rem] border border-white/25 bg-[linear-gradient(180deg,rgba(23,65,95,0.58),rgba(111,132,86,0.34))] px-2 py-1 text-white backdrop-blur-xl sm:inset-x-3 sm:bottom-3 sm:rounded-[1rem] sm:px-3 sm:py-2">
                                         <p className="text-[0.45rem] uppercase tracking-[0.20em] text-white/70 sm:text-[0.7rem] sm:tracking-[0.32em]">Gallery</p>
-                                        <div className="mt-0.5 h-px w-6 bg-[linear-gradient(90deg,#6f8456,#c4a26a,#7b5232)] sm:mt-1 sm:w-10" />
+                                        <div className="mt-0.5 h-px w-6 bg-[linear-gradient(90deg,#6f8456,#c9a24e,#1e5e8c)] sm:mt-1 sm:w-10" />
                                         <p className="mt-0.5 text-[0.65rem] font-medium sm:mt-1 sm:text-sm">{item.caption}</p>
                                     </div>
                                 </article>
@@ -435,15 +411,17 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                     <h2 className="mt-1.5 text-xl font-semibold tracking-[-0.03em] text-[#2c2118] sm:mt-3 sm:text-4xl sm:tracking-[-0.05em] lg:text-4xl">
                         Everything you need for a smooth renovation, and more.
                     </h2>
-                    <div className="mt-2 h-px w-20 bg-[linear-gradient(90deg,#6f8456,#c4a26a,#7b5232)] sm:mt-4 sm:w-28" />
+                    <div className="mt-2 h-px w-20 bg-[linear-gradient(90deg,#6f8456,#c9a24e,#1e5e8c)] sm:mt-4 sm:w-28" />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-10 lg:gap-12">
-                    {services.map(([title, description], index) => (
+                    {services.map(([title, description], index) => {
+                        const accent = index % 2 === 0 ? '#6f8456' : '#1e5e8c';
+                        return (
                         <div key={title} className="group">
                             <div className="flex items-baseline gap-2 sm:gap-3 mb-3 sm:mb-4">
-                                <p className="text-2xl sm:text-3xl font-light text-[#7b5232] tracking-tight">{String(index + 1).padStart(2, '0')}</p>
-                                <div className="flex-1 h-1 bg-[#7b5232]/40 group-hover:bg-[#7b5232]/60 transition-colors duration-300" />
+                                <p className="text-2xl sm:text-3xl font-light tracking-tight" style={{ color: accent }}>{String(index + 1).padStart(2, '0')}</p>
+                                <div className="flex-1 h-1 transition-opacity duration-300 opacity-40 group-hover:opacity-70" style={{ backgroundColor: accent }} />
                             </div>
                             <h3 className="text-sm sm:text-lg font-semibold text-[#2c2118] tracking-[-0.01em] mt-2 sm:mt-3 mb-1 sm:mb-2">
                                 {title}
@@ -452,20 +430,21 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                                 {description}
                             </p>
                         </div>
-                    ))}
+                        );
+                    })}
                 </div>
             </section>
 
             {/* TESTIMONIALS & ABOUT */}
             <section className="mx-auto max-w-7xl px-3 py-6 sm:px-6 sm:py-14 lg:px-8">
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-5 sm:rounded-[2.25rem] sm:p-8 items-stretch">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-5 items-stretch">
                     {/* LEFT: TESTIMONIALS */}
                     <div className="rounded-[1.2rem] border border-[#6f8456]/22 bg-[linear-gradient(180deg,rgba(250,246,238,0.6),rgba(227,237,214,0.7),rgba(236,223,206,0.46))] p-3 shadow-[0_30px_90px_-55px_rgba(54,39,23,0.9)] backdrop-blur-2xl sm:rounded-[2.25rem] sm:p-8">
                         <p className="text-[0.65rem] font-semibold uppercase tracking-[0.32em] text-[#6f8456] sm:text-xs sm:tracking-[0.35em]">Testimonials</p>
                         <h2 className="mt-1.5 text-lg font-semibold tracking-[-0.03em] text-[#2c2118] sm:mt-3 sm:text-2xl sm:tracking-[-0.05em]">
                             A few words from our valued clients.
                         </h2>
-                        <div className="mt-2 h-px w-16 bg-[linear-gradient(90deg,#6f8456,#c4a26a,#7b5232)] sm:mt-4 sm:w-20" />
+                        <div className="mt-2 h-px w-16 bg-[linear-gradient(90deg,#6f8456,#c9a24e,#1e5e8c)] sm:mt-4 sm:w-20" />
 
                         {testimonials.length === 0 ? (
                             <p className="mt-6 text-sm text-gray-600">Coming soon.</p>
@@ -481,7 +460,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                                     <div className="mt-2 h-1 overflow-hidden rounded-full bg-white/40 sm:mt-4 sm:h-1.5">
                                         <div
                                             key={testimonialTick}
-                                            className="testimonial-progress h-full rounded-full bg-[linear-gradient(90deg,rgba(111,132,86,0.98),rgba(139,171,99,0.96),rgba(196,162,106,0.94))]"
+                                            className="testimonial-progress h-full rounded-full bg-[linear-gradient(90deg,rgba(111,132,86,0.98),rgba(139,171,99,0.9),rgba(30,94,140,0.94))]"
                                         />
                                     </div>
                                 </div>
@@ -495,7 +474,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                         <h2 className="mt-1.5 text-lg font-semibold tracking-[-0.03em] text-[#2d2118] sm:mt-3 sm:text-2xl sm:tracking-[-0.05em]">
                             10 years in business, focused on clear pricing and careful delivery.
                         </h2>
-                        <div className="mt-2 h-px w-16 bg-[linear-gradient(90deg,#6f8456,#c4a26a,#7b5232)] sm:mt-4 sm:w-20" />
+                        <div className="mt-2 h-px w-16 bg-[linear-gradient(90deg,#6f8456,#c9a24e,#1e5e8c)] sm:mt-4 sm:w-20" />
                         <p className="mt-4 text-xs leading-5 text-[#5d4a3b] sm:mt-6 sm:text-sm sm:leading-6">
                             Pro Green Build works with homeowners who want renovation work that feels calm, looks warm, and stays grounded in sensible pricing.
                         </p>
@@ -512,7 +491,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                             <h2 className="mt-1.5 text-xl font-semibold tracking-[-0.03em] text-[#2d2118] sm:mt-3 sm:text-4xl sm:tracking-[-0.05em] lg:text-4xl">
                                 Ready when you are.
                             </h2>
-                            <div className="mt-2 h-1 w-20 bg-[linear-gradient(90deg,#6f8456,#1b7a7a,#6f8456)] rounded-full sm:mt-4 sm:w-28" />
+                            <div className="mt-2 h-1 w-20 bg-[linear-gradient(90deg,#6f8456,#1e5e8c,#6f8456)] rounded-full sm:mt-4 sm:w-28" />
                         </div>
 
                         {/* Contact options and social media - side by side */}
