@@ -192,12 +192,12 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                     <header className="flex items-center justify-between gap-2 sm:gap-4">
                         <div className="flex items-center gap-2 sm:gap-3">
                             {logo ? (
-                                <div className="relative h-20 w-20 sm:h-28 sm:w-28 rounded-full overflow-hidden border-2 border-[#6f8456]/30 bg-white/50">
+                                <div className="relative h-20 w-20 sm:h-28 sm:w-28 rounded-2xl overflow-hidden border-2 border-[#6f8456]/30 bg-white/50">
                                     <Image
                                         src={logo}
                                         alt="ProGreenBuild Logo"
                                         fill
-                                        className="object-contain p-2"
+                                        className="object-contain p-1 sm:p-2"
                                         sizes="(max-width: 640px) 80px, 112px"
                                         priority
                                     />
