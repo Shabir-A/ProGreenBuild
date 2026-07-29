@@ -292,3 +292,102 @@ export async function updateProcessStage(_prevState, formData) {
     revalidatePath('/');
     return { success: true };
 }
+
+export async function addTestimonial(_prevState, formData) {
+    const supabase = await createClient();
+    const user = await requireUser(supabase);
+    if (!user) {
+        return { error: 'Not authorized.' };
+    }
+
+    const quote = (formData.get('quote') || '').toString().trim();
+    const name = (formData.get('name') || '').toString().trim();
+
+    if (!quote || !name) {
+        return { error: 'Quote and name are required.' };
+    }
+
+    if (quote.length > 500) {
+        return { error: 'Quote must be 500 characters or less.' };
+    }
+
+    const { error } = await supabase.from('testimonials').insert({
+        quote,
+        name,
+        status: 'approved',
+    });
+
+    if (error) {
+        return { error: 'Could not add testimonial. Please try again.' };
+    }
+
+    revalidatePath('/admin');
+    revalidatePath('/');
+    return { success: true };
+}
+
+export async function deleteTestimonial(id) {
+    const supabase = await createClient();
+    const user = await requireUser(supabase);
+    if (!user) {
+        return { error: 'Not authorized.' };
+    }
+
+    const { error } = await supabase.from('testimonials').delete().eq('id', id);
+    if (error) {
+        return { error: 'Could not delete testimonial. Please try again.' };
+    }
+
+    revalidatePath('/admin');
+    revalidatePath('/');
+    return { success: true };
+}
+
+export async function addSocialMediaLink(_prevState, formData) {
+    const supabase = await createClient();
+    const user = await requireUser(supabase);
+    if (!user) {
+        return { error: 'Not authorized.' };
+    }
+
+    const title = (formData.get('title') || '').toString().trim();
+    const url = (formData.get('url') || '').toString().trim();
+
+    if (!title || !url) {
+        return { error: 'Title and URL are required.' };
+    }
+
+    if (!url.match(/^https?:\/\//)) {
+        return { error: 'URL must start with http:// or https://' };
+    }
+
+    const { error } = await supabase.from('social_media_links').insert({
+        title,
+        url,
+    });
+
+    if (error) {
+        return { error: 'Could not add social media link. Please try again.' };
+    }
+
+    revalidatePath('/admin');
+    revalidatePath('/');
+    return { success: true };
+}
+
+export async function deleteSocialMediaLink(id) {
+    const supabase = await createClient();
+    const user = await requireUser(supabase);
+    if (!user) {
+        return { error: 'Not authorized.' };
+    }
+
+    const { error } = await supabase.from('social_media_links').delete().eq('id', id);
+    if (error) {
+        return { error: 'Could not delete social media link. Please try again.' };
+    }
+
+    revalidatePath('/admin');
+    revalidatePath('/');
+    return { success: true };
+}

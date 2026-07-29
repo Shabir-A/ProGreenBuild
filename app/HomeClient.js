@@ -33,7 +33,7 @@ const PROCESS_DURATION = 4600;
 const FIELDS_FADE_DURATION = 450;
 const ICON_FLY_DURATION = 650;
 
-export default function HomeClient({ galleryItems, whatsappNumber, logo, processStages }) {
+export default function HomeClient({ galleryItems, whatsappNumber, logo, processStages, testimonials: dbTestimonials, socialMediaLinks }) {
     const [processIndex, setProcessIndex] = useState(0);
     const [processTick, setProcessTick] = useState(0);
     const [testimonialIndex, setTestimonialIndex] = useState(0);
@@ -54,6 +54,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
         ...stage,
         caption: STAGE_CAPTIONS[stage.label] || stage.caption,
     }));
+    const testimonials = (dbTestimonials || []).map((t) => [t.quote, t.name]);
 
     useEffect(() => {
         const el = marqueeRef.current;
@@ -210,7 +211,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                         <a href="#contact" className="glass-button glass-button--chip glass-button--primary px-2.5 py-1.5 text-[0.7rem] sm:px-4 sm:py-2.5 sm:text-sm">Get in touch</a>
                     </header>
 
-                    <div className="grid items-center gap-6 py-3 sm:gap-10 sm:py-5 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12 lg:py-6">
+                    <div className="items-center py-3 sm:py-5 lg:py-6">
                         <div className="max-w-2xl">
                             <p className="mb-2 text-[0.7rem] font-medium uppercase tracking-[0.28em] text-[#6f8456] sm:mb-4 sm:text-xs sm:tracking-[0.32em]">
                                 Singapore Renovations
@@ -223,38 +224,6 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                             <p className="mt-2 text-lg font-medium text-[#6f8456] sm:mt-4 sm:text-2xl">
                                 Quality Workmanship. Honest Pricing.
                             </p>
-
-                            <div className="mt-6 flex flex-wrap gap-3 sm:mt-8">
-                            </div>
-                        </div>
-
-                        <div className="relative mx-auto w-full max-w-xl">
-                            <div className="absolute -left-6 top-10 hidden h-24 w-24 rounded-full bg-[#d8b77a]/30 blur-3xl lg:block" />
-                            <div className="absolute -right-4 bottom-4 hidden h-28 w-28 rounded-full bg-[#6f8456]/18 blur-3xl lg:block" />
-
-                            <div className="rounded-[1rem] border border-[#6f8456]/18 bg-[linear-gradient(180deg,rgba(255,252,247,0.72),rgba(226,239,213,0.58),rgba(233,224,205,0.52))] p-2 shadow-[0_35px_90px_-45px_rgba(58,42,27,0.88)] backdrop-blur-2xl sm:rounded-[2rem] sm:p-3">
-                                <div className="rounded-[0.85rem] border border-[#6f8456]/14 bg-[linear-gradient(180deg,rgba(255,252,247,0.74),rgba(230,240,218,0.86),rgba(244,236,222,0.76))] p-2 sm:rounded-[1.7rem] sm:p-4">
-                                    <div className="grid gap-2 sm:grid-cols-2 sm:gap-3">
-                                        <div className="rounded-[0.8rem] border border-[#4a2e1c]/40 bg-[linear-gradient(180deg,rgba(101,67,42,0.92),rgba(70,45,28,0.95))] p-2.5 shadow-[0_18px_60px_-40px_rgba(20,12,6,0.6)] backdrop-blur-xl sm:col-span-2 sm:rounded-[1.4rem] sm:p-4">
-                                            <p className="text-[8px] uppercase tracking-[0.24em] text-[#e8cfa8] sm:text-xs sm:tracking-[0.35em]">Project approach</p>
-                                            <p className="mt-1.5 text-sm font-semibold tracking-[-0.02em] text-[#f7f1e6] sm:mt-3 sm:text-2xl sm:tracking-[-0.04em]">
-                                                Clear communication, seamless execution.
-                                            </p>
-                                            <div className="mt-2 h-px w-16 bg-[linear-gradient(90deg,#c4a26a,#e8cfa8,#c4a26a)] sm:mt-4 sm:w-24" />
-                                        </div>
-
-                                        <div className="rounded-[0.8rem] border border-[#4a2e1c]/35 bg-[linear-gradient(180deg,rgba(95,60,38,0.88),rgba(75,48,30,0.9))] p-2.5 backdrop-blur-xl sm:rounded-[1.4rem] sm:p-4">
-                                            <p className="text-[0.7rem] text-[#e0c8a8] sm:text-sm">Delivery style</p>
-                                            <p className="mt-1 text-xs font-semibold text-[#f7f1e6] sm:mt-2 sm:text-lg">Polished, purposeful, efficient.</p>
-                                        </div>
-
-                                        <div className="rounded-[0.8rem] border border-[#4a2e1c]/35 bg-[linear-gradient(180deg,rgba(90,57,37,0.9),rgba(72,46,29,0.92))] p-2.5 backdrop-blur-xl sm:rounded-[1.4rem] sm:p-4">
-                                            <p className="text-[0.7rem] text-[#e0c8a8] sm:text-sm">Project feel</p>
-                                            <p className="mt-1 text-xs font-semibold text-[#f7f1e6] sm:mt-2 sm:text-lg">Practical, neat, value-driven.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -385,7 +354,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
 
             {/* SERVICES */}
             <section className="mx-auto max-w-7xl px-3 py-6 sm:px-6 sm:py-14 lg:px-8">
-                <div className="max-w-2xl">
+                <div className="max-w-2xl mb-8 sm:mb-12">
                     <p className="text-[0.65rem] font-semibold uppercase tracking-[0.32em] text-[#6f8456] sm:text-xs sm:tracking-[0.35em]">Services</p>
                     <h2 className="mt-1.5 text-xl font-semibold tracking-[-0.03em] text-[#2c2118] sm:mt-3 sm:text-4xl sm:tracking-[-0.05em] lg:text-4xl">
                         Everything you need for a smooth renovation, and more.
@@ -393,16 +362,19 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                     <div className="mt-2 h-px w-20 bg-[linear-gradient(90deg,#6f8456,#c4a26a,#7b5232)] sm:mt-4 sm:w-28" />
                 </div>
 
-                <div className="mt-4 grid grid-cols-2 gap-2.5 sm:mt-8 sm:grid-cols-3 sm:gap-5">
-                    {services.map(([title, description]) => (
-                        <div
-                            key={title}
-                            className="service-card flex flex-col overflow-hidden rounded-[0.85rem] bg-[linear-gradient(150deg,rgba(247,234,208,0.95),rgba(232,207,168,0.85),rgba(196,162,106,0.6))] p-3 shadow-[0_14px_36px_-22px_rgba(123,82,50,0.6)] backdrop-blur-md sm:rounded-[1.4rem] sm:p-6"
-                        >
-                            <div className="pointer-events-none absolute -right-6 -top-6 hidden h-20 w-20 rounded-full bg-[#e8cfa8]/50 blur-2xl sm:block" />
-                            <div className="relative h-0.5 w-6 shrink-0 rounded-full bg-[linear-gradient(90deg,#7b5232,#c4a26a,#e8cfa8)] sm:h-1 sm:w-8" />
-                            <p className="relative mt-2 text-xs font-semibold leading-[1.2] text-[#3f2a16] sm:mt-4 sm:text-base">{title}</p>
-                            <p className="relative mt-1.5 line-clamp-3 text-[0.65rem] leading-[1.25] text-[#6f5843] sm:mt-3 sm:line-clamp-none sm:text-sm sm:leading-6">{description}</p>
+                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-10 lg:gap-12">
+                    {services.map(([title, description], index) => (
+                        <div key={title} className="group">
+                            <div className="flex items-baseline gap-2 sm:gap-3 mb-3 sm:mb-4">
+                                <p className="text-2xl sm:text-3xl font-light text-[#7b5232] tracking-tight">{String(index + 1).padStart(2, '0')}</p>
+                                <div className="flex-1 h-1 bg-[#7b5232]/40 group-hover:bg-[#7b5232]/60 transition-colors duration-300" />
+                            </div>
+                            <h3 className="text-sm sm:text-lg font-semibold text-[#2c2118] tracking-[-0.01em] mt-2 sm:mt-3 mb-1 sm:mb-2">
+                                {title}
+                            </h3>
+                            <p className="text-xs sm:text-sm text-[#6f5843] leading-5 sm:leading-6 font-light">
+                                {description}
+                            </p>
                         </div>
                     ))}
                 </div>
@@ -419,40 +391,26 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                         </h2>
                         <div className="mt-2 h-px w-16 bg-[linear-gradient(90deg,#6f8456,#c4a26a,#7b5232)] sm:mt-4 sm:w-20" />
 
-                        <div className="mt-3 flex flex-wrap gap-1 sm:gap-1.5">
-                            {testimonials.map(([, name], index) => (
-                                <button
-                                    key={name}
-                                    type="button"
-                                    onClick={() => {
-                                        setTestimonialIndex(index);
-                                        setTestimonialTick((value) => value + 1);
-                                    }}
-                                    className={`glass-button glass-button--chip px-1.5 py-0.5 text-[0.55rem] font-semibold uppercase tracking-[0.08em] sm:px-2 sm:py-1 sm:text-[0.65rem] sm:tracking-[0.16em] ${index === testimonialIndex ? 'glass-button--selected text-white' : 'glass-button--soft text-white'
-                                        }`}
-                                    aria-pressed={index === testimonialIndex}
-                                >
-                                    {name}
-                                </button>
-                            ))}
-                        </div>
-
-                        <div className="mt-4 sm:mt-6">
-                            <div className="rounded-[1rem] border border-[#6f8456]/18 bg-[linear-gradient(180deg,rgba(255,251,244,0.82),rgba(223,236,208,0.88),rgba(233,224,207,0.78))] p-3 shadow-[0_18px_50px_-36px_rgba(75,54,31,0.9)] backdrop-blur-xl sm:rounded-[1.75rem] sm:p-6">
-                                <p className="text-sm leading-[1.3] tracking-[-0.02em] text-[#2c2118] sm:text-lg sm:leading-[1.4] sm:tracking-[-0.03em]">
-                                    &ldquo;{activeTestimonial[0]}&rdquo;
-                                </p>
-                                <p className="mt-2 text-[0.55rem] font-semibold uppercase tracking-[0.15em] text-[#6f8456] sm:mt-3 sm:text-[0.65rem] sm:tracking-[0.2em]">
-                                    {activeTestimonial[1]}
-                                </p>
-                                <div className="mt-2 h-1 overflow-hidden rounded-full bg-white/40 sm:mt-4 sm:h-1.5">
-                                    <div
-                                        key={testimonialTick}
-                                        className="testimonial-progress h-full rounded-full bg-[linear-gradient(90deg,rgba(111,132,86,0.98),rgba(139,171,99,0.96),rgba(196,162,106,0.94))]"
-                                    />
+                        {testimonials.length === 0 ? (
+                            <p className="mt-6 text-sm text-gray-600">Coming soon.</p>
+                        ) : (
+                            <div className="mt-4 sm:mt-6">
+                                <div className="rounded-[1rem] border border-[#6f8456]/18 bg-[linear-gradient(180deg,rgba(255,251,244,0.82),rgba(223,236,208,0.88),rgba(233,224,207,0.78))] p-3 shadow-[0_18px_50px_-36px_rgba(75,54,31,0.9)] backdrop-blur-xl sm:rounded-[1.75rem] sm:p-6">
+                                    <p className="text-sm leading-[1.3] tracking-[-0.02em] text-[#2c2118] sm:text-lg sm:leading-[1.4] sm:tracking-[-0.03em]">
+                                        &ldquo;{activeTestimonial[0]}&rdquo;
+                                    </p>
+                                    <p className="mt-2 text-[0.55rem] font-semibold uppercase tracking-[0.15em] text-[#6f8456] sm:mt-3 sm:text-[0.65rem] sm:tracking-[0.2em]">
+                                        {activeTestimonial[1]}
+                                    </p>
+                                    <div className="mt-2 h-1 overflow-hidden rounded-full bg-white/40 sm:mt-4 sm:h-1.5">
+                                        <div
+                                            key={testimonialTick}
+                                            className="testimonial-progress h-full rounded-full bg-[linear-gradient(90deg,rgba(111,132,86,0.98),rgba(139,171,99,0.96),rgba(196,162,106,0.94))]"
+                                        />
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        )}
                     </div>
 
                     {/* RIGHT: ABOUT */}
@@ -486,10 +444,23 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                             {/* Left: Social Media */}
                             <div className="flex flex-col gap-2">
                                 <p className="text-[0.65rem] font-semibold uppercase tracking-[0.28em] text-[#6f8456] sm:text-xs">Follow us</p>
-                                <div className="flex flex-wrap gap-2 text-[0.7rem] sm:gap-3 sm:text-sm">
-                                    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="glass-button glass-button--chip px-2.5 py-1 sm:px-4 sm:py-2">Instagram</a>
-                                    <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="glass-button glass-button--chip px-2.5 py-1 sm:px-4 sm:py-2">Facebook</a>
-                                </div>
+                                {socialMediaLinks.length === 0 ? (
+                                    <p className="text-sm text-gray-600">Coming soon</p>
+                                ) : (
+                                    <div className="flex flex-wrap gap-2 text-[0.7rem] sm:gap-3 sm:text-sm">
+                                        {socialMediaLinks.map((link) => (
+                                            <a
+                                                key={link.title}
+                                                href={link.url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="glass-button glass-button--chip px-2.5 py-1 sm:px-4 sm:py-2"
+                                            >
+                                                {link.title}
+                                            </a>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
 
                             {/* Right: Contact Options */}

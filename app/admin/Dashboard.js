@@ -4,8 +4,12 @@ import { useActionState, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import {
     addGalleryImage,
+    addSocialMediaLink,
+    addTestimonial,
     deleteEnquiry,
     deleteGalleryImage,
+    deleteSocialMediaLink,
+    deleteTestimonial,
     logout,
     updateEnquiryStatus,
     updateLogo,
@@ -17,6 +21,7 @@ const initialUploadState = { error: null, success: false };
 const initialNumberState = { error: null, success: false };
 const initialLogoState = { error: null, success: false };
 const initialStageState = { error: null, success: false };
+const initialSocialMediaState = { error: null, success: false };
 
 const ENQUIRY_TYPE_LABELS = {
     general: 'General Renovation Enquiry',
@@ -35,13 +40,19 @@ const ENQUIRY_STATUS_OPTIONS = [
     { value: 'closed', label: 'Closed - Not Converted' },
 ];
 
-export default function Dashboard({ galleryItems, whatsappNumber, logo, processStages, enquiries }) {
+export default function Dashboard({ galleryItems, whatsappNumber, logo, processStages, enquiries, testimonials, socialMediaLinks }) {
     const [uploadFormKey, setUploadFormKey] = useState(0);
     const [uploadState, uploadAction, uploadPending] = useActionState(addGalleryImage, initialUploadState);
     const [numberState, numberAction, numberPending] = useActionState(updateWhatsappNumber, initialNumberState);
     const [logoState, logoAction, logoPending] = useActionState(updateLogo, initialLogoState);
+    const [testimonialFormKey, setTestimonialFormKey] = useState(0);
+    const [testimonialState, testimonialAction, testimonialPending] = useActionState(addTestimonial, initialUploadState);
+    const [socialMediaFormKey, setSocialMediaFormKey] = useState(0);
+    const [socialMediaState, socialMediaAction, socialMediaPending] = useActionState(addSocialMediaLink, initialSocialMediaState);
     const [stageStates, setStageStates] = useState({});
     const [deletingId, setDeletingId] = useState(null);
+    const [deletingTestimonialId, setDeletingTestimonialId] = useState(null);
+    const [deletingSocialMediaId, setDeletingSocialMediaId] = useState(null);
     const [enquiryStatusPendingId, setEnquiryStatusPendingId] = useState(null);
     const [deletingEnquiryId, setDeletingEnquiryId] = useState(null);
     const [enquiryErrors, setEnquiryErrors] = useState({});
@@ -73,6 +84,18 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
         }
     }, [logoState]);
 
+    useEffect(() => {
+        if (testimonialState?.success) {
+            setTestimonialFormKey((key) => key + 1);
+        }
+    }, [testimonialState]);
+
+    useEffect(() => {
+        if (socialMediaState?.success) {
+            setSocialMediaFormKey((key) => key + 1);
+        }
+    }, [socialMediaState]);
+
     const handleDelete = async (id, storagePath) => {
         if (!window.confirm('Remove this image?')) return;
         setDeletingId(id);
@@ -93,6 +116,20 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
         const result = await deleteEnquiry(id);
         setEnquiryErrors((prev) => ({ ...prev, [id]: result?.error ?? null }));
         setDeletingEnquiryId(null);
+    };
+
+    const handleDeleteTestimonial = async (id) => {
+        if (!window.confirm('Delete this testimonial?')) return;
+        setDeletingTestimonialId(id);
+        await deleteTestimonial(id);
+        setDeletingTestimonialId(null);
+    };
+
+    const handleDeleteSocialMediaLink = async (id) => {
+        if (!window.confirm('Delete this social media link?')) return;
+        setDeletingSocialMediaId(id);
+        await deleteSocialMediaLink(id);
+        setDeletingSocialMediaId(null);
     };
 
     const handleFileChange = (e) => {
@@ -142,66 +179,6 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
                         </button>
                     </form>
                 </div>
-
-                {/* ENQUIRIES SECTION */}
-                <section className="mb-12">
-                    <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-600 mb-4">Enquiries</h2>
-
-                    {enquiries.length === 0 ? (
-                        <p className="text-sm text-gray-500">No enquiries yet.</p>
-                    ) : (
-                        <ul className="space-y-3">
-                            {enquiries.map((item) => (
-                                <li key={item.id} className="border border-gray-300 p-3">
-                                    <div className="flex items-start justify-between gap-2 mb-1">
-                                        <p className="text-sm font-medium">{item.name}</p>
-                                        <p className="whitespace-nowrap text-xs text-gray-500">
-                                            {new Date(item.created_at).toLocaleDateString('en-SG', {
-                                                day: 'numeric',
-                                                month: 'short',
-                                                year: 'numeric',
-                                            })}
-                                        </p>
-                                    </div>
-                                    <p className="text-xs text-gray-600">{item.email}</p>
-                                    <p className="mb-2 text-xs text-gray-600">
-                                        {ENQUIRY_TYPE_LABELS[item.enquiry_type] ?? item.enquiry_type}
-                                    </p>
-                                    {item.message && (
-                                        <p className="mb-2 whitespace-pre-wrap text-xs text-gray-700">{item.message}</p>
-                                    )}
-
-                                    {enquiryErrors[item.id] && (
-                                        <p className="mb-2 text-xs text-red-700">{enquiryErrors[item.id]}</p>
-                                    )}
-
-                                    <div className="flex items-center gap-2">
-                                        <select
-                                            value={item.status}
-                                            disabled={enquiryStatusPendingId === item.id}
-                                            onChange={(e) => handleEnquiryStatusChange(item.id, e.target.value)}
-                                            className="flex-1 border border-gray-300 px-2 py-1 text-xs"
-                                        >
-                                            {ENQUIRY_STATUS_OPTIONS.map((option) => (
-                                                <option key={option.value} value={option.value}>
-                                                    {option.label}
-                                                </option>
-                                            ))}
-                                        </select>
-                                        <button
-                                            type="button"
-                                            onClick={() => handleDeleteEnquiry(item.id)}
-                                            disabled={deletingEnquiryId === item.id}
-                                            className="win95-button text-xs"
-                                        >
-                                            {deletingEnquiryId === item.id ? 'Deleting...' : 'Delete'}
-                                        </button>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
-                    )}
-                </section>
 
                 {/* LOGO SECTION */}
                 <section className="mb-12">
@@ -370,8 +347,140 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
                     )}
                 </section>
 
-                {/* PHONE NUMBER SECTION */}
-                <section>
+                {/* TESTIMONIALS SECTION */}
+                <section className="mb-12">
+                    <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-600 mb-4">Testimonials</h2>
+
+                    <form key={testimonialFormKey} action={testimonialAction} className="border border-gray-300 p-4 mb-4">
+                        <div className="mb-4">
+                            <label className="text-sm font-medium">
+                                Client Name *
+                            </label>
+                            <input
+                                type="text"
+                                name="name"
+                                required
+                                placeholder="e.g. Jane Tan"
+                                className="mt-2 block w-full border border-gray-300 px-2 py-1 text-sm"
+                            />
+                        </div>
+
+                        <div className="mb-4">
+                            <label className="text-sm font-medium">
+                                Testimonial Quote *
+                            </label>
+                            <textarea
+                                name="quote"
+                                required
+                                placeholder="What did the client say?"
+                                rows={3}
+                                maxLength={500}
+                                className="mt-2 block w-full border border-gray-300 px-2 py-1 text-sm"
+                            />
+                            <p className="mt-1 text-xs text-gray-500">Max 500 characters</p>
+                        </div>
+
+                        {testimonialState?.error && <p className="mb-4 text-sm text-red-700">{testimonialState.error}</p>}
+                        {testimonialState?.success && <p className="mb-4 text-sm text-green-700">Testimonial added.</p>}
+
+                        <button
+                            type="submit"
+                            disabled={testimonialPending}
+                            className="win95-button w-full"
+                        >
+                            {testimonialPending ? 'Adding...' : 'Add testimonial'}
+                        </button>
+                    </form>
+
+                    {testimonials.length === 0 ? (
+                        <p className="text-sm text-gray-500">No testimonials yet. Add your first one above.</p>
+                    ) : (
+                        <div className="space-y-2">
+                            {testimonials.map((item) => (
+                                <div key={item.id} className="border border-gray-300 p-3">
+                                    <p className="text-sm font-medium">{item.name}</p>
+                                    <p className="mt-1 text-sm text-gray-700 italic">"{item.quote}"</p>
+                                    <button
+                                        type="button"
+                                        onClick={() => handleDeleteTestimonial(item.id)}
+                                        disabled={deletingTestimonialId === item.id}
+                                        className="win95-button mt-2 text-xs"
+                                    >
+                                        {deletingTestimonialId === item.id ? 'Deleting...' : 'Delete'}
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </section>
+
+                {/* SOCIAL MEDIA LINKS SECTION */}
+                <section className="mb-12">
+                    <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-600 mb-4">Social media links</h2>
+
+                    <form key={socialMediaFormKey} action={socialMediaAction} className="border border-gray-300 p-4 mb-4">
+                        <div className="mb-4">
+                            <label className="text-sm font-medium">
+                                Platform name *
+                            </label>
+                            <input
+                                type="text"
+                                name="title"
+                                required
+                                placeholder="e.g. Facebook, LinkedIn, Instagram"
+                                className="mt-2 block w-full border border-gray-300 px-2 py-1 text-sm"
+                            />
+                        </div>
+
+                        <div className="mb-4">
+                            <label className="text-sm font-medium">
+                                URL *
+                            </label>
+                            <input
+                                type="url"
+                                name="url"
+                                required
+                                placeholder="https://facebook.com/yourpage"
+                                className="mt-2 block w-full border border-gray-300 px-2 py-1 text-sm"
+                            />
+                        </div>
+
+                        {socialMediaState?.error && <p className="mb-4 text-sm text-red-700">{socialMediaState.error}</p>}
+                        {socialMediaState?.success && <p className="mb-4 text-sm text-green-700">Social media link added.</p>}
+
+                        <button
+                            type="submit"
+                            disabled={socialMediaPending}
+                            className="win95-button w-full"
+                        >
+                            {socialMediaPending ? 'Adding...' : 'Add link'}
+                        </button>
+                    </form>
+
+                    {socialMediaLinks.length === 0 ? (
+                        <p className="text-sm text-gray-500">No social media links yet. Add your first one above.</p>
+                    ) : (
+                        <div className="space-y-2">
+                            {socialMediaLinks.map((item) => (
+                                <div key={item.id} className="border border-gray-300 p-3">
+                                    <p className="text-sm font-medium">{item.title}</p>
+                                    <p className="mt-1 text-xs text-gray-600 truncate">{item.url}</p>
+                                    <button
+                                        type="button"
+                                        onClick={() => handleDeleteSocialMediaLink(item.id)}
+                                        disabled={deletingSocialMediaId === item.id}
+                                        className="win95-button mt-2 text-xs"
+                                    >
+                                        {deletingSocialMediaId === item.id ? 'Deleting...' : 'Delete'}
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </section>
+
+                {/* WHATSAPP / PHONE NUMBER SECTION */}
+                <section className="mb-12">
                     <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-600 mb-4">WhatsApp / phone number</h2>
                     <form action={numberAction} className="border border-gray-300 p-4">
                         <label className="text-sm font-medium">
@@ -394,6 +503,66 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
                             {numberPending ? 'Saving...' : 'Save number'}
                         </button>
                     </form>
+                </section>
+
+                {/* ENQUIRIES SECTION */}
+                <section className="mb-12">
+                    <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-600 mb-4">Enquiries</h2>
+
+                    {enquiries.length === 0 ? (
+                        <p className="text-sm text-gray-500">No enquiries yet.</p>
+                    ) : (
+                        <ul className="space-y-3">
+                            {enquiries.map((item) => (
+                                <li key={item.id} className="border border-gray-300 p-3">
+                                    <div className="flex items-start justify-between gap-2 mb-1">
+                                        <p className="text-sm font-medium">{item.name}</p>
+                                        <p className="whitespace-nowrap text-xs text-gray-500">
+                                            {new Date(item.created_at).toLocaleDateString('en-SG', {
+                                                day: 'numeric',
+                                                month: 'short',
+                                                year: 'numeric',
+                                            })}
+                                        </p>
+                                    </div>
+                                    <p className="text-xs text-gray-600">{item.email}</p>
+                                    <p className="mb-2 text-xs text-gray-600">
+                                        {ENQUIRY_TYPE_LABELS[item.enquiry_type] ?? item.enquiry_type}
+                                    </p>
+                                    {item.message && (
+                                        <p className="mb-2 whitespace-pre-wrap text-xs text-gray-700">{item.message}</p>
+                                    )}
+
+                                    {enquiryErrors[item.id] && (
+                                        <p className="mb-2 text-xs text-red-700">{enquiryErrors[item.id]}</p>
+                                    )}
+
+                                    <div className="flex items-center gap-2">
+                                        <select
+                                            value={item.status}
+                                            disabled={enquiryStatusPendingId === item.id}
+                                            onChange={(e) => handleEnquiryStatusChange(item.id, e.target.value)}
+                                            className="flex-1 border border-gray-300 px-2 py-1 text-xs"
+                                        >
+                                            {ENQUIRY_STATUS_OPTIONS.map((option) => (
+                                                <option key={option.value} value={option.value}>
+                                                    {option.label}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <button
+                                            type="button"
+                                            onClick={() => handleDeleteEnquiry(item.id)}
+                                            disabled={deletingEnquiryId === item.id}
+                                            className="win95-button text-xs"
+                                        >
+                                            {deletingEnquiryId === item.id ? 'Deleting...' : 'Delete'}
+                                        </button>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
                 </section>
             </div>
         </div>
