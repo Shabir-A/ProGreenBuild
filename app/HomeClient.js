@@ -195,7 +195,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
         <main className="overflow-hidden text-[#2f241b]">
             {/* HERO */}
             <section className="relative isolate">
-                <div className="absolute inset-x-0 top-0 -z-10 h-[38rem] bg-[radial-gradient(circle_at_top_left,_rgba(18,105,72,0.72),_rgba(20,61,46,0)_46%),radial-gradient(circle_at_90%_12%,_rgba(33,90,158,0.70),_rgba(36,66,107,0)_40%),radial-gradient(circle_at_18%_35%,_rgba(123,79,44,0.12),_rgba(123,79,44,0)_22%),linear-gradient(180deg,rgba(255,253,248,0.88),rgba(255,253,248,0))]" />
+                <div className="absolute inset-x-0 top-0 -z-10 h-[38rem] bg-[radial-gradient(circle_at_top_left,_rgba(20,61,46,0.48),_rgba(20,61,46,0)_42%),radial-gradient(circle_at_90%_12%,_rgba(36,66,107,0.46),_rgba(36,66,107,0)_36%),radial-gradient(circle_at_18%_35%,_rgba(123,79,44,0.14),_rgba(123,79,44,0)_22%),linear-gradient(180deg,rgba(255,253,248,0.94),rgba(255,253,248,0))]" />
                 <div className="mx-auto flex max-w-7xl flex-col px-3 pb-4 pt-4 sm:px-6 sm:pb-8 sm:pt-6 lg:px-8 lg:pb-10 lg:pt-8">
                     <header className="flex items-center justify-between gap-2 sm:gap-4">
                         <div className="flex items-center gap-2 sm:gap-3">
@@ -236,7 +236,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
 
                         {/* Trust Badges */}
                         <div className="relative w-full sm:w-[24rem] lg:w-[27rem] flex flex-col gap-4 sm:gap-4 lg:gap-5">
-                            <div className="overflow-hidden rounded-2xl border border-white/60 bg-[linear-gradient(135deg,rgba(252,249,241,0.92),rgba(246,241,230,0.88))] p-5 shadow-[inset_0_3px_0_0_rgba(36,66,107,0.75),0_24px_60px_-28px_rgba(20,61,46,0.4)] backdrop-blur-sm lg:p-7 w-full">
+                            <div className="overflow-hidden rounded-2xl border border-white/60 bg-[linear-gradient(135deg,rgba(252,249,241,0.92),rgba(246,241,230,0.88))] p-5 shadow-[inset_0_3px_0_0_rgba(36,66,107,0.65),0_20px_60px_-30px_rgba(20,61,46,0.35)] backdrop-blur-sm lg:p-7 w-full">
                                 <div className="flex items-center gap-3 mb-4 lg:mb-5">
                                     <div className="rounded-full border-2 border-[#143D2E]/45 bg-white/60 p-2 lg:p-2.5 flex items-center justify-center h-12 w-12 lg:h-14 lg:w-14">
                                         <div className="relative h-8 w-8 lg:h-10 lg:w-10">
