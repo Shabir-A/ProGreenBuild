@@ -229,15 +229,6 @@ body {
   cursor: grabbing;
 }
 
-/* Pointer devices only cycle: no drag, wheel, or grab affordance. */
-.marquee-strip--locked,
-.marquee-strip--locked:active {
-  overflow-x: hidden;
-  cursor: default;
-  touch-action: none;
-  user-select: none;
-}
-
 .marquee-track {
   display: flex;
   width: max-content;

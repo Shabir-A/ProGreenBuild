@@ -47,7 +47,6 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
     const marqueeSetWidthRef = useRef(0);
     const marqueePausedRef = useRef(false);
     const [marqueeRepeats, setMarqueeRepeats] = useState(1);
-    const [isTouchDevice, setIsTouchDevice] = useState(false);
 
     const hasGalleryItems = galleryItems.length > 0;
     const contactDigits = (whatsappNumber || '').replace(/[^\d]/g, '');
@@ -130,10 +129,6 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
             el.removeEventListener('scroll', handleScroll);
         };
     }, [hasGalleryItems, marqueeRepeats]);
-
-    useEffect(() => {
-        setIsTouchDevice(window.matchMedia('(hover: none) and (pointer: coarse)').matches);
-    }, []);
 
     const pauseMarquee = () => {
         marqueePausedRef.current = true;
@@ -394,11 +389,13 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                 {hasGalleryItems ? (
                     <div
                         ref={marqueeRef}
-                        className={`marquee-strip rounded-[1rem] border border-[#143D2E]/20 bg-[linear-gradient(180deg,rgba(245,240,230,0.38),rgba(214,222,214,0.48),rgba(222,227,233,0.3))] shadow-[0_30px_100px_-60px_rgba(54,39,23,0.9)] backdrop-blur-2xl sm:rounded-[2.1rem] ${isTouchDevice ? '' : 'marquee-strip--locked'}`}
-                        onTouchStart={isTouchDevice ? pauseMarquee : undefined}
-                        onTouchEnd={isTouchDevice ? resumeMarquee : undefined}
-                        onPointerDown={isTouchDevice ? pauseMarquee : undefined}
-                        onPointerUp={isTouchDevice ? resumeMarquee : undefined}
+                        className="marquee-strip rounded-[1rem] border border-[#143D2E]/20 bg-[linear-gradient(180deg,rgba(245,240,230,0.38),rgba(214,222,214,0.48),rgba(222,227,233,0.3))] shadow-[0_30px_100px_-60px_rgba(54,39,23,0.9)] backdrop-blur-2xl sm:rounded-[2.1rem]"
+                        onMouseEnter={pauseMarquee}
+                        onMouseLeave={resumeMarquee}
+                        onTouchStart={pauseMarquee}
+                        onTouchEnd={resumeMarquee}
+                        onPointerDown={pauseMarquee}
+                        onPointerUp={resumeMarquee}
                     >
                         <div className="marquee-track py-2 sm:py-4">
                             {Array.from({ length: marqueeRepeats * 3 }, () => galleryItems).flat().map((item, index) => (
