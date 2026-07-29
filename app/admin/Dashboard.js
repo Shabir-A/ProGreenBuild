@@ -458,9 +458,7 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
                                     </div>
                                 )}
                                 {logoState?.error && <p className="text-sm text-red-600 bg-red-50 p-3 rounded-lg">{logoState.error}</p>}
-                                }
                                 {showLogoSuccess && <p className="text-sm text-green-600 bg-green-50 p-3 rounded-lg">Logo updated.</p>}
-                                }
                                 <button
                                     type="submit"
                                     disabled={logoPending}
@@ -512,9 +510,7 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
                                         )}
                                         <input type="hidden" name="stage_id" value={stage.id} />
                                         {stageStates[stage.id]?.error && <p className="mb-2 text-xs text-red-700">{stageStates[stage.id].error}</p>}
-                                        }
                                         {stageStates[stage.id]?.success && <p className="mb-2 text-xs text-green-700">✓</p>}
-                                        }
                                         <button
                                             type="submit"
                                             className="bg-gray-200 border border-gray-400 px-3 py-2 text-sm font-mono hover:bg-gray-300 cursor-pointer rounded w-full text-xs"
@@ -647,9 +643,7 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
                                 </div>
 
                                 {testimonialState?.error && <p className="text-sm text-red-600 bg-red-50 p-2 rounded">{testimonialState.error}</p>}
-                                }
                                 {showTestimonialSuccess && <p className="text-sm text-green-600 bg-green-50 p-2 rounded">Testimonial added.</p>}
-                                }
 
                                 <button
                                     type="submit"
@@ -717,9 +711,7 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
                                 </div>
 
                                 {socialMediaState?.error && <p className="text-sm text-red-600 bg-red-50 p-2 rounded">{socialMediaState.error}</p>}
-                                }
                                 {showSocialMediaSuccess && <p className="text-sm text-green-600 bg-green-50 p-2 rounded">Social media link added.</p>}
-                                }
 
                                 <button
                                     type="submit"
@@ -772,9 +764,7 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
                                     />
                                 </div>
                                 {numberState?.error && <p className="text-sm text-red-600 bg-red-50 p-2 rounded">{numberState.error}</p>}
-                                }
                                 {showNumberSuccess && <p className="text-sm text-green-600 bg-green-50 p-2 rounded">Saved.</p>}
-                                }
                                 <button
                                     type="submit"
                                     disabled={numberPending}

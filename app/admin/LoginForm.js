@@ -36,7 +36,6 @@ export default function LoginForm() {
                 </label>
 
                 {state?.error && <p className="mt-3 text-sm text-red-700">{state.error}</p>}
-                }
 
                 <button
                     type="submit"
