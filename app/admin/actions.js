@@ -3,14 +3,29 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { createClient } from '../../utils/supabase/server';
+import { validateImageFile, getImageExtension } from '../../utils/adminImages';
 
-const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png'];
-const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 const ENQUIRY_STATUSES = ['pending_reply', 'awaiting_customer', 'converted', 'closed'];
 
 async function requireUser(supabase) {
     const { data } = await supabase.auth.getUser();
     return data?.user ?? null;
+}
+
+// Creates a Supabase client and enforces an authenticated admin session.
+// Returns { supabase, user } when authorized, or { error } to return directly.
+async function authorize() {
+    const supabase = await createClient();
+    const user = await requireUser(supabase);
+    if (!user) {
+        return { error: 'Not authorized.' };
+    }
+    return { supabase, user };
+}
+
+function revalidateAdminAndHome() {
+    revalidatePath('/admin');
+    revalidatePath('/');
 }
 
 export async function login(_prevState, formData) {
@@ -45,11 +60,9 @@ export async function logout() {
 }
 
 export async function addGalleryImage(_prevState, formData) {
-    const supabase = await createClient();
-    const user = await requireUser(supabase);
-    if (!user) {
-        return { error: 'Not authorized.' };
-    }
+    const auth = await authorize();
+    if (auth.error) return auth;
+    const { supabase, user } = auth;
 
     const file = formData.get('image');
     const caption = (formData.get('caption') || '').toString().trim();
@@ -58,17 +71,12 @@ export async function addGalleryImage(_prevState, formData) {
         return { error: 'Caption is required.' };
     }
 
-    if (!file || typeof file === 'string' || file.size === 0) {
-        return { error: 'Choose an image to upload.' };
-    }
-    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
-        return { error: 'Only JPG or PNG images are allowed.' };
-    }
-    if (file.size > MAX_IMAGE_BYTES) {
-        return { error: 'Image must be 5MB or smaller.' };
+    const fileError = validateImageFile(file);
+    if (fileError) {
+        return { error: fileError };
     }
 
-    const extension = file.type === 'image/png' ? 'png' : 'jpg';
+    const extension = getImageExtension(file);
     const path = `${user.id}/${Date.now()}-${Math.random().toString(36).slice(2)}.${extension}`;
 
     const { error: uploadError } = await supabase.storage.from('gallery').upload(path, file, {
@@ -91,17 +99,14 @@ export async function addGalleryImage(_prevState, formData) {
         return { error: 'Could not save the image. Please try again.' };
     }
 
-    revalidatePath('/admin');
-    revalidatePath('/');
+    revalidateAdminAndHome();
     return { success: true };
 }
 
 export async function deleteGalleryImage(id, storagePath) {
-    const supabase = await createClient();
-    const user = await requireUser(supabase);
-    if (!user) {
-        return { error: 'Not authorized.' };
-    }
+    const auth = await authorize();
+    if (auth.error) return auth;
+    const { supabase } = auth;
 
     if (storagePath) {
         await supabase.storage.from('gallery').remove([storagePath]);
@@ -112,17 +117,14 @@ export async function deleteGalleryImage(id, storagePath) {
         return { error: 'Could not delete the image. Please try again.' };
     }
 
-    revalidatePath('/admin');
-    revalidatePath('/');
+    revalidateAdminAndHome();
     return { success: true };
 }
 
 export async function updateEnquiryStatus(id, status) {
-    const supabase = await createClient();
-    const user = await requireUser(supabase);
-    if (!user) {
-        return { error: 'Not authorized.' };
-    }
+    const auth = await authorize();
+    if (auth.error) return auth;
+    const { supabase } = auth;
 
     if (!ENQUIRY_STATUSES.includes(status)) {
         return { error: 'Invalid status.' };
@@ -142,11 +144,9 @@ export async function updateEnquiryStatus(id, status) {
 }
 
 export async function deleteEnquiry(id) {
-    const supabase = await createClient();
-    const user = await requireUser(supabase);
-    if (!user) {
-        return { error: 'Not authorized.' };
-    }
+    const auth = await authorize();
+    if (auth.error) return auth;
+    const { supabase } = auth;
 
     const { error } = await supabase.from('enquiries').delete().eq('id', id);
     if (error) {
@@ -158,11 +158,9 @@ export async function deleteEnquiry(id) {
 }
 
 export async function updateWhatsappNumber(_prevState, formData) {
-    const supabase = await createClient();
-    const user = await requireUser(supabase);
-    if (!user) {
-        return { error: 'Not authorized.' };
-    }
+    const auth = await authorize();
+    if (auth.error) return auth;
+    const { supabase } = auth;
 
     const number = (formData.get('whatsapp_number') || '').toString().trim().replace(/[^\d]/g, '');
 
@@ -175,34 +173,26 @@ export async function updateWhatsappNumber(_prevState, formData) {
         return { error: 'Could not save the number. Please try again.' };
     }
 
-    revalidatePath('/admin');
-    revalidatePath('/');
+    revalidateAdminAndHome();
     return { success: true };
 }
 
 export async function updateLogo(_prevState, formData) {
-    const supabase = await createClient();
-    const user = await requireUser(supabase);
-    if (!user) {
-        return { error: 'Not authorized.' };
-    }
+    const auth = await authorize();
+    if (auth.error) return auth;
+    const { supabase } = auth;
 
     const file = formData.get('logo');
 
-    if (!file || typeof file === 'string' || file.size === 0) {
-        return { error: 'Choose an image to upload.' };
-    }
-    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
-        return { error: 'Only JPG or PNG images are allowed.' };
-    }
-    if (file.size > MAX_IMAGE_BYTES) {
-        return { error: 'Image must be 5MB or smaller.' };
+    const fileError = validateImageFile(file);
+    if (fileError) {
+        return { error: fileError };
     }
 
     // Get current logo path to delete old one
     const { data: settingsRow } = await supabase.from('site_settings').select('logo_storage_path').eq('id', 1).maybeSingle();
 
-    const extension = file.type === 'image/png' ? 'png' : 'jpg';
+    const extension = getImageExtension(file);
     const path = `logos/${Date.now()}-${Math.random().toString(36).slice(2)}.${extension}`;
 
     const { error: uploadError } = await supabase.storage.from('site-assets').upload(path, file, {
@@ -229,17 +219,14 @@ export async function updateLogo(_prevState, formData) {
         return { error: 'Could not save the logo. Please try again.' };
     }
 
-    revalidatePath('/admin');
-    revalidatePath('/');
+    revalidateAdminAndHome();
     return { success: true };
 }
 
 export async function updateProcessStage(_prevState, formData) {
-    const supabase = await createClient();
-    const user = await requireUser(supabase);
-    if (!user) {
-        return { error: 'Not authorized.' };
-    }
+    const auth = await authorize();
+    if (auth.error) return auth;
+    const { supabase } = auth;
 
     const stageId = parseInt(formData.get('stage_id'), 10);
     const file = formData.get('image');
@@ -248,20 +235,15 @@ export async function updateProcessStage(_prevState, formData) {
         return { error: 'Invalid stage.' };
     }
 
-    if (!file || typeof file === 'string' || file.size === 0) {
-        return { error: 'Choose an image to upload.' };
-    }
-    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
-        return { error: 'Only JPG or PNG images are allowed.' };
-    }
-    if (file.size > MAX_IMAGE_BYTES) {
-        return { error: 'Image must be 5MB or smaller.' };
+    const fileError = validateImageFile(file);
+    if (fileError) {
+        return { error: fileError };
     }
 
     // Get current stage image path to delete old one
     const { data: stageRow } = await supabase.from('process_stages').select('storage_path').eq('id', stageId).maybeSingle();
 
-    const extension = file.type === 'image/png' ? 'png' : 'jpg';
+    const extension = getImageExtension(file);
     const path = `process-stages/${stageId}-${Date.now()}.${extension}`;
 
     const { error: uploadError } = await supabase.storage.from('site-assets').upload(path, file, {
@@ -288,17 +270,14 @@ export async function updateProcessStage(_prevState, formData) {
         return { error: 'Could not save the image. Please try again.' };
     }
 
-    revalidatePath('/admin');
-    revalidatePath('/');
+    revalidateAdminAndHome();
     return { success: true };
 }
 
 export async function addTestimonial(_prevState, formData) {
-    const supabase = await createClient();
-    const user = await requireUser(supabase);
-    if (!user) {
-        return { error: 'Not authorized.' };
-    }
+    const auth = await authorize();
+    if (auth.error) return auth;
+    const { supabase } = auth;
 
     const quote = (formData.get('quote') || '').toString().trim();
     const name = (formData.get('name') || '').toString().trim();
@@ -321,34 +300,28 @@ export async function addTestimonial(_prevState, formData) {
         return { error: 'Could not add testimonial. Please try again.' };
     }
 
-    revalidatePath('/admin');
-    revalidatePath('/');
+    revalidateAdminAndHome();
     return { success: true };
 }
 
 export async function deleteTestimonial(id) {
-    const supabase = await createClient();
-    const user = await requireUser(supabase);
-    if (!user) {
-        return { error: 'Not authorized.' };
-    }
+    const auth = await authorize();
+    if (auth.error) return auth;
+    const { supabase } = auth;
 
     const { error } = await supabase.from('testimonials').delete().eq('id', id);
     if (error) {
         return { error: 'Could not delete testimonial. Please try again.' };
     }
 
-    revalidatePath('/admin');
-    revalidatePath('/');
+    revalidateAdminAndHome();
     return { success: true };
 }
 
 export async function addSocialMediaLink(_prevState, formData) {
-    const supabase = await createClient();
-    const user = await requireUser(supabase);
-    if (!user) {
-        return { error: 'Not authorized.' };
-    }
+    const auth = await authorize();
+    if (auth.error) return auth;
+    const { supabase } = auth;
 
     const title = (formData.get('title') || '').toString().trim();
     const url = (formData.get('url') || '').toString().trim();
@@ -370,24 +343,20 @@ export async function addSocialMediaLink(_prevState, formData) {
         return { error: 'Could not add social media link. Please try again.' };
     }
 
-    revalidatePath('/admin');
-    revalidatePath('/');
+    revalidateAdminAndHome();
     return { success: true };
 }
 
 export async function deleteSocialMediaLink(id) {
-    const supabase = await createClient();
-    const user = await requireUser(supabase);
-    if (!user) {
-        return { error: 'Not authorized.' };
-    }
+    const auth = await authorize();
+    if (auth.error) return auth;
+    const { supabase } = auth;
 
     const { error } = await supabase.from('social_media_links').delete().eq('id', id);
     if (error) {
         return { error: 'Could not delete social media link. Please try again.' };
     }
 
-    revalidatePath('/admin');
-    revalidatePath('/');
+    revalidateAdminAndHome();
     return { success: true };
 }

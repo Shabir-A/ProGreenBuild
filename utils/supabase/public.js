@@ -1,8 +1,6 @@
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
+import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from './config';
 
 export function createClient() {
-    return createSupabaseClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL,
-        process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
-    );
+    return createSupabaseClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 }

@@ -16,22 +16,13 @@ import {
     updateProcessStage,
     updateWhatsappNumber,
 } from './actions';
+import { ENQUIRY_TYPE_LABELS } from '../../utils/enquiries';
 
 const initialUploadState = { error: null, success: false };
 const initialNumberState = { error: null, success: false };
 const initialLogoState = { error: null, success: false };
 const initialStageState = { error: null, success: false };
 const initialSocialMediaState = { error: null, success: false };
-
-const ENQUIRY_TYPE_LABELS = {
-    general: 'General Renovation Enquiry',
-    bathroom: 'Bathroom Modification',
-    kitchen: 'Kitchen Refit',
-    'living-room': 'Living Room Renovation',
-    'new-home': 'New Home Handover Inspection',
-    resale: 'Resale Property Inspection',
-    other: 'Other',
-};
 
 const ENQUIRY_STATUS_OPTIONS = [
     { value: 'pending_reply', label: 'Pending Reply from Pro Green Build' },

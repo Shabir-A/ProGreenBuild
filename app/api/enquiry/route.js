@@ -1,5 +1,6 @@
 import { Resend } from 'resend';
 import { createClient } from '../../../utils/supabase/server';
+import { getEnquiryTypeLabel } from '../../../utils/enquiries';
 
 const rateLimitStore = new Map();
 const RATE_LIMIT_WINDOW = 60 * 1000;
@@ -33,16 +34,6 @@ function checkRateLimit(ip) {
     return true;
 }
 
-const ENQUIRY_TYPE_LABELS = {
-    general: 'General Renovation Enquiry',
-    bathroom: 'Bathroom Modification',
-    kitchen: 'Kitchen Refit',
-    'living-room': 'Living Room Renovation',
-    'new-home': 'New Home Handover Inspection',
-    resale: 'Resale Property Inspection',
-    other: 'Other',
-};
-
 export async function POST(request) {
     const clientIp = getClientIp(request);
     if (!checkRateLimit(clientIp)) {
@@ -75,7 +66,7 @@ export async function POST(request) {
         return Response.json({ error: 'Email address is too long.' }, { status: 400 });
     }
 
-    const enquiryLabel = ENQUIRY_TYPE_LABELS[enquiryType] ?? enquiryType;
+    const enquiryLabel = getEnquiryTypeLabel(enquiryType);
 
     const supabase = await createClient();
     const { error: insertError } = await supabase.from('enquiries').insert({
