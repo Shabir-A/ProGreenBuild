@@ -46,6 +46,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
     const marqueeRef = useRef(null);
     const marqueeSetWidthRef = useRef(0);
     const marqueePausedRef = useRef(false);
+    const [marqueeRepeats, setMarqueeRepeats] = useState(1);
 
     const hasGalleryItems = galleryItems.length > 0;
     const contactDigits = (whatsappNumber || '').replace(/[^\d]/g, '');
@@ -63,6 +64,25 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
         caption: STAGE_CAPTIONS[stage.label] || stage.caption,
     }));
     const testimonials = (dbTestimonials || []).map((t) => [t.quote, t.name]);
+
+    // A single set of photos must be at least as wide as the strip, otherwise the
+    // three-set track cannot scroll far enough to reach its wrap point.
+    useEffect(() => {
+        const el = marqueeRef.current;
+        if (!el || !hasGalleryItems) return undefined;
+
+        const fitRepeats = () => {
+            const setWidth = el.scrollWidth / 3;
+            if (setWidth <= 0) return;
+            const itemsWidth = setWidth / marqueeRepeats;
+            const needed = Math.max(1, Math.ceil(el.clientWidth / itemsWidth));
+            if (needed !== marqueeRepeats) setMarqueeRepeats(needed);
+        };
+        fitRepeats();
+
+        window.addEventListener('resize', fitRepeats);
+        return () => window.removeEventListener('resize', fitRepeats);
+    }, [hasGalleryItems, marqueeRepeats, galleryItems.length]);
 
     useEffect(() => {
         const el = marqueeRef.current;
@@ -108,7 +128,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
             window.removeEventListener('resize', handleResize);
             el.removeEventListener('scroll', handleScroll);
         };
-    }, [hasGalleryItems]);
+    }, [hasGalleryItems, marqueeRepeats]);
 
     const pauseMarquee = () => {
         marqueePausedRef.current = true;
@@ -288,14 +308,14 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                 <div className="mb-4 flex items-end justify-between gap-6 sm:mb-6">
                     <div>
                         <h2 className="text-xl font-semibold tracking-[-0.03em] text-[#143D2E] sm:text-4xl sm:tracking-[-0.05em] lg:text-4xl">Our Process</h2>
-                        <p className="mt-1.5 text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-[#2c2118]/75 sm:mt-3 sm:text-xs sm:tracking-[0.28em]">
+                        <p className="mt-1.5 text-sm font-semibold tracking-[-0.02em] text-[#2c2118]/75 sm:mt-2 sm:text-base sm:tracking-[-0.03em]">
                             From plan to handover, seen step by step.
                         </p>
                         <div className="mt-2 h-1 w-20 bg-[linear-gradient(90deg,#143D2E,#24426B,#143D2E)] rounded-full sm:mt-4 sm:w-28" />
                     </div>
                 </div>
 
-                <div className="relative overflow-hidden rounded-[1rem] border border-[#143D2E]/22 bg-[linear-gradient(180deg,rgba(255,251,244,0.5),rgba(214,222,214,0.52),rgba(222,227,233,0.42))] shadow-[0_30px_100px_-58px_rgba(54,39,23,0.92)] backdrop-blur-2xl sm:rounded-[2.1rem]">
+                <div className="relative mx-auto w-full max-w-3xl overflow-hidden rounded-[1rem] border border-[#143D2E]/22 bg-[linear-gradient(180deg,rgba(255,251,244,0.5),rgba(214,222,214,0.52),rgba(222,227,233,0.42))] shadow-[0_30px_100px_-58px_rgba(54,39,23,0.92)] backdrop-blur-2xl sm:rounded-[2.1rem]">
                     <div className="relative aspect-[4/3] overflow-hidden sm:aspect-[16/9]">
                         {stagesWithCaptions.map((stage, index) => (
                             <div
@@ -308,7 +328,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                                     fill
                                     priority={index === 0}
                                     className="object-cover"
-                                    sizes="(max-width: 768px) 100vw, 1200px"
+                                    sizes="(max-width: 768px) 100vw, 768px"
                                 />
                             </div>
                         ))}
@@ -359,7 +379,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                 <div className="mb-4 flex items-end justify-between gap-6 sm:mb-6">
                     <div>
                         <h2 className="text-xl font-semibold tracking-[-0.03em] text-[#143D2E] sm:text-4xl sm:tracking-[-0.05em] lg:text-4xl">Gallery</h2>
-                        <p className="mt-1.5 text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-[#2c2118]/75 sm:mt-3 sm:text-xs sm:tracking-[0.28em]">
+                        <p className="mt-1.5 text-sm font-semibold tracking-[-0.02em] text-[#2c2118]/75 sm:mt-2 sm:text-base sm:tracking-[-0.03em]">
                             A seamless view of the finished spaces.
                         </p>
                         <div className="mt-2 h-1 w-20 bg-[linear-gradient(90deg,#143D2E,#24426B,#143D2E)] rounded-full sm:mt-4 sm:w-28" />
@@ -378,7 +398,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                         onPointerUp={resumeMarquee}
                     >
                         <div className="marquee-track py-2 sm:py-4">
-                            {[...galleryItems, ...galleryItems, ...galleryItems].map((item, index) => (
+                            {Array.from({ length: marqueeRepeats * 3 }, () => galleryItems).flat().map((item, index) => (
                                 <article
                                     key={`${item.caption}-${index}`}
                                     className="group relative h-32 w-44 shrink-0 overflow-hidden rounded-[0.8rem] border border-[#143D2E]/18 bg-[linear-gradient(180deg,rgba(255,252,247,0.42),rgba(214,222,214,0.28),rgba(222,227,233,0.26))] shadow-[0_18px_45px_-32px_rgba(58,42,27,0.7)] sm:h-56 sm:w-[18.5rem] sm:rounded-[1.45rem] lg:h-60 lg:w-[20.5rem]"
@@ -410,7 +430,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
             <section className="mx-auto max-w-7xl px-3 py-6 sm:px-6 sm:py-14 lg:px-8">
                 <div className="max-w-2xl mb-8 sm:mb-12">
                     <h2 className="text-xl font-semibold tracking-[-0.03em] text-[#143D2E] sm:text-4xl sm:tracking-[-0.05em] lg:text-4xl">Services</h2>
-                    <p className="mt-1.5 text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-[#2c2118]/75 sm:mt-3 sm:text-xs sm:tracking-[0.28em]">
+                    <p className="mt-1.5 text-sm font-semibold tracking-[-0.02em] text-[#2c2118]/75 sm:mt-2 sm:text-base sm:tracking-[-0.03em]">
                         Everything you need for a smooth renovation, and more.
                     </p>
                     <div className="mt-2 h-px w-20 bg-[linear-gradient(90deg,#143D2E,#7B4F2C,#24426B)] sm:mt-4 sm:w-28" />
@@ -443,7 +463,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                     {/* LEFT: TESTIMONIALS */}
                     <div className="rounded-[1.2rem] border border-[#143D2E]/22 bg-[linear-gradient(180deg,rgba(250,246,238,0.6),rgba(214,222,214,0.7),rgba(222,227,233,0.46))] p-3 shadow-[0_30px_90px_-55px_rgba(54,39,23,0.9)] backdrop-blur-2xl sm:rounded-[2.25rem] sm:p-8">
                         <h2 className="text-lg font-semibold tracking-[-0.03em] text-[#143D2E] sm:text-2xl sm:tracking-[-0.05em]">Testimonials</h2>
-                        <p className="mt-1.5 text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-[#2c2118]/75 sm:mt-3 sm:text-xs sm:tracking-[0.28em]">
+                        <p className="mt-1.5 text-sm font-semibold tracking-[-0.02em] text-[#2c2118]/75 sm:mt-2 sm:text-base sm:tracking-[-0.03em]">
                             What homeowners say about working with us.
                         </p>
                         <div className="mt-2 h-px w-16 bg-[linear-gradient(90deg,#143D2E,#7B4F2C,#24426B)] sm:mt-4 sm:w-20" />
@@ -473,7 +493,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                     {/* RIGHT: ABOUT */}
                     <div className="rounded-[1.2rem] border border-[#143D2E]/22 bg-[linear-gradient(180deg,rgba(255,251,244,0.72),rgba(214,222,214,0.78),rgba(222,227,233,0.5))] p-3 shadow-[0_28px_80px_-50px_rgba(63,44,23,0.9)] backdrop-blur-xl sm:rounded-[2.25rem] sm:p-8">
                         <h2 className="text-lg font-semibold tracking-[-0.03em] text-[#143D2E] sm:text-2xl sm:tracking-[-0.05em]">About</h2>
-                        <p className="mt-1.5 text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-[#2c2118]/75 sm:mt-3 sm:text-xs sm:tracking-[0.28em]">
+                        <p className="mt-1.5 text-sm font-semibold tracking-[-0.02em] text-[#2c2118]/75 sm:mt-2 sm:text-base sm:tracking-[-0.03em]">
                             {getYearsInBusiness()} years in business, focused on clear pricing and careful delivery.
                         </p>
                         <div className="mt-2 h-px w-16 bg-[linear-gradient(90deg,#143D2E,#7B4F2C,#24426B)] sm:mt-4 sm:w-20" />
@@ -490,7 +510,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                     <div className="flex flex-col gap-4 sm:gap-6">
                         <div>
                             <h2 className="text-xl font-semibold tracking-[-0.03em] text-[#143D2E] sm:text-4xl sm:tracking-[-0.05em] lg:text-4xl">Contact</h2>
-                            <p className="mt-1.5 text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-[#2c2118]/75 sm:mt-3 sm:text-xs sm:tracking-[0.28em]">
+                            <p className="mt-1.5 text-sm font-semibold tracking-[-0.02em] text-[#2c2118]/75 sm:mt-2 sm:text-base sm:tracking-[-0.03em]">
                                 Ready when you are.
                             </p>
                             <div className="mt-2 h-1 w-20 bg-[linear-gradient(90deg,#143D2E,#24426B,#143D2E)] rounded-full sm:mt-4 sm:w-28" />
