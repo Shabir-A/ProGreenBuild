@@ -236,7 +236,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
 
                         {/* Trust Badges */}
                         <div className="relative w-full sm:w-[24rem] lg:w-[27rem] flex flex-col gap-4 sm:gap-4 lg:gap-5">
-                            <div className="overflow-hidden rounded-2xl border border-white/60 bg-[linear-gradient(135deg,rgba(252,249,241,0.92),rgba(246,241,230,0.88))] p-5 shadow-[inset_0_3px_0_0_rgba(36,66,107,0.65),0_20px_60px_-30px_rgba(20,61,46,0.35)] backdrop-blur-sm lg:p-7 w-full">
+                            <div className="overflow-hidden rounded-2xl border border-white/60 bg-[linear-gradient(135deg,rgba(252,249,241,0.92),rgba(246,241,230,0.88))] p-5 shadow-[inset_0_4px_0_0_#1F3A63,0_20px_60px_-30px_rgba(20,61,46,0.35)] backdrop-blur-sm lg:p-7 w-full">
                                 <div className="flex items-center gap-3 mb-4 lg:mb-5">
                                     <div className="rounded-full border-2 border-[#143D2E]/45 bg-white/60 p-2 lg:p-2.5 flex items-center justify-center h-12 w-12 lg:h-14 lg:w-14">
                                         <div className="relative h-8 w-8 lg:h-10 lg:w-10">
