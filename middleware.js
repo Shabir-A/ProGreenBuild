@@ -22,7 +22,15 @@ export async function middleware(request) {
     );
 
     // Refresh the auth session so /admin always sees an up-to-date cookie.
-    await supabase.auth.getUser();
+    // A failure here must not take the route down; /admin re-checks the session itself.
+    try {
+        const { error } = await supabase.auth.getUser();
+        if (error) {
+            console.error('Failed to refresh the auth session:', error.message);
+        }
+    } catch (err) {
+        console.error('Failed to refresh the auth session:', err);
+    }
 
     return response;
 }

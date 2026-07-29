@@ -9,7 +9,11 @@ const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 const ENQUIRY_STATUSES = ['pending_reply', 'awaiting_customer', 'converted', 'closed'];
 
 async function requireUser(supabase) {
-    const { data } = await supabase.auth.getUser();
+    const { data, error } = await supabase.auth.getUser();
+    if (error) {
+        console.error('Failed to resolve the current user:', error.message);
+        return null;
+    }
     return data?.user ?? null;
 }
 
@@ -28,18 +32,23 @@ export async function login(_prevState, formData) {
         if (error) {
             return { error: 'Invalid email or password.' };
         }
-
-        revalidatePath('/admin');
-        redirect('/admin');
     } catch (err) {
         console.error('Login error:', err);
         return { error: 'Something went wrong. Please try again.' };
     }
+
+    revalidatePath('/admin');
+    redirect('/admin');
 }
 
 export async function logout() {
     const supabase = await createClient();
-    await supabase.auth.signOut();
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+        console.error('Sign out failed:', error.message);
+        return { error: 'Could not sign you out. Please try again.' };
+    }
+
     revalidatePath('/admin');
     redirect('/admin');
 }
@@ -75,6 +84,7 @@ export async function addGalleryImage(_prevState, formData) {
         contentType: file.type,
     });
     if (uploadError) {
+        console.error('Gallery image upload failed:', uploadError.message);
         return { error: 'Upload failed. Please try again.' };
     }
 
@@ -87,7 +97,11 @@ export async function addGalleryImage(_prevState, formData) {
     });
 
     if (insertError) {
-        await supabase.storage.from('gallery').remove([path]);
+        console.error('Failed to save the gallery image:', insertError.message);
+        const { error: cleanupError } = await supabase.storage.from('gallery').remove([path]);
+        if (cleanupError) {
+            console.error('Failed to clean up the orphaned gallery file:', cleanupError.message);
+        }
         return { error: 'Could not save the image. Please try again.' };
     }
 
@@ -104,11 +118,15 @@ export async function deleteGalleryImage(id, storagePath) {
     }
 
     if (storagePath) {
-        await supabase.storage.from('gallery').remove([storagePath]);
+        const { error: removeError } = await supabase.storage.from('gallery').remove([storagePath]);
+        if (removeError) {
+            console.error('Failed to remove gallery file from storage:', removeError.message);
+        }
     }
 
     const { error } = await supabase.from('gallery_items').delete().eq('id', id);
     if (error) {
+        console.error('Failed to delete the gallery image row:', error.message);
         return { error: 'Could not delete the image. Please try again.' };
     }
 
@@ -134,6 +152,7 @@ export async function updateEnquiryStatus(id, status) {
         .eq('id', id);
 
     if (error) {
+        console.error('Failed to update the enquiry status:', error.message);
         return { error: 'Could not update status. Please try again.' };
     }
 
@@ -150,6 +169,7 @@ export async function deleteEnquiry(id) {
 
     const { error } = await supabase.from('enquiries').delete().eq('id', id);
     if (error) {
+        console.error('Failed to delete the enquiry:', error.message);
         return { error: 'Could not delete the enquiry. Please try again.' };
     }
 
@@ -172,6 +192,7 @@ export async function updateWhatsappNumber(_prevState, formData) {
         .eq('id', 1);
 
     if (error) {
+        console.error('Failed to save the WhatsApp number:', error.message);
         return { error: 'Could not save the number. Please try again.' };
     }
 
@@ -199,8 +220,15 @@ export async function updateLogo(_prevState, formData) {
         return { error: 'Image must be 5MB or smaller.' };
     }
 
-    // Get current logo path to delete old one
-    const { data: settingsRow } = await supabase.from('site_settings').select('logo_storage_path').eq('id', 1).maybeSingle();
+    // Current logo path, used to clean up the previous file after a successful swap.
+    const { data: settingsRow, error: settingsError } = await supabase
+        .from('site_settings')
+        .select('logo_storage_path')
+        .eq('id', 1)
+        .maybeSingle();
+    if (settingsError) {
+        console.error('Failed to read the existing logo path:', settingsError.message);
+    }
 
     const extension = file.type === 'image/png' ? 'png' : 'jpg';
     const path = `logos/${Date.now()}-${Math.random().toString(36).slice(2)}.${extension}`;
@@ -209,14 +237,19 @@ export async function updateLogo(_prevState, formData) {
         contentType: file.type,
     });
     if (uploadError) {
+        console.error('Logo upload failed:', uploadError.message);
         return { error: 'Upload failed. Please try again.' };
     }
 
     const { data: publicUrlData } = supabase.storage.from('site-assets').getPublicUrl(path);
 
-    // Delete old logo if exists
     if (settingsRow?.logo_storage_path) {
-        await supabase.storage.from('site-assets').remove([settingsRow.logo_storage_path]);
+        const { error: removeError } = await supabase.storage
+            .from('site-assets')
+            .remove([settingsRow.logo_storage_path]);
+        if (removeError) {
+            console.error('Failed to remove the previous logo file:', removeError.message);
+        }
     }
 
     const { error: updateError } = await supabase
@@ -225,7 +258,11 @@ export async function updateLogo(_prevState, formData) {
         .eq('id', 1);
 
     if (updateError) {
-        await supabase.storage.from('site-assets').remove([path]);
+        console.error('Failed to save the logo:', updateError.message);
+        const { error: cleanupError } = await supabase.storage.from('site-assets').remove([path]);
+        if (cleanupError) {
+            console.error('Failed to clean up the orphaned logo file:', cleanupError.message);
+        }
         return { error: 'Could not save the logo. Please try again.' };
     }
 
@@ -258,8 +295,15 @@ export async function updateProcessStage(_prevState, formData) {
         return { error: 'Image must be 5MB or smaller.' };
     }
 
-    // Get current stage image path to delete old one
-    const { data: stageRow } = await supabase.from('process_stages').select('storage_path').eq('id', stageId).maybeSingle();
+    // Current stage image path, used to clean up the previous file after a successful swap.
+    const { data: stageRow, error: stageRowError } = await supabase
+        .from('process_stages')
+        .select('storage_path')
+        .eq('id', stageId)
+        .maybeSingle();
+    if (stageRowError) {
+        console.error('Failed to read the existing process stage image path:', stageRowError.message);
+    }
 
     const extension = file.type === 'image/png' ? 'png' : 'jpg';
     const path = `process-stages/${stageId}-${Date.now()}.${extension}`;
@@ -268,14 +312,17 @@ export async function updateProcessStage(_prevState, formData) {
         contentType: file.type,
     });
     if (uploadError) {
+        console.error('Process stage image upload failed:', uploadError.message);
         return { error: 'Upload failed. Please try again.' };
     }
 
     const { data: publicUrlData } = supabase.storage.from('site-assets').getPublicUrl(path);
 
-    // Delete old image if exists
     if (stageRow?.storage_path) {
-        await supabase.storage.from('site-assets').remove([stageRow.storage_path]);
+        const { error: removeError } = await supabase.storage.from('site-assets').remove([stageRow.storage_path]);
+        if (removeError) {
+            console.error('Failed to remove the previous process stage image:', removeError.message);
+        }
     }
 
     const { error: updateError } = await supabase
@@ -284,7 +331,11 @@ export async function updateProcessStage(_prevState, formData) {
         .eq('id', stageId);
 
     if (updateError) {
-        await supabase.storage.from('site-assets').remove([path]);
+        console.error('Failed to save the process stage image:', updateError.message);
+        const { error: cleanupError } = await supabase.storage.from('site-assets').remove([path]);
+        if (cleanupError) {
+            console.error('Failed to clean up the orphaned process stage image:', cleanupError.message);
+        }
         return { error: 'Could not save the image. Please try again.' };
     }
 
@@ -318,6 +369,7 @@ export async function addTestimonial(_prevState, formData) {
     });
 
     if (error) {
+        console.error('Failed to add the testimonial:', error.message);
         return { error: 'Could not add testimonial. Please try again.' };
     }
 
@@ -335,6 +387,7 @@ export async function deleteTestimonial(id) {
 
     const { error } = await supabase.from('testimonials').delete().eq('id', id);
     if (error) {
+        console.error('Failed to delete the testimonial:', error.message);
         return { error: 'Could not delete testimonial. Please try again.' };
     }
 
@@ -367,6 +420,7 @@ export async function addSocialMediaLink(_prevState, formData) {
     });
 
     if (error) {
+        console.error('Failed to add the social media link:', error.message);
         return { error: 'Could not add social media link. Please try again.' };
     }
 
@@ -384,6 +438,7 @@ export async function deleteSocialMediaLink(id) {
 
     const { error } = await supabase.from('social_media_links').delete().eq('id', id);
     if (error) {
+        console.error('Failed to delete the social media link:', error.message);
         return { error: 'Could not delete social media link. Please try again.' };
     }
 

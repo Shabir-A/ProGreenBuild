@@ -4,7 +4,7 @@ import HomeClient from './HomeClient';
 export default async function Page() {
     const supabase = createClient();
 
-    const [{ data: galleryRows }, { data: settingsRow }, { data: processStagesData }, { data: testimonialRows }, { data: socialMediaRows }] = await Promise.all([
+    const [galleryResult, settingsResult, processStagesResult, testimonialsResult, socialMediaResult] = await Promise.all([
         supabase.from('gallery_items').select('image_url, caption').order('created_at', { ascending: true }),
         supabase.from('site_settings').select('whatsapp_number, logo_url').eq('id', 1).maybeSingle(),
         supabase
@@ -21,6 +21,26 @@ export default async function Page() {
             .select('title, url')
             .order('created_at', { ascending: true }),
     ]);
+
+    const results = {
+        gallery_items: galleryResult,
+        site_settings: settingsResult,
+        process_stages: processStagesResult,
+        testimonials: testimonialsResult,
+        social_media_links: socialMediaResult,
+    };
+
+    for (const [table, { error }] of Object.entries(results)) {
+        if (error) {
+            console.error(`Failed to load ${table} for the homepage:`, error.message);
+        }
+    }
+
+    const { data: galleryRows } = galleryResult;
+    const { data: settingsRow } = settingsResult;
+    const { data: processStagesData } = processStagesResult;
+    const { data: testimonialRows } = testimonialsResult;
+    const { data: socialMediaRows } = socialMediaResult;
 
     const galleryItems = (galleryRows ?? []).map((row) => ({
         src: row.image_url,

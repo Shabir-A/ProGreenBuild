@@ -169,10 +169,10 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(enquiryFields),
             });
-            const data = await response.json();
+            const data = await response.json().catch(() => null);
 
             if (!response.ok) {
-                setSubmitError(data.error || 'Something went wrong. Please try again.');
+                setSubmitError(data?.error || 'Something went wrong. Please try again.');
                 setFormPhase('idle');
                 return;
             }
@@ -185,7 +185,8 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                     closeEnquiryForm();
                 }, ICON_FLY_DURATION);
             }, FIELDS_FADE_DURATION);
-        } catch {
+        } catch (err) {
+            console.error('Enquiry submission failed:', err);
             setSubmitError('Something went wrong. Please check your connection and try again.');
             setFormPhase('idle');
         }

@@ -40,7 +40,7 @@ const ENQUIRY_STATUS_OPTIONS = [
     { value: 'closed', label: 'Closed - Not Converted' },
 ];
 
-export default function Dashboard({ galleryItems, whatsappNumber, logo, processStages, enquiries, testimonials, socialMediaLinks }) {
+export default function Dashboard({ loadErrors = [], galleryItems, whatsappNumber, logo, processStages, enquiries, testimonials, socialMediaLinks }) {
     const [uploadFormKey, setUploadFormKey] = useState(0);
     const [uploadState, uploadAction, uploadPending] = useActionState(addGalleryImage, initialUploadState);
     const [numberState, numberAction, numberPending] = useActionState(updateWhatsappNumber, initialNumberState);
@@ -56,6 +56,9 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
     const [enquiryStatusPendingId, setEnquiryStatusPendingId] = useState(null);
     const [deletingEnquiryId, setDeletingEnquiryId] = useState(null);
     const [enquiryErrors, setEnquiryErrors] = useState({});
+    const [galleryErrors, setGalleryErrors] = useState({});
+    const [testimonialErrors, setTestimonialErrors] = useState({});
+    const [socialMediaErrors, setSocialMediaErrors] = useState({});
     const [fileSelected, setFileSelected] = useState(false);
     const [uploadSubmitted, setUploadSubmitted] = useState(false);
     const [logoFileSelected, setLogoFileSelected] = useState(false);
@@ -77,7 +80,9 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
         const resetInactivityTimer = () => {
             if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current);
             inactivityTimerRef.current = setTimeout(() => {
-                logout();
+                logout().catch((err) => {
+                    console.error('Auto-logout failed:', err);
+                });
             }, INACTIVITY_TIME);
         };
 
@@ -144,40 +149,42 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
         }
     }, [numberState]);
 
+    const runItemAction = async (id, setErrors, setPendingId, action) => {
+        setPendingId(id);
+        setErrors((prev) => ({ ...prev, [id]: null }));
+        try {
+            const result = await action();
+            setErrors((prev) => ({ ...prev, [id]: result?.error ?? null }));
+        } catch (err) {
+            console.error('Admin action failed:', err);
+            setErrors((prev) => ({ ...prev, [id]: 'Something went wrong. Please try again.' }));
+        } finally {
+            setPendingId(null);
+        }
+    };
+
     const handleDelete = async (id, storagePath) => {
         if (!window.confirm('Remove this image?')) return;
-        setDeletingId(id);
-        await deleteGalleryImage(id, storagePath);
-        setDeletingId(null);
+        await runItemAction(id, setGalleryErrors, setDeletingId, () => deleteGalleryImage(id, storagePath));
     };
 
     const handleEnquiryStatusChange = async (id, status) => {
-        setEnquiryStatusPendingId(id);
-        const result = await updateEnquiryStatus(id, status);
-        setEnquiryErrors((prev) => ({ ...prev, [id]: result?.error ?? null }));
-        setEnquiryStatusPendingId(null);
+        await runItemAction(id, setEnquiryErrors, setEnquiryStatusPendingId, () => updateEnquiryStatus(id, status));
     };
 
     const handleDeleteEnquiry = async (id) => {
         if (!window.confirm('Delete this enquiry? This cannot be undone.')) return;
-        setDeletingEnquiryId(id);
-        const result = await deleteEnquiry(id);
-        setEnquiryErrors((prev) => ({ ...prev, [id]: result?.error ?? null }));
-        setDeletingEnquiryId(null);
+        await runItemAction(id, setEnquiryErrors, setDeletingEnquiryId, () => deleteEnquiry(id));
     };
 
     const handleDeleteTestimonial = async (id) => {
         if (!window.confirm('Delete this testimonial?')) return;
-        setDeletingTestimonialId(id);
-        await deleteTestimonial(id);
-        setDeletingTestimonialId(null);
+        await runItemAction(id, setTestimonialErrors, setDeletingTestimonialId, () => deleteTestimonial(id));
     };
 
     const handleDeleteSocialMediaLink = async (id) => {
         if (!window.confirm('Delete this social media link?')) return;
-        setDeletingSocialMediaId(id);
-        await deleteSocialMediaLink(id);
-        setDeletingSocialMediaId(null);
+        await runItemAction(id, setSocialMediaErrors, setDeletingSocialMediaId, () => deleteSocialMediaLink(id));
     };
 
     const handleFileChange = (e) => {
@@ -201,8 +208,13 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
     };
 
     const handleStageSubmit = (stageId) => async (formData) => {
-        const action = updateProcessStage;
-        const state = await action(stageStates[stageId] || initialStageState, formData);
+        let state;
+        try {
+            state = await updateProcessStage(stageStates[stageId] || initialStageState, formData);
+        } catch (err) {
+            console.error('Process stage upload failed:', err);
+            state = { error: 'Something went wrong. Please try again.' };
+        }
         setStageStates((prev) => ({
             ...prev,
             [stageId]: state,
@@ -231,6 +243,12 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
                         </form>
                     </div>
                 </div>
+
+                {loadErrors.length > 0 && (
+                    <p className="mb-6 text-sm text-red-600 bg-red-50 p-3 rounded border border-red-200">
+                        Some data could not be loaded ({loadErrors.join(', ')}). It may be incomplete — refresh to try again.
+                    </p>
+                )}
 
                 {/* ENQUIRIES SECTION - AT TOP */}
                 <section className="mb-10 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
@@ -465,6 +483,9 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
                                     </div>
                                     <div className="p-2">
                                         <p className="truncate text-xs text-gray-700 font-medium">{item.caption}</p>
+                                        {galleryErrors[item.id] && (
+                                            <p className="mt-2 text-xs text-red-600 bg-red-50 p-2 rounded">{galleryErrors[item.id]}</p>
+                                        )}
                                         <button
                                             type="button"
                                             onClick={() => handleDelete(item.id, item.storage_path)}
@@ -536,6 +557,9 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
                                 <div key={item.id} className="border border-gray-200 rounded-lg p-4 bg-white hover:shadow-sm transition">
                                     <p className="text-sm font-semibold text-gray-900">{item.name}</p>
                                     <p className="mt-2 text-sm text-gray-700 italic">"{item.quote}"</p>
+                                    {testimonialErrors[item.id] && (
+                                        <p className="mt-2 text-xs text-red-600 bg-red-50 p-2 rounded">{testimonialErrors[item.id]}</p>
+                                    )}
                                     <button
                                         type="button"
                                         onClick={() => handleDeleteTestimonial(item.id)}
@@ -604,6 +628,9 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
                                 <div key={item.id} className="border border-gray-200 rounded-lg p-4 bg-white hover:shadow-sm transition">
                                     <p className="text-sm font-semibold text-gray-900">{item.title}</p>
                                     <p className="mt-2 text-xs text-gray-600 truncate hover:text-clip">{item.url}</p>
+                                    {socialMediaErrors[item.id] && (
+                                        <p className="mt-2 text-xs text-red-600 bg-red-50 p-2 rounded">{socialMediaErrors[item.id]}</p>
+                                    )}
                                     <button
                                         type="button"
                                         onClick={() => handleDeleteSocialMediaLink(item.id)}

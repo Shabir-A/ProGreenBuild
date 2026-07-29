@@ -77,20 +77,25 @@ export async function POST(request) {
 
     const enquiryLabel = ENQUIRY_TYPE_LABELS[enquiryType] ?? enquiryType;
 
-    const supabase = await createClient();
-    const { error: insertError } = await supabase.from('enquiries').insert({
-        name: name.toString().trim(),
-        email: trimmedEmail,
-        enquiry_type: enquiryType,
-        message: message?.toString().trim() || null,
-    });
+    try {
+        const supabase = await createClient();
+        const { error: insertError } = await supabase.from('enquiries').insert({
+            name: name.toString().trim(),
+            email: trimmedEmail,
+            enquiry_type: enquiryType,
+            message: message?.toString().trim() || null,
+        });
 
-    if (insertError) {
-        // Don't block the enquiry email on a logging failure — email delivery is the critical path.
-        console.error('Failed to log enquiry:', insertError.message);
+        if (insertError) {
+            // Don't block the enquiry email on a logging failure — email delivery is the critical path.
+            console.error('Failed to log enquiry:', insertError.message);
+        }
+    } catch (err) {
+        console.error('Failed to log enquiry:', err);
     }
 
-    if (!process.env.RESEND_API_KEY) {
+    if (!process.env.RESEND_API_KEY || !process.env.ENQUIRY_RECEIVING_EMAIL) {
+        console.error('Enquiry email is not configured: RESEND_API_KEY or ENQUIRY_RECEIVING_EMAIL is missing.');
         return Response.json({ error: 'Email service is not configured.' }, { status: 500 });
     }
 
@@ -112,11 +117,13 @@ export async function POST(request) {
         });
 
         if (error) {
-            return Response.json({ error: error.message ?? 'Failed to send email.' }, { status: 502 });
+            console.error('Resend rejected the enquiry email:', error.message ?? error);
+            return Response.json({ error: 'Could not send your enquiry. Please try again.' }, { status: 502 });
         }
 
         return Response.json({ success: true });
-    } catch {
+    } catch (err) {
+        console.error('Failed to send the enquiry email:', err);
         return Response.json({ error: 'Something went wrong while sending your enquiry.' }, { status: 500 });
     }
 }

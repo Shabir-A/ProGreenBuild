@@ -6,13 +6,17 @@ export const dynamic = 'force-dynamic';
 
 export default async function AdminPage() {
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (authError) {
+        console.error('Failed to resolve the admin session:', authError.message);
+    }
 
     if (!user) {
         return <LoginForm />;
     }
 
-    const [{ data: galleryItems }, { data: settingsRow }, { data: processStagesData }, { data: enquiries }, { data: testimonials }, { data: socialMediaLinks }] = await Promise.all([
+    const [galleryResult, settingsResult, processStagesResult, enquiriesResult, testimonialsResult, socialMediaResult] = await Promise.all([
         supabase
             .from('gallery_items')
             .select('id, image_url, storage_path, caption')
@@ -37,8 +41,32 @@ export default async function AdminPage() {
             .order('created_at', { ascending: true }),
     ]);
 
+    const results = {
+        gallery_items: galleryResult,
+        site_settings: settingsResult,
+        process_stages: processStagesResult,
+        enquiries: enquiriesResult,
+        testimonials: testimonialsResult,
+        social_media_links: socialMediaResult,
+    };
+
+    const loadErrors = Object.entries(results)
+        .filter(([, { error }]) => error)
+        .map(([table, { error }]) => {
+            console.error(`Failed to load ${table} for the admin dashboard:`, error.message);
+            return table;
+        });
+
+    const { data: galleryItems } = galleryResult;
+    const { data: settingsRow } = settingsResult;
+    const { data: processStagesData } = processStagesResult;
+    const { data: enquiries } = enquiriesResult;
+    const { data: testimonials } = testimonialsResult;
+    const { data: socialMediaLinks } = socialMediaResult;
+
     return (
         <Dashboard
+            loadErrors={loadErrors}
             galleryItems={galleryItems ?? []}
             whatsappNumber={settingsRow?.whatsapp_number ?? ''}
             logo={settingsRow?.logo_url ?? ''}
