@@ -78,7 +78,10 @@ A modern web application for ProGreen Build to showcase their portfolio and mana
    - ENQUIRY_RECEIVING_EMAIL: Admin email for enquiry notifications
 
 4. Set up Supabase
-   - Run the SQL migration: supabase/migration_add_enquiries.sql
+   - Run the SQL migrations: supabase/migration_add_enquiries.sql and
+     supabase/migration_public_read_policies.sql (the latter grants the anon
+     role read access to the tables the public homepage renders; without it RLS
+     hides the content and the homepage shows "Coming soon")
    - Create an admin user in Supabase Auth dashboard
 
 5. Run locally
