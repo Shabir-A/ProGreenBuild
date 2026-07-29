@@ -195,8 +195,8 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
         <main className="overflow-hidden text-[#2f241b]">
             {/* HERO */}
             <section className="relative isolate">
-                <div className="absolute inset-x-0 top-0 -z-10 h-[38rem] bg-[radial-gradient(circle_at_top_left,_rgba(18,105,72,0.72),_rgba(20,61,46,0)_46%),radial-gradient(circle_at_90%_12%,_rgba(33,90,158,0.70),_rgba(36,66,107,0)_40%),radial-gradient(circle_at_18%_35%,_rgba(123,79,44,0.12),_rgba(123,79,44,0)_22%),linear-gradient(180deg,rgba(255,253,248,0.88),rgba(255,253,248,0))]" />
-                <div className="mx-auto flex max-w-7xl flex-col px-3 pb-4 pt-4 sm:px-6 sm:pb-8 sm:pt-6 lg:px-8 lg:pb-10 lg:pt-8">
+                <div className="absolute inset-x-0 top-0 -z-10 h-[46rem] [mask-image:linear-gradient(180deg,#000_0%,#000_58%,transparent_100%)] bg-[radial-gradient(circle_at_top_left,_rgba(18,105,72,0.72),_rgba(20,61,46,0)_46%),radial-gradient(circle_at_90%_12%,_rgba(33,90,158,0.70),_rgba(36,66,107,0)_40%),radial-gradient(circle_at_18%_35%,_rgba(123,79,44,0.12),_rgba(123,79,44,0)_22%),linear-gradient(180deg,rgba(255,253,248,0.88),rgba(255,253,248,0))]" />
+                <div className="mx-auto flex max-w-7xl flex-col px-3 pb-2 pt-4 sm:px-6 sm:pb-4 sm:pt-6 lg:px-8 lg:pb-5 lg:pt-8">
                     <header className="flex items-center justify-between gap-2 sm:gap-4">
                         <div className="flex items-center gap-2 sm:gap-3">
                             {logo ? (
@@ -219,7 +219,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                         <a href="#contact" className="glass-button glass-button--chip glass-button--primary px-2.5 py-1.5 text-[0.7rem] sm:px-4 sm:py-2.5 sm:text-sm">Get in touch</a>
                     </header>
 
-                    <div className="flex flex-col items-center gap-6 py-3 sm:flex-row sm:items-start sm:justify-between sm:py-5 lg:py-6">
+                    <div className="flex flex-col items-center gap-6 py-3 sm:flex-row sm:items-center sm:justify-between sm:py-4">
                         <div className="max-w-2xl">
                             <p className="mb-2 text-[0.7rem] font-medium uppercase tracking-[0.28em] text-[#143D2E] sm:mb-4 sm:text-xs sm:tracking-[0.32em]">
                                 Singapore Renovations
@@ -287,16 +287,16 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
             <section className="mx-auto max-w-7xl px-3 pt-0 pb-6 sm:px-6 sm:pt-0 sm:pb-14 lg:px-8">
                 <div className="mb-4 flex items-end justify-between gap-6 sm:mb-6">
                     <div>
-                        <p className="text-[0.65rem] font-semibold uppercase tracking-[0.32em] text-[#143D2E] sm:text-xs sm:tracking-[0.35em]">Our Process</p>
-                        <h2 className="mt-1.5 text-xl font-semibold tracking-[-0.03em] text-[#2c2118] sm:mt-3 sm:text-4xl sm:tracking-[-0.05em] lg:text-4xl">
+                        <h2 className="text-xl font-semibold tracking-[-0.03em] text-[#143D2E] sm:text-4xl sm:tracking-[-0.05em] lg:text-4xl">Our Process</h2>
+                        <p className="mt-1.5 text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-[#2c2118]/75 sm:mt-3 sm:text-xs sm:tracking-[0.28em]">
                             From plan to handover, seen step by step.
-                        </h2>
+                        </p>
                         <div className="mt-2 h-1 w-20 bg-[linear-gradient(90deg,#143D2E,#24426B,#143D2E)] rounded-full sm:mt-4 sm:w-28" />
                     </div>
                 </div>
 
                 <div className="relative overflow-hidden rounded-[1rem] border border-[#143D2E]/22 bg-[linear-gradient(180deg,rgba(255,251,244,0.5),rgba(214,222,214,0.52),rgba(222,227,233,0.42))] shadow-[0_30px_100px_-58px_rgba(54,39,23,0.92)] backdrop-blur-2xl sm:rounded-[2.1rem]">
-                    <div className="relative h-[12rem] overflow-hidden sm:h-[20rem] lg:h-[22rem]">
+                    <div className="relative aspect-[4/3] overflow-hidden sm:aspect-[16/9]">
                         {stagesWithCaptions.map((stage, index) => (
                             <div
                                 key={stage.label}
@@ -358,10 +358,10 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
             <section className="mx-auto max-w-7xl px-3 py-6 sm:px-6 sm:py-14 lg:px-8">
                 <div className="mb-4 flex items-end justify-between gap-6 sm:mb-6">
                     <div>
-                        <p className="text-[0.65rem] font-semibold uppercase tracking-[0.32em] text-[#143D2E] sm:text-xs sm:tracking-[0.35em]">Gallery</p>
-                        <h2 className="mt-1.5 text-xl font-semibold tracking-[-0.03em] text-[#2c2118] sm:mt-3 sm:text-4xl sm:tracking-[-0.05em] lg:text-4xl">
+                        <h2 className="text-xl font-semibold tracking-[-0.03em] text-[#143D2E] sm:text-4xl sm:tracking-[-0.05em] lg:text-4xl">Gallery</h2>
+                        <p className="mt-1.5 text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-[#2c2118]/75 sm:mt-3 sm:text-xs sm:tracking-[0.28em]">
                             A seamless view of the finished spaces.
-                        </h2>
+                        </p>
                         <div className="mt-2 h-1 w-20 bg-[linear-gradient(90deg,#143D2E,#24426B,#143D2E)] rounded-full sm:mt-4 sm:w-28" />
                     </div>
                 </div>
@@ -392,8 +392,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                                     />
                                     <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(32,21,12,0.02)_40%,rgba(32,21,12,0.5)_100%)]" />
                                     <div className="absolute inset-x-2 bottom-2 rounded-[0.6rem] border border-white/25 bg-[linear-gradient(180deg,rgba(36,66,107,0.58),rgba(20,61,46,0.34))] px-2 py-1 text-white backdrop-blur-xl sm:inset-x-3 sm:bottom-3 sm:rounded-[1rem] sm:px-3 sm:py-2">
-                                        <p className="text-[0.45rem] uppercase tracking-[0.20em] text-white/70 sm:text-[0.7rem] sm:tracking-[0.32em]">Gallery</p>
-                                        <div className="mt-0.5 h-px w-6 bg-[linear-gradient(90deg,#143D2E,#7B4F2C,#24426B)] sm:mt-1 sm:w-10" />
+                                        <div className="h-px w-6 bg-[linear-gradient(90deg,#143D2E,#7B4F2C,#24426B)] sm:w-10" />
                                         <p className="mt-0.5 text-[0.65rem] font-medium sm:mt-1 sm:text-sm">{item.caption}</p>
                                     </div>
                                 </article>
@@ -410,10 +409,10 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
             {/* SERVICES */}
             <section className="mx-auto max-w-7xl px-3 py-6 sm:px-6 sm:py-14 lg:px-8">
                 <div className="max-w-2xl mb-8 sm:mb-12">
-                    <p className="text-[0.65rem] font-semibold uppercase tracking-[0.32em] text-[#143D2E] sm:text-xs sm:tracking-[0.35em]">Services</p>
-                    <h2 className="mt-1.5 text-xl font-semibold tracking-[-0.03em] text-[#2c2118] sm:mt-3 sm:text-4xl sm:tracking-[-0.05em] lg:text-4xl">
+                    <h2 className="text-xl font-semibold tracking-[-0.03em] text-[#143D2E] sm:text-4xl sm:tracking-[-0.05em] lg:text-4xl">Services</h2>
+                    <p className="mt-1.5 text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-[#2c2118]/75 sm:mt-3 sm:text-xs sm:tracking-[0.28em]">
                         Everything you need for a smooth renovation, and more.
-                    </h2>
+                    </p>
                     <div className="mt-2 h-px w-20 bg-[linear-gradient(90deg,#143D2E,#7B4F2C,#24426B)] sm:mt-4 sm:w-28" />
                 </div>
 
@@ -443,10 +442,10 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-5 items-stretch">
                     {/* LEFT: TESTIMONIALS */}
                     <div className="rounded-[1.2rem] border border-[#143D2E]/22 bg-[linear-gradient(180deg,rgba(250,246,238,0.6),rgba(214,222,214,0.7),rgba(222,227,233,0.46))] p-3 shadow-[0_30px_90px_-55px_rgba(54,39,23,0.9)] backdrop-blur-2xl sm:rounded-[2.25rem] sm:p-8">
-                        <p className="text-[0.65rem] font-semibold uppercase tracking-[0.32em] text-[#143D2E] sm:text-xs sm:tracking-[0.35em]">Testimonials</p>
-                        <h2 className="mt-1.5 text-lg font-semibold tracking-[-0.03em] text-[#2c2118] sm:mt-3 sm:text-2xl sm:tracking-[-0.05em]">
+                        <h2 className="text-lg font-semibold tracking-[-0.03em] text-[#143D2E] sm:text-2xl sm:tracking-[-0.05em]">Testimonials</h2>
+                        <p className="mt-1.5 text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-[#2c2118]/75 sm:mt-3 sm:text-xs sm:tracking-[0.28em]">
                             What homeowners say about working with us.
-                        </h2>
+                        </p>
                         <div className="mt-2 h-px w-16 bg-[linear-gradient(90deg,#143D2E,#7B4F2C,#24426B)] sm:mt-4 sm:w-20" />
 
                         {testimonials.length === 0 ? (
@@ -473,10 +472,10 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
 
                     {/* RIGHT: ABOUT */}
                     <div className="rounded-[1.2rem] border border-[#143D2E]/22 bg-[linear-gradient(180deg,rgba(255,251,244,0.72),rgba(214,222,214,0.78),rgba(222,227,233,0.5))] p-3 shadow-[0_28px_80px_-50px_rgba(63,44,23,0.9)] backdrop-blur-xl sm:rounded-[2.25rem] sm:p-8">
-                        <p className="text-[0.65rem] font-semibold uppercase tracking-[0.32em] text-[#143D2E] sm:text-xs sm:tracking-[0.35em]">About</p>
-                        <h2 className="mt-1.5 text-lg font-semibold tracking-[-0.03em] text-[#2d2118] sm:mt-3 sm:text-2xl sm:tracking-[-0.05em]">
+                        <h2 className="text-lg font-semibold tracking-[-0.03em] text-[#143D2E] sm:text-2xl sm:tracking-[-0.05em]">About</h2>
+                        <p className="mt-1.5 text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-[#2c2118]/75 sm:mt-3 sm:text-xs sm:tracking-[0.28em]">
                             {getYearsInBusiness()} years in business, focused on clear pricing and careful delivery.
-                        </h2>
+                        </p>
                         <div className="mt-2 h-px w-16 bg-[linear-gradient(90deg,#143D2E,#7B4F2C,#24426B)] sm:mt-4 sm:w-20" />
                         <p className="mt-4 text-xs leading-5 text-[#5d4a3b] sm:mt-6 sm:text-sm sm:leading-6">
                             ProGreenBuild has been helping Singapore homeowners transform their spaces since 2016 through quality workmanship, transparent pricing, and reliable project delivery.
@@ -490,10 +489,10 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                 <div className="rounded-[1.2rem] border border-[#143D2E]/22 bg-[linear-gradient(180deg,rgba(255,251,244,0.82),rgba(214,222,214,0.9),rgba(222,227,233,0.74))] p-3 shadow-[0_24px_80px_-56px_rgba(55,39,23,0.9)] backdrop-blur-2xl sm:rounded-[2rem] sm:p-8">
                     <div className="flex flex-col gap-4 sm:gap-6">
                         <div>
-                            <p className="text-[0.65rem] font-semibold uppercase tracking-[0.32em] text-[#143D2E] sm:text-xs sm:tracking-[0.35em]">Contact</p>
-                            <h2 className="mt-1.5 text-xl font-semibold tracking-[-0.03em] text-[#2d2118] sm:mt-3 sm:text-4xl sm:tracking-[-0.05em] lg:text-4xl">
+                            <h2 className="text-xl font-semibold tracking-[-0.03em] text-[#143D2E] sm:text-4xl sm:tracking-[-0.05em] lg:text-4xl">Contact</h2>
+                            <p className="mt-1.5 text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-[#2c2118]/75 sm:mt-3 sm:text-xs sm:tracking-[0.28em]">
                                 Ready when you are.
-                            </h2>
+                            </p>
                             <div className="mt-2 h-1 w-20 bg-[linear-gradient(90deg,#143D2E,#24426B,#143D2E)] rounded-full sm:mt-4 sm:w-28" />
                         </div>
 
