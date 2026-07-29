@@ -417,7 +417,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                     <div className="rounded-[1.2rem] border border-[#6f8456]/22 bg-[linear-gradient(180deg,rgba(255,251,244,0.72),rgba(218,233,208,0.78),rgba(227,214,195,0.5))] p-3 shadow-[0_28px_80px_-50px_rgba(63,44,23,0.9)] backdrop-blur-xl sm:rounded-[2.25rem] sm:p-8">
                         <p className="text-[0.65rem] font-semibold uppercase tracking-[0.32em] text-[#6f8456] sm:text-xs sm:tracking-[0.35em]">About</p>
                         <h2 className="mt-1.5 text-lg font-semibold tracking-[-0.03em] text-[#2d2118] sm:mt-3 sm:text-2xl sm:tracking-[-0.05em]">
-                            5 years in business, focused on clear pricing and careful delivery.
+                            10 years in business, focused on clear pricing and careful delivery.
                         </h2>
                         <div className="mt-2 h-px w-16 bg-[linear-gradient(90deg,#6f8456,#c4a26a,#7b5232)] sm:mt-4 sm:w-20" />
                         <p className="mt-4 text-xs leading-5 text-[#5d4a3b] sm:mt-6 sm:text-sm sm:leading-6">
@@ -615,6 +615,49 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                     </div>
                 </div>
             )}
+
+            {/* Footer - Legal Info */}
+            <footer className="border-t border-gray-200 bg-gray-50 px-3 py-8 sm:px-6 lg:px-8">
+                <div className="mx-auto max-w-7xl">
+                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
+                        {/* Company Info */}
+                        <div>
+                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-600">Company</p>
+                            <div className="mt-3 space-y-1 text-xs text-gray-600">
+                                <p className="font-medium text-gray-900">PROGREENBUILD PTE. LTD.</p>
+                                <p>UEN: 202120698M</p>
+                                <p>Singapore</p>
+                            </div>
+                        </div>
+
+                        {/* Legal Links */}
+                        <div>
+                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-600">Legal</p>
+                            <div className="mt-3 space-y-2">
+                                <a href="/privacy" className="text-xs text-gray-600 hover:text-gray-900">Privacy Policy</a>
+                                <br />
+                                <a href="/terms" className="text-xs text-gray-600 hover:text-gray-900">Terms & Conditions</a>
+                            </div>
+                        </div>
+
+                        {/* Contact */}
+                        <div>
+                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-600">Contact</p>
+                            <div className="mt-3 text-xs text-gray-600">
+                                <p>
+                                    <a href="mailto:contact@progreenbuild.com" className="hover:text-gray-900">
+                                        contact@progreenbuild.com
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="mt-6 border-t border-gray-200 pt-6 text-center text-xs text-gray-500">
+                        <p>&copy; {new Date().getFullYear()} PROGREENBUILD PTE. LTD. All rights reserved.</p>
+                    </div>
+                </div>
+            </footer>
         </main>
     );
 }

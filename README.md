@@ -9,20 +9,26 @@ A modern web application for ProGreen Build to showcase their portfolio and mana
 - 4-stage renovation process carousel with progress indicator
 - Auto-scrolling portfolio gallery of completed projects
 - Services grid listing core offerings and specialties
-- Rotating client testimonials with auto-play
+- Rotating client testimonials with auto-play (falls back to "Coming soon" if none added)
+- Social media links section (with "Coming soon" fallback)
 - About section with company story and values
 - Contact options: email enquiry form, WhatsApp, and phone links
+- Legal pages: Privacy Policy and Terms & Conditions
 - Mobile responsive design across all breakpoints
-- Success notification on enquiry submission
+- Success notification on enquiry submission (auto-dismisses after 5 seconds)
 
 ### Admin Dashboard
 - Secure email/password login (Supabase Auth)
 - Logo upload and management
 - Process stage image uploads (4 stages: Floor Plan to Finished Result)
 - Gallery image management (add/remove with captions)
+- Testimonials management (add/remove with quotes)
+- Social media links management (add/remove platform links)
 - Contact settings (WhatsApp/phone number)
 - Enquiry management (view, update status, delete with confirmation)
-- Windows 95 style minimalist interface
+- Minimalist utilitarian interface with monospace buttons
+- Success messages auto-dismiss after 5 seconds
+- Delete buttons highlighted in red for emphasis
 
 ### Data Features
 - Gallery images pulled from Supabase
@@ -130,6 +136,8 @@ utils/
 - site_settings: Phone number, logo URL
 - gallery_items: Portfolio images with captions
 - process_stages: 4 renovation stages with images
+- testimonials: Client testimonials with quotes and approval status
+- social_media_links: Social media platform links for footer
 - enquiries: Enquiry submissions with status tracking (pending_reply, awaiting_customer, converted, closed)
 
 ### Storage Buckets
@@ -146,15 +154,52 @@ utils/
 6. Set contact number: WhatsApp and phone link (digits only)
 7. Log out: clears session
 
-## Deployment
+## Regulatory Compliance (Singapore)
 
-Push to GitHub. Vercel auto-deploys.
+### PDPA (Personal Data Protection Act)
+- Privacy Policy available at `/privacy`
+- Privacy policy outlines data collection, usage, and user rights
+- Compliant with Singapore PDPA requirements for personal data handling
+- Data used for: internal customer tracking, email contact, WhatsApp/phone contact
 
-Before deploying:
+### Website Legal Pages
+- Privacy Policy (`/privacy`) — covers data handling and PDPA compliance
+- Terms & Conditions (`/terms`) — covers website usage and liability
+- Business information in footer — UEN: 202120698M, company name, contact email
+
+## Pre-Deployment Checklist
+
+Before going live:
+
+### Domain & Email
+- [ ] Purchase custom domain
+- [ ] Update email address (currently: contact@progreenbuild.com) — point to your email service
+- [ ] Update footer contact info if needed
+
+### Content
+- [ ] Add at least one testimonial (or leave as "Coming soon")
+- [ ] Add social media links (or leave as "Coming soon")
+- [ ] Upload logo
+- [ ] Upload process stage images
+- [ ] Add gallery images
+
+### Admin Setup
+- [ ] Create admin user in Supabase Auth
+- [ ] Test admin login at /admin
+- [ ] Test all upload features
+
+### Testing
+- [ ] Test enquiry form and email delivery
+- [ ] Test on mobile (responsive design)
+- [ ] Review /privacy and /terms pages (update as needed)
+- [ ] Check footer displays correctly with company info
+
+### Deployment
 1. Add environment variables to Vercel project settings
 2. Ensure Supabase RLS policies are active
-3. Test admin login on staging
-4. Test enquiry form and email delivery
+3. Push to GitHub (Vercel auto-deploys)
+4. Set custom domain in Vercel dashboard
+5. Test enquiry form on live site
 
 ## Email Integration
 
