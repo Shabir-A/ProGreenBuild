@@ -20,14 +20,6 @@ const services = [
     ['Kitchen & Bathroom Refits', 'Focused refreshes for the rooms that see the most daily use.'],
 ];
 
-const testimonials = [
-    ['The pricing was clear from the start and the finish still felt premium.', 'Jane Tan (test)'],
-    ['They kept the home tidy and the handover was much easier than we expected.', 'Daniel Lim (test)'],
-    ['Quick replies, good advice, and the final look was exactly what we wanted.', 'Alicia Wong (test)'],
-    ['The team made the renovation feel straightforward instead of stressful.', 'Marcus Goh (test)'],
-    ['Strong value for the price, with a finish that looked carefully considered.', 'Priya Nair (test)'],
-];
-
 const TESTIMONIAL_DURATION = 5600;
 const PROCESS_DURATION = 4600;
 const FIELDS_FADE_DURATION = 450;
@@ -191,6 +183,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
     }, []);
 
     useEffect(() => {
+        if (stagesWithCaptions.length === 0) return undefined;
         const timer = window.setTimeout(() => {
             setProcessIndex((value) => (value + 1) % stagesWithCaptions.length);
             setProcessTick((value) => value + 1);
@@ -199,6 +192,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
     }, [processTick, stagesWithCaptions.length]);
 
     useEffect(() => {
+        if (testimonials.length === 0) return undefined;
         const timer = window.setTimeout(() => {
             setTestimonialIndex((value) => (value + 1) % testimonials.length);
             setTestimonialTick((value) => value + 1);

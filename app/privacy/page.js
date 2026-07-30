@@ -18,7 +18,7 @@ export default function PrivacyPolicy() {
                         <ul className="ml-4 mt-2 list-disc space-y-1">
                             <li>Your name</li>
                             <li>Your email address</li>
-                            <li>Your phone number (if provided)</li>
+                            <li>Your phone number if you contact us through WhatsApp or otherwise provide it directly</li>
                             <li>Your enquiry type and message</li>
                         </ul>
                     </section>
@@ -29,7 +29,7 @@ export default function PrivacyPolicy() {
                         <ul className="ml-4 mt-2 list-disc space-y-1">
                             <li>Internal customer tracking and enquiry management</li>
                             <li>Contacting you via email if you provided your email address</li>
-                            <li>Contacting you via WhatsApp or phone call if you indicated preference for these methods</li>
+                            <li>Contacting you via WhatsApp or phone call if you reach out to us through those channels or provide your number</li>
                             <li>Responding to your enquiries and providing services</li>
                         </ul>
                     </section>

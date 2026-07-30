@@ -1,57 +1,46 @@
 # Functional Requirements
 
-## Public Site (MVP Complete)
-- Landing page with hero section
-- Services grid
-- Portfolio/gallery showcase
-- Testimonials carousel
-- About section
-- Contact information (phone, email, social links)
-- Contact form for enquiries (NEW)
+## Public Site
+- Render homepage content from Supabase on each request
+- Show hero, services, process stages, gallery, testimonials, about, and contact sections
+- Show social media links when configured, otherwise show a fallback state
+- Open an enquiry modal from the contact section
+- Accept public enquiry submissions with name, email, enquiry type, and optional message
+- Send each enquiry to the configured receiving email through Resend
+- Log each enquiry into the `enquiries` table
+- Show privacy policy at `/privacy`
+- Show terms and conditions at `/terms`
 
 ## Admin Dashboard
 
 ### Authentication
-- Email + password login at /admin/login
-- Supabase Auth integration
-- Session management and logout
-- Protected admin routes with middleware
-- Secure password reset capability
+- Require Supabase-authenticated access for `/admin`
+- Support email/password sign-in
+- Support logout
+- Refresh auth session for admin traffic through middleware
 
-### Gallery Management
-- Upload images to gallery (JPG, PNG only, max 5MB)
-- Images stored in Supabase Storage
-- Display and manage gallery items
-- Delete gallery images
-- Reorder gallery items (display_order)
-- Public gallery pulls from database (not hardcoded)
+### Content Management
+- Upload gallery images to Supabase Storage
+- Save gallery captions in the database
+- Delete gallery images and their associated records
+- Upload a site logo
+- Upload one image per renovation process stage
+- Add testimonials
+- Delete testimonials
+- Add social media links
+- Delete social media links
+- Update the WhatsApp/contact number stored in `site_settings`
 
-### Email Configuration
-- View current enquiry email address
-- Change email address that receives contact form submissions
-- Settings stored in Supabase database
-- Only logged-in admins can modify
+### Enquiry Management
+- List enquiries in the admin dashboard
+- Separate enquiries into open and archive views based on status
+- Update enquiry status between `pending_reply`, `awaiting_customer`, `converted`, and `closed`
+- Delete enquiries
 
-### Contact Form Handling
-- Simple contact form on public site (Name, Email, Message)
-- Form submission sends email to configured admin email
-- Email delivery via SendGrid or Resend
-- Success/error notifications to user
-- No authentication needed for users
-
-## What Admin CANNOT Do
-- Upload sensitive documents (prices, addresses, contracts)
-- Edit service descriptions or pricing
-- Modify testimonials
-- Access user data or analytics
-- Manage client projects or documents
-- Change site design/layout
-
-## Non-functional Requirements
-- Mobile responsive design (3 breakpoints: mobile, tablet, desktop)
-- Fast page load performance
-- Minimal, intuitive admin UI
-- Environment variables for secrets (API keys, Supabase URLs)
-- File upload validation (type + size)
-- Input sanitization for form submissions
-- Rate limiting on API endpoints
+## Constraints
+- Allow only JPG and PNG uploads
+- Reject uploads above 5MB
+- Validate email format server-side
+- Apply a best-effort rate limit on the enquiry endpoint
+- Store secrets in environment variables
+- Keep the public site mobile responsive
