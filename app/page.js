@@ -1,6 +1,10 @@
 import { createClient } from '../utils/supabase/public';
 import HomeClient from './HomeClient';
 
+// Forces a fresh render on every request instead of a cached build-time snapshot,
+// so the "years in business" figure in HomeClient stays correct without a redeploy.
+export const dynamic = 'force-dynamic';
+
 export default async function Page() {
     const supabase = createClient();
 
