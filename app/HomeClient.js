@@ -290,7 +290,28 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                                 </div>
                             )}
                         </div>
-                        <a href="#contact" className="glass-button glass-button--chip glass-button--primary px-2.5 py-1.5 text-[0.7rem] sm:px-4 sm:py-2.5 sm:text-sm">Get in touch</a>
+                        <div className="flex items-center gap-1.5 sm:gap-2">
+                            <button
+                                onClick={() => setShowEnquiryForm(true)}
+                                className="glass-button glass-button--chip glass-button--primary px-2.5 py-1.5 text-[0.7rem] sm:px-4 sm:py-2.5 sm:text-sm"
+                            >
+                                Email enquiry
+                            </button>
+                            {hasContactNumber && (
+                                <a
+                                    href={`https://wa.me/${contactDigits}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="glass-button glass-button--chip glass-button--primary inline-flex items-center gap-1.5 px-2.5 py-1.5 text-[0.7rem] sm:px-4 sm:py-2.5 sm:text-sm"
+                                >
+                                    <svg viewBox="0 0 24 24" fill="currentColor" className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" aria-hidden="true">
+                                        <path d="M17.472 14.382c-.297-.149-1.758-.868-2.03-.967-.273-.099-.472-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.372-.01-.571-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+                                        <path d="M12.001 2.003c-5.522 0-9.998 4.476-9.998 9.997 0 1.762.464 3.484 1.345 4.997l-1.44 4.97 5.099-1.335a9.965 9.965 0 004.994 1.337h.001c5.521 0 9.997-4.476 9.997-9.997 0-5.522-4.476-9.997-9.998-9.997zm0 18.312a8.29 8.29 0 01-4.234-1.156l-.303-.181-3.024.792.808-2.946-.198-.303a8.284 8.284 0 01-1.279-4.421c0-4.581 3.729-8.309 8.311-8.309 4.583 0 8.311 3.728 8.311 8.309-.001 4.582-3.729 8.309-8.312 8.215z" />
+                                    </svg>
+                                    WhatsApp
+                                </a>
+                            )}
+                        </div>
                     </header>
 
                     <div className="flex flex-col items-center gap-6 py-3 sm:flex-row sm:items-center sm:justify-between sm:py-4">
