@@ -40,7 +40,7 @@ export default function LoginForm() {
                 <button
                     type="submit"
                     disabled={pending}
-                    className="win95-button mt-4 w-full"
+                    className="bg-gray-200 border border-gray-400 px-3 py-2 text-sm font-mono hover:bg-gray-300 cursor-pointer rounded mt-4 w-full"
                 >
                     {pending ? 'Signing in...' : 'Sign in'}
                 </button>

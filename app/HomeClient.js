@@ -20,14 +20,6 @@ const services = [
     ['Kitchen & Bathroom Refits', 'Focused refreshes for the rooms that see the most daily use.'],
 ];
 
-const testimonials = [
-    ['The pricing was clear from the start and the finish still felt premium.', 'Jane Tan (test)'],
-    ['They kept the home tidy and the handover was much easier than we expected.', 'Daniel Lim (test)'],
-    ['Quick replies, good advice, and the final look was exactly what we wanted.', 'Alicia Wong (test)'],
-    ['The team made the renovation feel straightforward instead of stressful.', 'Marcus Goh (test)'],
-    ['Strong value for the price, with a finish that looked carefully considered.', 'Priya Nair (test)'],
-];
-
 const TESTIMONIAL_DURATION = 5600;
 const PROCESS_DURATION = 4600;
 const FIELDS_FADE_DURATION = 450;
@@ -46,6 +38,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
     const marqueeRef = useRef(null);
     const marqueeSetWidthRef = useRef(0);
     const marqueePausedRef = useRef(false);
+    const [marqueeRepeats, setMarqueeRepeats] = useState(1);
 
     const hasGalleryItems = galleryItems.length > 0;
     const contactDigits = (whatsappNumber || '').replace(/[^\d]/g, '');
@@ -64,13 +57,37 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
     }));
     const testimonials = (dbTestimonials || []).map((t) => [t.quote, t.name]);
 
+    // A single set of photos must be at least as wide as the strip, otherwise the
+    // three-set track cannot scroll far enough to reach its wrap point.
     useEffect(() => {
         const el = marqueeRef.current;
         if (!el || !hasGalleryItems) return undefined;
 
+        const fitRepeats = () => {
+            const setWidth = el.scrollWidth / 3;
+            if (setWidth <= 0) return;
+            const itemsWidth = setWidth / marqueeRepeats;
+            const needed = Math.max(1, Math.ceil(el.clientWidth / itemsWidth));
+            if (needed !== marqueeRepeats) setMarqueeRepeats(needed);
+        };
+        fitRepeats();
+
+        window.addEventListener('resize', fitRepeats);
+        return () => window.removeEventListener('resize', fitRepeats);
+    }, [hasGalleryItems, marqueeRepeats, galleryItems.length]);
+
+    useEffect(() => {
+        const el = marqueeRef.current;
+        if (!el || !hasGalleryItems) return undefined;
+
+        // The animation drives a float offset of its own: reading scrollLeft back
+        // each frame loses sub-pixel steps, which stalls the marquee entirely.
+        let offset = 0;
+
         const measure = () => {
             marqueeSetWidthRef.current = el.scrollWidth / 3;
-            el.scrollLeft = marqueeSetWidthRef.current;
+            offset = marqueeSetWidthRef.current;
+            el.scrollLeft = offset;
         };
         measure();
 
@@ -83,11 +100,14 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
 
         function step(time) {
             if (lastTime === null) lastTime = time;
-            const delta = time - lastTime;
+            const delta = Math.min(time - lastTime, 100);
             lastTime = time;
 
-            if (!marqueePausedRef.current && marqueeSetWidthRef.current > 0) {
-                el.scrollLeft += SPEED_PX_PER_MS * delta;
+            const setWidth = marqueeSetWidthRef.current;
+            if (!marqueePausedRef.current && setWidth > 0) {
+                offset += SPEED_PX_PER_MS * delta;
+                if (offset > setWidth * 2) offset -= setWidth;
+                el.scrollLeft = offset;
             }
             frameId = window.requestAnimationFrame(step);
         }
@@ -95,20 +115,55 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
         const handleScroll = () => {
             const setWidth = marqueeSetWidthRef.current;
             if (!setWidth) return;
-            if (el.scrollLeft < setWidth * 0.5) {
-                el.scrollLeft += setWidth;
-            } else if (el.scrollLeft > setWidth * 1.5) {
-                el.scrollLeft -= setWidth;
+            // Only adopt positions the user scrolled to, not our own writes.
+            if (Math.abs(el.scrollLeft - offset) > 2) offset = el.scrollLeft;
+            if (offset < setWidth * 0.5) {
+                offset += setWidth;
+                el.scrollLeft = offset;
+            } else if (offset > setWidth * 1.5) {
+                offset -= setWidth;
+                el.scrollLeft = offset;
             }
         };
         el.addEventListener('scroll', handleScroll, { passive: true });
+
+        // Touch devices drag the strip natively; a mouse needs to be wired up.
+        let dragStartX = null;
+        let dragStartScroll = 0;
+
+        const handlePointerDown = (event) => {
+            if (event.pointerType !== 'mouse') return;
+            dragStartX = event.clientX;
+            dragStartScroll = el.scrollLeft;
+            el.setPointerCapture(event.pointerId);
+        };
+
+        const handlePointerMove = (event) => {
+            if (dragStartX === null) return;
+            event.preventDefault();
+            offset = dragStartScroll - (event.clientX - dragStartX);
+            el.scrollLeft = offset;
+        };
+
+        const endDrag = () => {
+            dragStartX = null;
+        };
+
+        el.addEventListener('pointerdown', handlePointerDown);
+        el.addEventListener('pointermove', handlePointerMove);
+        el.addEventListener('pointerup', endDrag);
+        el.addEventListener('pointercancel', endDrag);
 
         return () => {
             window.cancelAnimationFrame(frameId);
             window.removeEventListener('resize', handleResize);
             el.removeEventListener('scroll', handleScroll);
+            el.removeEventListener('pointerdown', handlePointerDown);
+            el.removeEventListener('pointermove', handlePointerMove);
+            el.removeEventListener('pointerup', endDrag);
+            el.removeEventListener('pointercancel', endDrag);
         };
-    }, [hasGalleryItems]);
+    }, [hasGalleryItems, marqueeRepeats]);
 
     const pauseMarquee = () => {
         marqueePausedRef.current = true;
@@ -117,7 +172,18 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
         marqueePausedRef.current = false;
     };
 
+    // A pointer released outside the strip would otherwise pause the marquee forever.
     useEffect(() => {
+        window.addEventListener('pointerup', resumeMarquee);
+        window.addEventListener('touchend', resumeMarquee);
+        return () => {
+            window.removeEventListener('pointerup', resumeMarquee);
+            window.removeEventListener('touchend', resumeMarquee);
+        };
+    }, []);
+
+    useEffect(() => {
+        if (stagesWithCaptions.length === 0) return undefined;
         const timer = window.setTimeout(() => {
             setProcessIndex((value) => (value + 1) % stagesWithCaptions.length);
             setProcessTick((value) => value + 1);
@@ -126,6 +192,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
     }, [processTick, stagesWithCaptions.length]);
 
     useEffect(() => {
+        if (testimonials.length === 0) return undefined;
         const timer = window.setTimeout(() => {
             setTestimonialIndex((value) => (value + 1) % testimonials.length);
             setTestimonialTick((value) => value + 1);
@@ -195,8 +262,8 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
         <main className="overflow-hidden text-[#2f241b]">
             {/* HERO */}
             <section className="relative isolate">
-                <div className="absolute inset-x-0 top-0 -z-10 h-[38rem] bg-[radial-gradient(circle_at_top_left,_rgba(20,61,46,0.48),_rgba(20,61,46,0)_42%),radial-gradient(circle_at_90%_12%,_rgba(36,66,107,0.46),_rgba(36,66,107,0)_36%),radial-gradient(circle_at_18%_35%,_rgba(123,79,44,0.14),_rgba(123,79,44,0)_22%),linear-gradient(180deg,rgba(255,253,248,0.94),rgba(255,253,248,0))]" />
-                <div className="mx-auto flex max-w-7xl flex-col px-3 pb-4 pt-4 sm:px-6 sm:pb-8 sm:pt-6 lg:px-8 lg:pb-10 lg:pt-8">
+                <div className="absolute inset-x-0 top-0 -z-10 h-[46rem] [mask-image:linear-gradient(180deg,#000_0%,#000_58%,transparent_100%)] bg-[radial-gradient(circle_at_top_left,_rgba(18,105,72,0.72),_rgba(20,61,46,0)_46%),radial-gradient(circle_at_90%_12%,_rgba(33,90,158,0.70),_rgba(36,66,107,0)_40%),radial-gradient(circle_at_18%_35%,_rgba(123,79,44,0.12),_rgba(123,79,44,0)_22%),linear-gradient(180deg,rgba(255,253,248,0.88),rgba(255,253,248,0))]" />
+                <div className="mx-auto flex max-w-7xl flex-col px-3 pb-2 pt-4 sm:px-6 sm:pb-4 sm:pt-6 lg:px-8 lg:pb-5 lg:pt-8">
                     <header className="flex items-center justify-between gap-2 sm:gap-4">
                         <div className="flex items-center gap-2 sm:gap-3">
                             {logo ? (
@@ -219,7 +286,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                         <a href="#contact" className="glass-button glass-button--chip glass-button--primary px-2.5 py-1.5 text-[0.7rem] sm:px-4 sm:py-2.5 sm:text-sm">Get in touch</a>
                     </header>
 
-                    <div className="flex flex-col items-center gap-6 py-3 sm:flex-row sm:items-start sm:justify-between sm:py-5 lg:py-6">
+                    <div className="flex flex-col items-center gap-6 py-3 sm:flex-row sm:items-center sm:justify-between sm:py-4">
                         <div className="max-w-2xl">
                             <p className="mb-2 text-[0.7rem] font-medium uppercase tracking-[0.28em] text-[#143D2E] sm:mb-4 sm:text-xs sm:tracking-[0.32em]">
                                 Singapore Renovations
@@ -236,7 +303,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
 
                         {/* Trust Badges */}
                         <div className="relative w-full sm:w-[24rem] lg:w-[27rem] flex flex-col gap-4 sm:gap-4 lg:gap-5">
-                            <div className="overflow-hidden rounded-2xl bg-[linear-gradient(135deg,rgba(20,61,46,0.07),rgba(20,61,46,0.03))] p-5 shadow-[inset_0_3px_0_0_rgba(36,66,107,0.65),0_20px_60px_-30px_rgba(20,61,46,0.35)] backdrop-blur-sm lg:p-7 w-full">
+                            <div className="overflow-hidden rounded-2xl border border-white/60 bg-[linear-gradient(135deg,rgba(252,249,241,0.92),rgba(246,241,230,0.88))] p-5 shadow-[inset_0_4px_0_0_#1F3A63,0_20px_60px_-30px_rgba(20,61,46,0.35)] backdrop-blur-sm lg:p-7 w-full">
                                 <div className="flex items-center gap-3 mb-4 lg:mb-5">
                                     <div className="rounded-full border-2 border-[#143D2E]/45 bg-white/60 p-2 lg:p-2.5 flex items-center justify-center h-12 w-12 lg:h-14 lg:w-14">
                                         <div className="relative h-8 w-8 lg:h-10 lg:w-10">
@@ -287,16 +354,16 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
             <section className="mx-auto max-w-7xl px-3 pt-0 pb-6 sm:px-6 sm:pt-0 sm:pb-14 lg:px-8">
                 <div className="mb-4 flex items-end justify-between gap-6 sm:mb-6">
                     <div>
-                        <p className="text-[0.65rem] font-semibold uppercase tracking-[0.32em] text-[#143D2E] sm:text-xs sm:tracking-[0.35em]">Our Process</p>
-                        <h2 className="mt-1.5 text-xl font-semibold tracking-[-0.03em] text-[#2c2118] sm:mt-3 sm:text-4xl sm:tracking-[-0.05em] lg:text-4xl">
+                        <h2 className="text-xl font-semibold tracking-[-0.03em] text-[#143D2E] sm:text-4xl sm:tracking-[-0.05em] lg:text-4xl">Our Process</h2>
+                        <p className="mt-1.5 text-sm font-semibold tracking-[-0.02em] text-[#2c2118]/75 sm:mt-2 sm:text-base sm:tracking-[-0.03em]">
                             From plan to handover, seen step by step.
-                        </h2>
+                        </p>
                         <div className="mt-2 h-1 w-20 bg-[linear-gradient(90deg,#143D2E,#24426B,#143D2E)] rounded-full sm:mt-4 sm:w-28" />
                     </div>
                 </div>
 
-                <div className="relative overflow-hidden rounded-[1rem] border border-[#143D2E]/22 bg-[linear-gradient(180deg,rgba(255,251,244,0.5),rgba(214,222,214,0.52),rgba(222,227,233,0.42))] shadow-[0_30px_100px_-58px_rgba(54,39,23,0.92)] backdrop-blur-2xl sm:rounded-[2.1rem]">
-                    <div className="relative h-[12rem] overflow-hidden sm:h-[20rem] lg:h-[22rem]">
+                <div className="relative mx-auto w-full max-w-3xl overflow-hidden rounded-[1rem] border border-[#143D2E]/22 bg-[linear-gradient(180deg,rgba(255,251,244,0.5),rgba(214,222,214,0.52),rgba(222,227,233,0.42))] shadow-[0_30px_100px_-58px_rgba(54,39,23,0.92)] backdrop-blur-2xl sm:rounded-[2.1rem]">
+                    <div className="relative aspect-[4/3] overflow-hidden sm:aspect-[16/9]">
                         {stagesWithCaptions.map((stage, index) => (
                             <div
                                 key={stage.label}
@@ -308,7 +375,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                                     fill
                                     priority={index === 0}
                                     className="object-cover"
-                                    sizes="(max-width: 768px) 100vw, 1200px"
+                                    sizes="(max-width: 768px) 100vw, 768px"
                                 />
                             </div>
                         ))}
@@ -358,10 +425,10 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
             <section className="mx-auto max-w-7xl px-3 py-6 sm:px-6 sm:py-14 lg:px-8">
                 <div className="mb-4 flex items-end justify-between gap-6 sm:mb-6">
                     <div>
-                        <p className="text-[0.65rem] font-semibold uppercase tracking-[0.32em] text-[#143D2E] sm:text-xs sm:tracking-[0.35em]">Gallery</p>
-                        <h2 className="mt-1.5 text-xl font-semibold tracking-[-0.03em] text-[#2c2118] sm:mt-3 sm:text-4xl sm:tracking-[-0.05em] lg:text-4xl">
+                        <h2 className="text-xl font-semibold tracking-[-0.03em] text-[#143D2E] sm:text-4xl sm:tracking-[-0.05em] lg:text-4xl">Gallery</h2>
+                        <p className="mt-1.5 text-sm font-semibold tracking-[-0.02em] text-[#2c2118]/75 sm:mt-2 sm:text-base sm:tracking-[-0.03em]">
                             A seamless view of the finished spaces.
-                        </h2>
+                        </p>
                         <div className="mt-2 h-1 w-20 bg-[linear-gradient(90deg,#143D2E,#24426B,#143D2E)] rounded-full sm:mt-4 sm:w-28" />
                     </div>
                 </div>
@@ -370,15 +437,15 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                     <div
                         ref={marqueeRef}
                         className="marquee-strip rounded-[1rem] border border-[#143D2E]/20 bg-[linear-gradient(180deg,rgba(245,240,230,0.38),rgba(214,222,214,0.48),rgba(222,227,233,0.3))] shadow-[0_30px_100px_-60px_rgba(54,39,23,0.9)] backdrop-blur-2xl sm:rounded-[2.1rem]"
-                        onMouseEnter={pauseMarquee}
-                        onMouseLeave={resumeMarquee}
                         onTouchStart={pauseMarquee}
                         onTouchEnd={resumeMarquee}
+                        onTouchCancel={resumeMarquee}
                         onPointerDown={pauseMarquee}
                         onPointerUp={resumeMarquee}
+                        onPointerCancel={resumeMarquee}
                     >
                         <div className="marquee-track py-2 sm:py-4">
-                            {[...galleryItems, ...galleryItems, ...galleryItems].map((item, index) => (
+                            {Array.from({ length: marqueeRepeats * 3 }, () => galleryItems).flat().map((item, index) => (
                                 <article
                                     key={`${item.caption}-${index}`}
                                     className="group relative h-32 w-44 shrink-0 overflow-hidden rounded-[0.8rem] border border-[#143D2E]/18 bg-[linear-gradient(180deg,rgba(255,252,247,0.42),rgba(214,222,214,0.28),rgba(222,227,233,0.26))] shadow-[0_18px_45px_-32px_rgba(58,42,27,0.7)] sm:h-56 sm:w-[18.5rem] sm:rounded-[1.45rem] lg:h-60 lg:w-[20.5rem]"
@@ -392,8 +459,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                                     />
                                     <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(32,21,12,0.02)_40%,rgba(32,21,12,0.5)_100%)]" />
                                     <div className="absolute inset-x-2 bottom-2 rounded-[0.6rem] border border-white/25 bg-[linear-gradient(180deg,rgba(36,66,107,0.58),rgba(20,61,46,0.34))] px-2 py-1 text-white backdrop-blur-xl sm:inset-x-3 sm:bottom-3 sm:rounded-[1rem] sm:px-3 sm:py-2">
-                                        <p className="text-[0.45rem] uppercase tracking-[0.20em] text-white/70 sm:text-[0.7rem] sm:tracking-[0.32em]">Gallery</p>
-                                        <div className="mt-0.5 h-px w-6 bg-[linear-gradient(90deg,#143D2E,#7B4F2C,#24426B)] sm:mt-1 sm:w-10" />
+                                        <div className="h-px w-6 bg-[linear-gradient(90deg,#143D2E,#7B4F2C,#24426B)] sm:w-10" />
                                         <p className="mt-0.5 text-[0.65rem] font-medium sm:mt-1 sm:text-sm">{item.caption}</p>
                                     </div>
                                 </article>
@@ -410,10 +476,10 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
             {/* SERVICES */}
             <section className="mx-auto max-w-7xl px-3 py-6 sm:px-6 sm:py-14 lg:px-8">
                 <div className="max-w-2xl mb-8 sm:mb-12">
-                    <p className="text-[0.65rem] font-semibold uppercase tracking-[0.32em] text-[#143D2E] sm:text-xs sm:tracking-[0.35em]">Services</p>
-                    <h2 className="mt-1.5 text-xl font-semibold tracking-[-0.03em] text-[#2c2118] sm:mt-3 sm:text-4xl sm:tracking-[-0.05em] lg:text-4xl">
+                    <h2 className="text-xl font-semibold tracking-[-0.03em] text-[#143D2E] sm:text-4xl sm:tracking-[-0.05em] lg:text-4xl">Services</h2>
+                    <p className="mt-1.5 text-sm font-semibold tracking-[-0.02em] text-[#2c2118]/75 sm:mt-2 sm:text-base sm:tracking-[-0.03em]">
                         Everything you need for a smooth renovation, and more.
-                    </h2>
+                    </p>
                     <div className="mt-2 h-px w-20 bg-[linear-gradient(90deg,#143D2E,#7B4F2C,#24426B)] sm:mt-4 sm:w-28" />
                 </div>
 
@@ -443,10 +509,10 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-5 items-stretch">
                     {/* LEFT: TESTIMONIALS */}
                     <div className="rounded-[1.2rem] border border-[#143D2E]/22 bg-[linear-gradient(180deg,rgba(250,246,238,0.6),rgba(214,222,214,0.7),rgba(222,227,233,0.46))] p-3 shadow-[0_30px_90px_-55px_rgba(54,39,23,0.9)] backdrop-blur-2xl sm:rounded-[2.25rem] sm:p-8">
-                        <p className="text-[0.65rem] font-semibold uppercase tracking-[0.32em] text-[#143D2E] sm:text-xs sm:tracking-[0.35em]">Testimonials</p>
-                        <h2 className="mt-1.5 text-lg font-semibold tracking-[-0.03em] text-[#2c2118] sm:mt-3 sm:text-2xl sm:tracking-[-0.05em]">
+                        <h2 className="text-lg font-semibold tracking-[-0.03em] text-[#143D2E] sm:text-2xl sm:tracking-[-0.05em]">Testimonials</h2>
+                        <p className="mt-1.5 text-sm font-semibold tracking-[-0.02em] text-[#2c2118]/75 sm:mt-2 sm:text-base sm:tracking-[-0.03em]">
                             What homeowners say about working with us.
-                        </h2>
+                        </p>
                         <div className="mt-2 h-px w-16 bg-[linear-gradient(90deg,#143D2E,#7B4F2C,#24426B)] sm:mt-4 sm:w-20" />
 
                         {testimonials.length === 0 ? (
@@ -473,10 +539,10 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
 
                     {/* RIGHT: ABOUT */}
                     <div className="rounded-[1.2rem] border border-[#143D2E]/22 bg-[linear-gradient(180deg,rgba(255,251,244,0.72),rgba(214,222,214,0.78),rgba(222,227,233,0.5))] p-3 shadow-[0_28px_80px_-50px_rgba(63,44,23,0.9)] backdrop-blur-xl sm:rounded-[2.25rem] sm:p-8">
-                        <p className="text-[0.65rem] font-semibold uppercase tracking-[0.32em] text-[#143D2E] sm:text-xs sm:tracking-[0.35em]">About</p>
-                        <h2 className="mt-1.5 text-lg font-semibold tracking-[-0.03em] text-[#2d2118] sm:mt-3 sm:text-2xl sm:tracking-[-0.05em]">
+                        <h2 className="text-lg font-semibold tracking-[-0.03em] text-[#143D2E] sm:text-2xl sm:tracking-[-0.05em]">About</h2>
+                        <p className="mt-1.5 text-sm font-semibold tracking-[-0.02em] text-[#2c2118]/75 sm:mt-2 sm:text-base sm:tracking-[-0.03em]">
                             {getYearsInBusiness()} years in business, focused on clear pricing and careful delivery.
-                        </h2>
+                        </p>
                         <div className="mt-2 h-px w-16 bg-[linear-gradient(90deg,#143D2E,#7B4F2C,#24426B)] sm:mt-4 sm:w-20" />
                         <p className="mt-4 text-xs leading-5 text-[#5d4a3b] sm:mt-6 sm:text-sm sm:leading-6">
                             ProGreenBuild has been helping Singapore homeowners transform their spaces since 2016 through quality workmanship, transparent pricing, and reliable project delivery.
@@ -490,10 +556,10 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                 <div className="rounded-[1.2rem] border border-[#143D2E]/22 bg-[linear-gradient(180deg,rgba(255,251,244,0.82),rgba(214,222,214,0.9),rgba(222,227,233,0.74))] p-3 shadow-[0_24px_80px_-56px_rgba(55,39,23,0.9)] backdrop-blur-2xl sm:rounded-[2rem] sm:p-8">
                     <div className="flex flex-col gap-4 sm:gap-6">
                         <div>
-                            <p className="text-[0.65rem] font-semibold uppercase tracking-[0.32em] text-[#143D2E] sm:text-xs sm:tracking-[0.35em]">Contact</p>
-                            <h2 className="mt-1.5 text-xl font-semibold tracking-[-0.03em] text-[#2d2118] sm:mt-3 sm:text-4xl sm:tracking-[-0.05em] lg:text-4xl">
+                            <h2 className="text-xl font-semibold tracking-[-0.03em] text-[#143D2E] sm:text-4xl sm:tracking-[-0.05em] lg:text-4xl">Contact</h2>
+                            <p className="mt-1.5 text-sm font-semibold tracking-[-0.02em] text-[#2c2118]/75 sm:mt-2 sm:text-base sm:tracking-[-0.03em]">
                                 Ready when you are.
-                            </h2>
+                            </p>
                             <div className="mt-2 h-1 w-20 bg-[linear-gradient(90deg,#143D2E,#24426B,#143D2E)] rounded-full sm:mt-4 sm:w-28" />
                         </div>
 
