@@ -20,6 +20,13 @@ const services = [
     ['Kitchen & Bathroom Refits', 'Focused refreshes for the rooms that see the most daily use.'],
 ];
 
+const WHATSAPP_MESSAGE = [
+    'Hello! I came across the ProGreenBuild website. I would love to find out more!',
+    '',
+    'Enquiry type: HDB/ private/ landed/ office/ others (specify)',
+    'Message: ',
+].join('\n');
+
 const TESTIMONIAL_DURATION = 5600;
 const PROCESS_DURATION = 4600;
 const FIELDS_FADE_DURATION = 450;
@@ -599,7 +606,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                                     </button>
                                     {hasContactNumber && (
                                         <a
-                                            href={`https://wa.me/${contactDigits}?text=Hey!%20I%20came%20across%20your%20website,%20would%20love%20to%20find%20out%20more`}
+                                            href={`https://wa.me/${contactDigits}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="glass-button glass-button--chip inline-flex items-center gap-1.5 px-2.5 py-1.5 sm:px-5 sm:py-3"
