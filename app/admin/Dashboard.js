@@ -306,7 +306,7 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
                     <form action={logoAction} className="space-y-4">
                         <div>
                             <label className="text-sm font-medium text-gray-900 block mb-2">
-                                Logo image (JPG or PNG, max 5MB) *
+                                Logo image (JPG or PNG, max 4MB) *
                             </label>
                             <div className="win95-file-input-wrapper">
                                 <input
@@ -406,7 +406,7 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
                     <form key={uploadFormKey} action={handleUploadSubmit} className="space-y-4 mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
                         <div>
                             <label className="text-sm font-medium text-gray-900 block mb-1">
-                                Image (JPG or PNG, max 5MB) *
+                                Image (JPG or PNG, max 4MB) *
                             </label>
                             <input
                                 ref={fileInputRef}

@@ -9,6 +9,12 @@ const nextConfig = {
       ? [{ protocol: 'https', hostname: supabaseHostname, pathname: '/storage/v1/object/public/**' }]
       : [],
   },
+  experimental: {
+    serverActions: {
+      // Vercel's hard payload ceiling for serverless functions is 4.5MB, so this must stay under that.
+      bodySizeLimit: '4.5mb',
+    },
+  },
 };
 
 module.exports = nextConfig;

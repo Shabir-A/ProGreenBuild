@@ -5,7 +5,8 @@ import { redirect } from 'next/navigation';
 import { createClient } from '../../utils/supabase/server';
 
 const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png'];
-const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+// Vercel serverless functions hard-cap request bodies at 4.5MB, so this must stay under that.
+const MAX_IMAGE_BYTES = 4 * 1024 * 1024;
 const ENQUIRY_STATUSES = ['pending_reply', 'awaiting_customer', 'converted', 'closed'];
 
 async function requireUser(supabase) {
@@ -65,7 +66,7 @@ export async function addGalleryImage(_prevState, formData) {
         return { error: 'Only JPG or PNG images are allowed.' };
     }
     if (file.size > MAX_IMAGE_BYTES) {
-        return { error: 'Image must be 5MB or smaller.' };
+        return { error: 'Image must be 4MB or smaller.' };
     }
 
     const extension = file.type === 'image/png' ? 'png' : 'jpg';
@@ -196,7 +197,7 @@ export async function updateLogo(_prevState, formData) {
         return { error: 'Only JPG or PNG images are allowed.' };
     }
     if (file.size > MAX_IMAGE_BYTES) {
-        return { error: 'Image must be 5MB or smaller.' };
+        return { error: 'Image must be 4MB or smaller.' };
     }
 
     // Get current logo path to delete old one
@@ -255,7 +256,7 @@ export async function updateProcessStage(_prevState, formData) {
         return { error: 'Only JPG or PNG images are allowed.' };
     }
     if (file.size > MAX_IMAGE_BYTES) {
-        return { error: 'Image must be 5MB or smaller.' };
+        return { error: 'Image must be 4MB or smaller.' };
     }
 
     // Get current stage image path to delete old one
