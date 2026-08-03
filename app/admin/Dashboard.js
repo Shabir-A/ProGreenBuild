@@ -23,6 +23,11 @@ const initialLogoState = { error: null, success: false };
 const initialStageState = { error: null, success: false };
 const initialSocialMediaState = { error: null, success: false };
 
+// Must match MAX_IMAGE_BYTES in app/admin/actions.js. Checked here too so oversized
+// files are rejected instantly in the browser instead of failing as a server/network error.
+const MAX_IMAGE_BYTES = 4 * 1024 * 1024;
+const IMAGE_SIZE_ERROR = 'Image must be 4MB or smaller.';
+
 const ENQUIRY_TYPE_LABELS = {
     general: 'General Renovation Enquiry',
     bathroom: 'Bathroom Modification',
@@ -116,7 +121,9 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
     const [enquiryErrors, setEnquiryErrors] = useState({});
     const [fileSelected, setFileSelected] = useState(false);
     const [uploadSubmitted, setUploadSubmitted] = useState(false);
+    const [uploadFileError, setUploadFileError] = useState('');
     const [logoFileSelected, setLogoFileSelected] = useState(false);
+    const [logoFileError, setLogoFileError] = useState('');
     const [stageFileSelected, setStageFileSelected] = useState({});
     const [showUploadSuccess, setShowUploadSuccess] = useState(false);
     const [showLogoSuccess, setShowLogoSuccess] = useState(false);
@@ -238,17 +245,47 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
     };
 
     const handleFileChange = (e) => {
-        setFileSelected(e.target.files && e.target.files.length > 0);
+        const file = e.target.files?.[0];
+        if (file && file.size > MAX_IMAGE_BYTES) {
+            setUploadFileError(IMAGE_SIZE_ERROR);
+            setFileSelected(false);
+            e.target.value = '';
+            return;
+        }
+        setUploadFileError('');
+        setFileSelected(!!file);
     };
 
     const handleLogoFileChange = (e) => {
-        setLogoFileSelected(e.target.files && e.target.files.length > 0);
+        const file = e.target.files?.[0];
+        if (file && file.size > MAX_IMAGE_BYTES) {
+            setLogoFileError(IMAGE_SIZE_ERROR);
+            setLogoFileSelected(false);
+            e.target.value = '';
+            return;
+        }
+        setLogoFileError('');
+        setLogoFileSelected(!!file);
     };
 
     const handleStageFileChange = (stageId) => (e) => {
+        const file = e.target.files?.[0];
+        if (file && file.size > MAX_IMAGE_BYTES) {
+            setStageStates((prev) => ({
+                ...prev,
+                [stageId]: { error: IMAGE_SIZE_ERROR, success: false },
+            }));
+            setStageFileSelected((prev) => ({ ...prev, [stageId]: false }));
+            e.target.value = '';
+            return;
+        }
+        setStageStates((prev) => ({
+            ...prev,
+            [stageId]: { error: null, success: false },
+        }));
         setStageFileSelected((prev) => ({
             ...prev,
-            [stageId]: e.target.files && e.target.files.length > 0,
+            [stageId]: !!file,
         }));
     };
 
@@ -457,7 +494,9 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
                                         </div>
                                     </div>
                                 )}
-                                {logoState?.error && <p className="text-sm text-red-600 bg-red-50 p-3 rounded-lg">{logoState.error}</p>}
+                                {(logoFileError || logoState?.error) && (
+                                    <p className="text-sm text-red-600 bg-red-50 p-3 rounded-lg">{logoFileError || logoState.error}</p>
+                                )}
                                 {showLogoSuccess && <p className="text-sm text-green-600 bg-green-50 p-3 rounded-lg">Logo updated.</p>}
                                 <button
                                     type="submit"
@@ -558,7 +597,10 @@ export default function Dashboard({ galleryItems, whatsappNumber, logo, processS
                                     />
                                 </div>
 
-                                {uploadState?.error && uploadSubmitted && fileSelected && (
+                                {uploadFileError && (
+                                    <p className="text-sm text-red-600 bg-red-50 p-2 rounded">{uploadFileError}</p>
+                                )}
+                                {!uploadFileError && uploadState?.error && uploadSubmitted && fileSelected && (
                                     <p className="text-sm text-red-600 bg-red-50 p-2 rounded">{uploadState.error}</p>
                                 )}
                                 {showUploadSuccess && (
