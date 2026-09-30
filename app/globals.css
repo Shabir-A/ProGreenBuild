@@ -216,7 +216,7 @@ body {
 
 @media (max-width: 640px) {
   .hero-surface::before { top: -13rem; left: -11rem; width: 24rem; }
-  .hero-surface::after { right: -12rem; bottom: -12rem; width: 24rem; }
+  .hero-surface::after { right: -14rem; bottom: 2rem; width: 31rem; }
 }
 
 .marquee-strip {
@@ -290,4 +290,3 @@ body {
     opacity: 0;
   }
 }
-

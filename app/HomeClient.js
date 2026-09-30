@@ -308,12 +308,16 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                     <div className="grid gap-10 pt-12 sm:pt-16 lg:grid-cols-[minmax(0,1.3fr)_minmax(20rem,0.7fr)] lg:items-end lg:gap-16">
                         <div className="max-w-3xl">
                             <p className="mb-4 text-xs font-bold uppercase tracking-[0.14em] text-[#24426B]">
-                                ProGreenBuild Pte. Ltd. · Singapore
+                                Singapore Renovations
                             </p>
 
                             <h1 className="text-4xl font-bold leading-[1.08] tracking-[-0.035em] text-[#143D2E] sm:text-6xl lg:text-[4.5rem]">
-                                Renovation work,<br />done properly.
+                                ProGreenBuild
                             </h1>
+
+                            <p className="mt-4 text-lg font-semibold text-[#143D2E] sm:text-2xl">
+                                Quality Renovations Without The Premium Price Tag.
+                            </p>
 
                             <p className="mt-5 max-w-xl text-base leading-7 text-[#34443b] sm:text-lg sm:leading-8">
                                 Home renovation, BTO inspections, carpentry and finishing work. Practical planning, clear communication and careful delivery from start to handover.
