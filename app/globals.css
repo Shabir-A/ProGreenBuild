@@ -199,24 +199,24 @@ body {
 }
 
 .hero-surface::before {
-  width: min(42vw, 36rem);
+  width: min(58vw, 48rem);
   aspect-ratio: 1;
-  top: -22rem;
-  left: -13rem;
-  background: #d7e4d8;
+  top: -27rem;
+  left: -15rem;
+  background: #9fc5ac;
 }
 
 .hero-surface::after {
-  width: min(30vw, 24rem);
+  width: min(46vw, 40rem);
   aspect-ratio: 1;
-  right: -9rem;
-  bottom: -15rem;
-  background: #dce5ec;
+  right: -12rem;
+  bottom: -19rem;
+  background: #94b7d3;
 }
 
 @media (max-width: 640px) {
-  .hero-surface::before { top: -9rem; left: -8rem; width: 16rem; }
-  .hero-surface::after { right: -8rem; bottom: -8rem; width: 14rem; }
+  .hero-surface::before { top: -13rem; left: -11rem; width: 24rem; }
+  .hero-surface::after { right: -12rem; bottom: -12rem; width: 24rem; }
 }
 
 .marquee-strip {
@@ -290,5 +290,4 @@ body {
     opacity: 0;
   }
 }
-
 
