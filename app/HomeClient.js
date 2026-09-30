@@ -29,8 +29,6 @@ const WHATSAPP_MESSAGE = [
 
 const TESTIMONIAL_DURATION = 5600;
 const PROCESS_DURATION = 4600;
-const FIELDS_FADE_DURATION = 450;
-const ICON_FLY_DURATION = 650;
 
 export default function HomeClient({ galleryItems, whatsappNumber, logo, processStages, testimonials: dbTestimonials, socialMediaLinks }) {
     const [processIndex, setProcessIndex] = useState(0);
@@ -38,7 +36,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
     const [testimonialIndex, setTestimonialIndex] = useState(0);
     const [testimonialTick, setTestimonialTick] = useState(0);
     const [showEnquiryForm, setShowEnquiryForm] = useState(false);
-    const [formPhase, setFormPhase] = useState('idle'); // 'idle' | 'sending' | 'hiding' | 'flying'
+    const [formPhase, setFormPhase] = useState('idle'); // 'idle' | 'sending'
     const [enquiryFields, setEnquiryFields] = useState({ name: '', email: '', enquiryType: '', message: '' });
     const [submitError, setSubmitError] = useState('');
     const [showSuccessMessage, setShowSuccessMessage] = useState(false);
@@ -251,14 +249,8 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                 return;
             }
 
-            setFormPhase('hiding');
-            window.setTimeout(() => {
-                setFormPhase('flying');
-                showSuccessToast();
-                window.setTimeout(() => {
-                    closeEnquiryForm();
-                }, ICON_FLY_DURATION);
-            }, FIELDS_FADE_DURATION);
+            closeEnquiryForm();
+            showSuccessToast();
         } catch {
             setSubmitError('Something went wrong. Please check your connection and try again.');
             setFormPhase('idle');
@@ -268,32 +260,31 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
     return (
         <main className="overflow-hidden text-[#2f241b]">
             {/* HERO */}
-            <section className="relative isolate">
-                <div className="absolute inset-x-0 top-0 -z-10 h-[46rem] [mask-image:linear-gradient(180deg,#000_0%,#000_58%,transparent_100%)] bg-[radial-gradient(circle_at_top_left,_rgba(18,105,72,0.72),_rgba(20,61,46,0)_46%),radial-gradient(circle_at_90%_12%,_rgba(33,90,158,0.70),_rgba(36,66,107,0)_40%),radial-gradient(circle_at_18%_35%,_rgba(123,79,44,0.12),_rgba(123,79,44,0)_22%),linear-gradient(180deg,rgba(255,253,248,0.88),rgba(255,253,248,0))]" />
-                <div className="mx-auto flex max-w-7xl flex-col px-3 pb-2 pt-4 sm:px-6 sm:pb-4 sm:pt-6 lg:px-8 lg:pb-5 lg:pt-8">
+            <section className="hero-surface relative isolate overflow-hidden border-b border-[#143D2E]/15">
+                <div className="relative z-10 mx-auto flex max-w-7xl flex-col px-4 pb-10 pt-5 sm:px-6 sm:pb-14 sm:pt-7 lg:px-8 lg:pb-20">
                     <header className="flex items-center justify-between gap-2 sm:gap-4">
                         <div className="flex items-center gap-2 sm:gap-3">
                             {logo ? (
-                                <div className="relative h-20 w-20 sm:h-28 sm:w-28 rounded-full overflow-hidden border-2 border-[#143D2E]/30 bg-white/50">
+                                <div className="relative h-16 w-16 overflow-hidden border border-[#143D2E]/25 bg-white sm:h-20 sm:w-20">
                                     <Image
                                         src={logo}
                                         alt="ProGreenBuild Logo"
                                         fill
                                         className="object-cover"
-                                        sizes="(max-width: 640px) 80px, 112px"
+                                        sizes="(max-width: 640px) 64px, 80px"
                                         priority
                                     />
                                 </div>
                             ) : (
-                                <div className="flex h-20 w-20 sm:h-28 sm:w-28 items-center justify-center rounded-full border border-white/70 bg-[linear-gradient(140deg,rgba(20,61,46,0.98),rgba(123,79,44,0.9),rgba(36,66,107,0.95))] shadow-[0_20px_60px_-30px_rgba(36,66,107,0.7)] backdrop-blur-xl">
-                                    <span className="text-base font-semibold tracking-[0.3em] text-[#f7f1e6] sm:text-2xl">PGB</span>
+                                <div className="flex h-16 w-16 items-center justify-center bg-[#143D2E] sm:h-20 sm:w-20">
+                                    <span className="text-base font-bold tracking-[0.08em] text-white sm:text-xl">PGB</span>
                                 </div>
                             )}
                         </div>
                         <div className="flex items-center gap-1.5 sm:gap-2">
                             <button
                                 onClick={() => setShowEnquiryForm(true)}
-                                className="glass-button glass-button--chip glass-button--primary px-2.5 py-1.5 text-[0.7rem] sm:px-4 sm:py-2.5 sm:text-sm"
+                                className="site-button site-button--chip site-button--primary px-2.5 py-1.5 text-[0.7rem] sm:px-4 sm:py-2.5 sm:text-sm"
                             >
                                 Email enquiry
                             </button>
@@ -302,7 +293,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                                     href={`https://wa.me/${contactDigits}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="glass-button glass-button--chip glass-button--primary inline-flex items-center gap-1.5 px-2.5 py-1.5 text-[0.7rem] sm:px-4 sm:py-2.5 sm:text-sm"
+                                    className="site-button site-button--chip site-button--primary inline-flex items-center gap-1.5 px-2.5 py-1.5 text-[0.7rem] sm:px-4 sm:py-2.5 sm:text-sm"
                                 >
                                     <svg viewBox="0 0 24 24" fill="currentColor" className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" aria-hidden="true">
                                         <path d="M17.472 14.382c-.297-.149-1.758-.868-2.03-.967-.273-.099-.472-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.372-.01-.571-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
@@ -314,26 +305,30 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                         </div>
                     </header>
 
-                    <div className="flex flex-col items-center gap-6 py-3 sm:flex-row sm:items-center sm:justify-between sm:py-4">
-                        <div className="max-w-2xl">
-                            <p className="mb-2 text-[0.7rem] font-medium uppercase tracking-[0.28em] text-[#143D2E] sm:mb-4 sm:text-xs sm:tracking-[0.32em]">
-                                Singapore Renovations
+                    <div className="grid gap-10 pt-12 sm:pt-16 lg:grid-cols-[minmax(0,1.3fr)_minmax(20rem,0.7fr)] lg:items-end lg:gap-16">
+                        <div className="max-w-3xl">
+                            <p className="mb-4 text-xs font-bold uppercase tracking-[0.14em] text-[#24426B]">
+                                ProGreenBuild Pte. Ltd. · Singapore
                             </p>
 
-                            <h1 className="text-5xl font-bold tracking-[-0.03em] text-[#143D2E] sm:text-6xl sm:tracking-[-0.04em] lg:text-7xl">
-                                ProGreenBuild
+                            <h1 className="text-4xl font-bold leading-[1.08] tracking-[-0.035em] text-[#143D2E] sm:text-6xl lg:text-[4.5rem]">
+                                Renovation work,<br />done properly.
                             </h1>
 
-                            <p className="mt-2 text-lg font-medium text-[#143D2E] sm:mt-4 sm:text-2xl">
-                                Quality Renovations Without The Premium Price Tag.
+                            <p className="mt-5 max-w-xl text-base leading-7 text-[#34443b] sm:text-lg sm:leading-8">
+                                Home renovation, BTO inspections, carpentry and finishing work. Practical planning, clear communication and careful delivery from start to handover.
                             </p>
+                            <div className="mt-7 flex flex-wrap gap-3">
+                                <button onClick={() => setShowEnquiryForm(true)} className="site-button site-button--primary px-5 py-3 text-sm">Discuss your project</button>
+                                <a href="#services" className="site-button site-button--soft px-5 py-3 text-sm">Explore our services</a>
+                            </div>
                         </div>
 
                         {/* Trust Badges */}
-                        <div className="relative w-full sm:w-[24rem] lg:w-[27rem] flex flex-col gap-4 sm:gap-4 lg:gap-5">
-                            <div className="overflow-hidden rounded-2xl border border-white/60 bg-[linear-gradient(135deg,rgba(252,249,241,0.92),rgba(246,241,230,0.88))] p-5 shadow-[inset_0_4px_0_0_#1F3A63,0_20px_60px_-30px_rgba(20,61,46,0.35)] backdrop-blur-sm lg:p-7 w-full">
+                        <div className="w-full">
+                            <div className="border-l-4 border-[#24426B] bg-white p-5 lg:p-7">
                                 <div className="flex items-center gap-3 mb-4 lg:mb-5">
-                                    <div className="rounded-full border-2 border-[#143D2E]/45 bg-white/60 p-2 lg:p-2.5 flex items-center justify-center h-12 w-12 lg:h-14 lg:w-14">
+                                    <div className="flex h-12 w-12 items-center justify-center border border-[#143D2E]/20 bg-white p-2 lg:h-14 lg:w-14">
                                         <div className="relative h-8 w-8 lg:h-10 lg:w-10">
                                             <Image
                                                 src="/images/hdb-logo.png"
@@ -343,7 +338,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                                             />
                                         </div>
                                     </div>
-                                    <div className="rounded-full border-2 border-[#24426B]/45 bg-white/60 p-2 lg:p-2.5 flex items-center justify-center h-12 w-12 lg:h-14 lg:w-14">
+                                    <div className="flex h-12 w-12 items-center justify-center border border-[#24426B]/20 bg-white p-2 lg:h-14 lg:w-14">
                                         <div className="relative h-8 w-8 lg:h-10 lg:w-10">
                                             <Image
                                                 src="/images/bca-logo.jpg"
@@ -354,7 +349,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                                         </div>
                                     </div>
                                 </div>
-                                <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#143D2E] mb-3 lg:text-sm lg:mb-4">Licensed & Established</p>
+                                <p className="mb-3 text-xs font-bold uppercase tracking-[0.12em] text-[#143D2E] lg:mb-4">Licensed & Established</p>
                                 <div className="space-y-3 lg:space-y-4">
                                     {[
                                         { title: 'HDB Licensed', detail: 'HB-05-6344F' },
@@ -379,18 +374,18 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
             </section>
 
             {/* OUR PROCESS */}
-            <section className="mx-auto max-w-7xl px-3 pt-0 pb-6 sm:px-6 sm:pt-0 sm:pb-14 lg:px-8">
+            <section className="mx-auto max-w-7xl px-4 pt-10 pb-6 sm:px-6 sm:pt-14 sm:pb-14 lg:px-8">
                 <div className="mb-4 flex items-end justify-between gap-6 sm:mb-6">
                     <div>
                         <h2 className="text-xl font-semibold tracking-[-0.03em] text-[#143D2E] sm:text-4xl sm:tracking-[-0.05em] lg:text-4xl">Our Process</h2>
                         <p className="mt-1.5 text-sm font-semibold tracking-[-0.02em] text-[#2c2118]/75 sm:mt-2 sm:text-base sm:tracking-[-0.03em]">
                             From plan to handover, seen step by step.
                         </p>
-                        <div className="mt-2 h-1 w-20 bg-[linear-gradient(90deg,#143D2E,#24426B,#143D2E)] rounded-full sm:mt-4 sm:w-28" />
+                        <div className="mt-3 h-0.5 w-20 bg-[#143D2E] sm:mt-4" />
                     </div>
                 </div>
 
-                <div className="relative mx-auto w-full max-w-3xl overflow-hidden rounded-[1rem] border border-[#143D2E]/22 bg-[linear-gradient(180deg,rgba(255,251,244,0.5),rgba(214,222,214,0.52),rgba(222,227,233,0.42))] shadow-[0_30px_100px_-58px_rgba(54,39,23,0.92)] backdrop-blur-2xl sm:rounded-[2.1rem]">
+                <div className="relative mx-auto w-full max-w-3xl overflow-hidden border border-[#143D2E]/20 bg-white">
                     <div className="relative aspect-[4/3] overflow-hidden sm:aspect-[16/9]">
                         {stagesWithCaptions.map((stage, index) => (
                             <div
@@ -408,15 +403,13 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                             </div>
                         ))}
 
-                        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(27,19,11,0.08)_0%,rgba(27,19,11,0.05)_55%,rgba(27,19,11,0.28)_100%)]" />
-
                         {/* Stage label */}
-                        <div className="absolute left-2.5 top-2.5 z-10 glass-button glass-button--chip px-2.5 py-1 text-[8px] uppercase tracking-[0.20em] text-white sm:left-4 sm:top-4 sm:px-4 sm:py-2 sm:text-xs sm:tracking-[0.34em]">
+                        <div className="absolute left-2.5 top-2.5 z-10 bg-[#143D2E] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.1em] text-white sm:left-4 sm:top-4 sm:px-4 sm:py-2 sm:text-xs">
                             Stage {processIndex + 1} of {stagesWithCaptions.length}
                         </div>
 
                         {/* Dots overlay bottom-right of image — reduced prominence on mobile */}
-                        <div className="absolute bottom-2.5 right-2.5 z-10 flex items-center gap-1 opacity-60 sm:bottom-4 sm:right-4 sm:gap-2 sm:opacity-100">
+                        <div className="absolute bottom-2.5 right-2.5 z-10 flex items-center gap-1 sm:bottom-4 sm:right-4 sm:gap-2">
                             {stagesWithCaptions.map((stage, index) => (
                                 <button
                                     key={stage.label}
@@ -425,23 +418,23 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                                         setProcessIndex(index);
                                         setProcessTick((value) => value + 1);
                                     }}
-                                    className={`glass-button glass-button--dot ${index === processIndex ? 'glass-button--selected' : 'glass-button--soft'}`}
-                                    aria-label={`Show process stage ${index + 1}`}
+                                    className={`site-button site-button--dot ${index === processIndex ? 'site-button--selected' : 'site-button--soft'}`}
+                                    aria-label={`Show process stage ${index + 1}: ${stage.label}`}
                                     aria-pressed={index === processIndex}
                                 />
                             ))}
                         </div>
                     </div>
 
-                    {/* Glass caption card below image — subtle overlap ties it to the photo, premium feel restored */}
-                    <div className="relative z-10 -mt-4 px-3 pb-3 sm:mt-0 sm:px-5 sm:pb-5 sm:pt-6">
-                        <div className="rounded-[1.2rem] border border-white/40 bg-[linear-gradient(165deg,rgba(255,253,250,0.82),rgba(248,246,242,0.68))] px-4 py-3.5 shadow-[0_24px_56px_-22px_rgba(20,61,46,0.32),inset_0_1px_1px_rgba(255,255,255,0.8),inset_0_-1px_2px_rgba(20,61,46,0.08)] backdrop-blur-lg sm:rounded-[1.35rem] sm:px-6 sm:py-5 sm:shadow-[0_20px_50px_-28px_rgba(20,61,46,0.25),inset_0_1px_1px_rgba(255,255,255,0.7)]">
+                    {/* Straightforward stage description below the project image. */}
+                    <div className="border-t border-[#143D2E]/15 px-4 py-4 sm:px-6 sm:py-5">
+                        <div>
                             <p className="text-[0.55rem] uppercase tracking-[0.22em] font-medium text-[#143D2E]/65 sm:text-[0.7rem] sm:tracking-[0.36em]">{stagesWithCaptions[processIndex]?.label}</p>
                             <p className="mt-1.5 text-[0.75rem] leading-5 text-[#2c2118] sm:mt-2.5 sm:text-base sm:leading-6 font-medium">{stagesWithCaptions[processIndex]?.caption}</p>
                             <div className="mt-3 h-1 overflow-hidden rounded-full bg-[#143D2E]/10 sm:mt-4 sm:h-1.5">
                                 <div
                                     key={processTick}
-                                    className="process-progress h-full rounded-full bg-[linear-gradient(90deg,rgba(20,61,46,0.98),rgba(58,92,66,0.9),rgba(36,66,107,0.94))]"
+                                    className="process-progress h-full bg-[#24426B]"
                                 />
                             </div>
                         </div>
@@ -457,14 +450,14 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                         <p className="mt-1.5 text-sm font-semibold tracking-[-0.02em] text-[#2c2118]/75 sm:mt-2 sm:text-base sm:tracking-[-0.03em]">
                             A seamless view of the finished spaces.
                         </p>
-                        <div className="mt-2 h-1 w-20 bg-[linear-gradient(90deg,#143D2E,#24426B,#143D2E)] rounded-full sm:mt-4 sm:w-28" />
+                        <div className="mt-3 h-0.5 w-20 bg-[#143D2E] sm:mt-4" />
                     </div>
                 </div>
 
                 {hasGalleryItems ? (
                     <div
                         ref={marqueeRef}
-                        className="marquee-strip rounded-[1rem] border border-[#143D2E]/20 bg-[linear-gradient(180deg,rgba(245,240,230,0.38),rgba(214,222,214,0.48),rgba(222,227,233,0.3))] shadow-[0_30px_100px_-60px_rgba(54,39,23,0.9)] backdrop-blur-2xl sm:rounded-[2.1rem]"
+                        className="marquee-strip border border-[#143D2E]/20 bg-white"
                         onTouchStart={pauseMarquee}
                         onTouchEnd={resumeMarquee}
                         onTouchCancel={resumeMarquee}
@@ -476,7 +469,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                             {Array.from({ length: marqueeRepeats * 3 }, () => galleryItems).flat().map((item, index) => (
                                 <article
                                     key={`${item.caption}-${index}`}
-                                    className="group relative h-32 w-44 shrink-0 overflow-hidden rounded-[0.8rem] border border-[#143D2E]/18 bg-[linear-gradient(180deg,rgba(255,252,247,0.42),rgba(214,222,214,0.28),rgba(222,227,233,0.26))] shadow-[0_18px_45px_-32px_rgba(58,42,27,0.7)] sm:h-56 sm:w-[18.5rem] sm:rounded-[1.45rem] lg:h-60 lg:w-[20.5rem]"
+                                    className="group relative h-32 w-44 shrink-0 overflow-hidden bg-[#e6e9e4] sm:h-56 sm:w-[18.5rem] lg:h-60 lg:w-[20.5rem]"
                                 >
                                     <Image
                                         src={item.src}
@@ -485,9 +478,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                                         className="object-cover transition duration-700 group-hover:scale-[1.04]"
                                         sizes="(max-width: 640px) 13rem, (max-width: 1024px) 18.5rem, 20.5rem"
                                     />
-                                    <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(32,21,12,0.02)_40%,rgba(32,21,12,0.5)_100%)]" />
-                                    <div className="absolute inset-x-2 bottom-2 rounded-[0.6rem] border border-white/25 bg-[linear-gradient(180deg,rgba(36,66,107,0.58),rgba(20,61,46,0.34))] px-2 py-1 text-white backdrop-blur-xl sm:inset-x-3 sm:bottom-3 sm:rounded-[1rem] sm:px-3 sm:py-2">
-                                        <div className="h-px w-6 bg-[linear-gradient(90deg,#143D2E,#7B4F2C,#24426B)] sm:w-10" />
+                                    <div className="absolute inset-x-2 bottom-2 bg-[#143D2E] px-2 py-1 text-white sm:inset-x-3 sm:bottom-3 sm:px-3 sm:py-2">
                                         <p className="mt-0.5 text-[0.65rem] font-medium sm:mt-1 sm:text-sm">{item.caption}</p>
                                     </div>
                                 </article>
@@ -495,20 +486,20 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                         </div>
                     </div>
                 ) : (
-                    <div className="rounded-[1rem] border border-[#143D2E]/20 bg-[linear-gradient(180deg,rgba(245,240,230,0.38),rgba(214,222,214,0.48),rgba(222,227,233,0.3))] p-8 text-center text-sm text-[#6f5843] backdrop-blur-2xl sm:rounded-[2.1rem]">
+                    <div className="border border-[#143D2E]/20 bg-white p-8 text-center text-sm text-[#5d4a3b]">
                         Gallery photos coming soon.
                     </div>
                 )}
             </section>
 
             {/* SERVICES */}
-            <section className="mx-auto max-w-7xl px-3 py-6 sm:px-6 sm:py-14 lg:px-8">
+            <section id="services" className="mx-auto max-w-7xl px-3 py-6 sm:px-6 sm:py-14 lg:px-8">
                 <div className="max-w-2xl mb-8 sm:mb-12">
                     <h2 className="text-xl font-semibold tracking-[-0.03em] text-[#143D2E] sm:text-4xl sm:tracking-[-0.05em] lg:text-4xl">Services</h2>
                     <p className="mt-1.5 text-sm font-semibold tracking-[-0.02em] text-[#2c2118]/75 sm:mt-2 sm:text-base sm:tracking-[-0.03em]">
                         Everything you need for a smooth renovation, and more.
                     </p>
-                    <div className="mt-2 h-px w-20 bg-[linear-gradient(90deg,#143D2E,#7B4F2C,#24426B)] sm:mt-4 sm:w-28" />
+                    <div className="mt-3 h-0.5 w-20 bg-[#24426B] sm:mt-4" />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-10 lg:gap-12">
@@ -536,18 +527,18 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
             <section className="mx-auto max-w-7xl px-3 py-6 sm:px-6 sm:py-14 lg:px-8">
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-5 items-stretch">
                     {/* LEFT: TESTIMONIALS */}
-                    <div className="rounded-[1.2rem] border border-[#143D2E]/22 bg-[linear-gradient(180deg,rgba(250,246,238,0.6),rgba(214,222,214,0.7),rgba(222,227,233,0.46))] p-3 shadow-[0_30px_90px_-55px_rgba(54,39,23,0.9)] backdrop-blur-2xl sm:rounded-[2.25rem] sm:p-8">
+                    <div className="border border-[#143D2E]/20 bg-white p-4 sm:p-8">
                         <h2 className="text-lg font-semibold tracking-[-0.03em] text-[#143D2E] sm:text-2xl sm:tracking-[-0.05em]">Testimonials</h2>
                         <p className="mt-1.5 text-sm font-semibold tracking-[-0.02em] text-[#2c2118]/75 sm:mt-2 sm:text-base sm:tracking-[-0.03em]">
                             What homeowners say about working with us.
                         </p>
-                        <div className="mt-2 h-px w-16 bg-[linear-gradient(90deg,#143D2E,#7B4F2C,#24426B)] sm:mt-4 sm:w-20" />
+                        <div className="mt-3 h-0.5 w-16 bg-[#143D2E] sm:mt-4" />
 
                         {testimonials.length === 0 ? (
                             <p className="mt-6 text-sm text-gray-600">Coming soon.</p>
                         ) : (
                             <div className="mt-4 sm:mt-6">
-                                <div className="rounded-[1rem] border border-[#143D2E]/18 bg-[linear-gradient(180deg,rgba(255,251,244,0.82),rgba(214,222,214,0.88),rgba(222,227,233,0.78))] p-3 shadow-[0_18px_50px_-36px_rgba(75,54,31,0.9)] backdrop-blur-xl sm:rounded-[1.75rem] sm:p-6">
+                                <div className="border-l-2 border-[#24426B] bg-[#f4f6f3] p-4 sm:p-6">
                                     <p className="text-sm leading-[1.3] tracking-[-0.02em] text-[#2c2118] sm:text-lg sm:leading-[1.4] sm:tracking-[-0.03em]">
                                         &ldquo;{activeTestimonial[0]}&rdquo;
                                     </p>
@@ -557,7 +548,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                                     <div className="mt-2 h-1 overflow-hidden rounded-full bg-white/40 sm:mt-4 sm:h-1.5">
                                         <div
                                             key={testimonialTick}
-                                            className="testimonial-progress h-full rounded-full bg-[linear-gradient(90deg,rgba(20,61,46,0.98),rgba(58,92,66,0.9),rgba(36,66,107,0.94))]"
+                                            className="testimonial-progress h-full bg-[#24426B]"
                                         />
                                     </div>
                                 </div>
@@ -566,12 +557,12 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                     </div>
 
                     {/* RIGHT: ABOUT */}
-                    <div className="rounded-[1.2rem] border border-[#143D2E]/22 bg-[linear-gradient(180deg,rgba(255,251,244,0.72),rgba(214,222,214,0.78),rgba(222,227,233,0.5))] p-3 shadow-[0_28px_80px_-50px_rgba(63,44,23,0.9)] backdrop-blur-xl sm:rounded-[2.25rem] sm:p-8">
+                    <div className="border border-[#143D2E]/20 bg-white p-4 sm:p-8">
                         <h2 className="text-lg font-semibold tracking-[-0.03em] text-[#143D2E] sm:text-2xl sm:tracking-[-0.05em]">About</h2>
                         <p className="mt-1.5 text-sm font-semibold tracking-[-0.02em] text-[#2c2118]/75 sm:mt-2 sm:text-base sm:tracking-[-0.03em]">
                             {getYearsInBusiness()} years in business, focused on clear pricing and careful delivery.
                         </p>
-                        <div className="mt-2 h-px w-16 bg-[linear-gradient(90deg,#143D2E,#7B4F2C,#24426B)] sm:mt-4 sm:w-20" />
+                        <div className="mt-3 h-0.5 w-16 bg-[#24426B] sm:mt-4" />
                         <p className="mt-4 text-xs leading-5 text-[#5d4a3b] sm:mt-6 sm:text-sm sm:leading-6">
                             ProGreenBuild has been helping Singapore homeowners transform their spaces since 2016 through quality workmanship, transparent pricing, and reliable project delivery.
                         </p>
@@ -581,14 +572,14 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
 
             {/* CONTACT / FOOTER */}
             <footer id="contact" className="mx-auto max-w-7xl px-3 pb-6 pt-6 sm:px-6 sm:pb-12 sm:pt-8 lg:px-8">
-                <div className="rounded-[1.2rem] border border-[#143D2E]/22 bg-[linear-gradient(180deg,rgba(255,251,244,0.82),rgba(214,222,214,0.9),rgba(222,227,233,0.74))] p-3 shadow-[0_24px_80px_-56px_rgba(55,39,23,0.9)] backdrop-blur-2xl sm:rounded-[2rem] sm:p-8">
+                <div className="border border-[#143D2E]/20 bg-white p-4 sm:p-8">
                     <div className="flex flex-col gap-4 sm:gap-6">
                         <div>
                             <h2 className="text-xl font-semibold tracking-[-0.03em] text-[#143D2E] sm:text-4xl sm:tracking-[-0.05em] lg:text-4xl">Contact</h2>
                             <p className="mt-1.5 text-sm font-semibold tracking-[-0.02em] text-[#2c2118]/75 sm:mt-2 sm:text-base sm:tracking-[-0.03em]">
                                 Ready when you are.
                             </p>
-                            <div className="mt-2 h-1 w-20 bg-[linear-gradient(90deg,#143D2E,#24426B,#143D2E)] rounded-full sm:mt-4 sm:w-28" />
+                            <div className="mt-3 h-0.5 w-20 bg-[#143D2E] sm:mt-4" />
                         </div>
 
                         {/* Contact options and social media - side by side */}
@@ -606,7 +597,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                                                 href={link.url}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="glass-button glass-button--chip px-2.5 py-1 sm:px-4 sm:py-2"
+                                                className="site-button site-button--chip px-2.5 py-1 sm:px-4 sm:py-2"
                                             >
                                                 {link.title}
                                             </a>
@@ -621,7 +612,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                                 <div className="flex flex-wrap gap-2 text-[0.7rem] font-medium sm:gap-3 sm:text-sm">
                                     <button
                                         onClick={() => setShowEnquiryForm(true)}
-                                        className="glass-button glass-button--chip px-2.5 py-1.5 sm:px-5 sm:py-3"
+                                        className="site-button site-button--chip px-2.5 py-1.5 sm:px-5 sm:py-3"
                                     >
                                         Email enquiry
                                     </button>
@@ -630,7 +621,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                                             href={`https://wa.me/${contactDigits}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="glass-button glass-button--chip inline-flex items-center gap-1.5 px-2.5 py-1.5 sm:px-5 sm:py-3"
+                                            className="site-button site-button--chip inline-flex items-center gap-1.5 px-2.5 py-1.5 sm:px-5 sm:py-3"
                                         >
                                             <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4 shrink-0" aria-hidden="true">
                                                 <path d="M17.472 14.382c-.297-.149-1.758-.868-2.03-.967-.273-.099-.472-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.372-.01-.571-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
@@ -648,10 +639,12 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
 
             {/* ENQUIRY FORM MODAL */}
             {showEnquiryForm && (
-                <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-sm sm:items-center">
-                    <div className="relative w-full max-w-md overflow-hidden rounded-t-[1.5rem] border border-[#143D2E]/22 bg-[linear-gradient(180deg,rgba(255,251,244,0.98),rgba(214,222,214,0.96))] p-4 shadow-[0_30px_100px_-40px_rgba(54,39,23,0.95)] backdrop-blur-2xl sm:rounded-[2rem] sm:p-8">
+                <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/55 sm:items-center">
+                    <div className="relative w-full max-w-md border border-[#143D2E]/20 bg-white p-5 shadow-xl sm:p-8">
                         <button
                             onClick={closeEnquiryForm}
+                            type="button"
+                            aria-label="Close enquiry form"
                             className="absolute right-3 top-3 text-[#143D2E] hover:text-[#2f241b] sm:right-4 sm:top-4"
                         >
                             ✕
@@ -661,10 +654,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                         <p className="mt-1 text-xs text-[#6f5843] sm:text-sm">We'll get back to you shortly</p>
 
                         <form className="mt-4 sm:mt-6" onSubmit={handleSendEnquiry}>
-                            <div
-                                className={`space-y-3 overflow-hidden transition-all duration-[450ms] ease-in sm:space-y-4 ${formPhase !== 'idle' ? 'max-h-0 opacity-0' : 'max-h-[40rem] opacity-100'
-                                    }`}
-                            >
+                            <div className="space-y-3 sm:space-y-4">
                                 {submitError && (
                                     <p className="rounded-[0.6rem] border border-red-300 bg-red-50 px-3 py-2 text-xs text-red-700">
                                         {submitError}
@@ -680,7 +670,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                                         value={enquiryFields.name}
                                         onChange={handleEnquiryFieldChange('name')}
                                         required
-                                        className="mt-1 w-full rounded-[0.8rem] border border-[#143D2E]/20 bg-white/50 px-3 py-2 text-sm text-[#2f241b] placeholder-[#8d7b6e] backdrop-blur-sm transition focus:border-[#143D2E]/50 focus:outline-none focus:ring-2 focus:ring-[#143D2E]/20 sm:px-4 sm:py-2.5 sm:text-base"
+                                        className="mt-1 w-full rounded border border-[#143D2E]/30 bg-white px-3 py-2 text-sm text-[#2f241b] placeholder-[#8d7b6e] focus:border-[#143D2E] focus:outline-none focus:ring-2 focus:ring-[#143D2E]/20 sm:px-4 sm:py-2.5 sm:text-base"
                                     />
                                 </div>
 
@@ -693,7 +683,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                                         value={enquiryFields.email}
                                         onChange={handleEnquiryFieldChange('email')}
                                         required
-                                        className="mt-1 w-full rounded-[0.8rem] border border-[#143D2E]/20 bg-white/50 px-3 py-2 text-sm text-[#2f241b] placeholder-[#8d7b6e] backdrop-blur-sm transition focus:border-[#143D2E]/50 focus:outline-none focus:ring-2 focus:ring-[#143D2E]/20 sm:px-4 sm:py-2.5 sm:text-base"
+                                        className="mt-1 w-full rounded border border-[#143D2E]/30 bg-white px-3 py-2 text-sm text-[#2f241b] placeholder-[#8d7b6e] focus:border-[#143D2E] focus:outline-none focus:ring-2 focus:ring-[#143D2E]/20 sm:px-4 sm:py-2.5 sm:text-base"
                                     />
                                 </div>
 
@@ -704,7 +694,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                                         value={enquiryFields.enquiryType}
                                         onChange={handleEnquiryFieldChange('enquiryType')}
                                         required
-                                        className="mt-1 w-full rounded-[0.8rem] border border-[#143D2E]/20 bg-white/50 px-3 py-2 text-sm text-[#2f241b] backdrop-blur-sm transition focus:border-[#143D2E]/50 focus:outline-none focus:ring-2 focus:ring-[#143D2E]/20 sm:px-4 sm:py-2.5 sm:text-base"
+                                        className="mt-1 w-full rounded border border-[#143D2E]/30 bg-white px-3 py-2 text-sm text-[#2f241b] focus:border-[#143D2E] focus:outline-none focus:ring-2 focus:ring-[#143D2E]/20 sm:px-4 sm:py-2.5 sm:text-base"
                                     >
                                         <option value="">Select an enquiry type</option>
                                         <option value="general">General Renovation Enquiry</option>
@@ -725,28 +715,18 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
                                         rows={5}
                                         value={enquiryFields.message}
                                         onChange={handleEnquiryFieldChange('message')}
-                                        className="mt-1 w-full rounded-[0.8rem] border border-[#143D2E]/20 bg-white/50 px-3 py-2 text-sm text-[#2f241b] placeholder-[#8d7b6e] backdrop-blur-sm transition focus:border-[#143D2E]/50 focus:outline-none focus:ring-2 focus:ring-[#143D2E]/20 sm:px-4 sm:py-2.5 sm:text-base"
+                                        className="mt-1 w-full rounded border border-[#143D2E]/30 bg-white px-3 py-2 text-sm text-[#2f241b] placeholder-[#8d7b6e] focus:border-[#143D2E] focus:outline-none focus:ring-2 focus:ring-[#143D2E]/20 sm:px-4 sm:py-2.5 sm:text-base"
                                     />
                                 </div>
                             </div>
 
-                            {/* Send Button / Mail icon */}
-                            <div className={`flex justify-center ${formPhase === 'idle' ? 'mt-4 sm:mt-6' : 'mt-2'}`}>
+                            <div className="mt-5 sm:mt-6">
                                 <button
                                     type="submit"
                                     disabled={formPhase !== 'idle'}
-                                    className={`glass-button glass-button--primary flex items-center justify-center overflow-hidden font-semibold transition-all duration-500 ease-in ${formPhase === 'idle' || formPhase === 'sending'
-                                            ? 'w-full rounded-[999px] px-4 py-2.5 sm:py-3'
-                                            : 'h-12 w-12 rounded-full px-0 py-0'
-                                        } ${formPhase === 'flying' ? 'translate-x-[600px] opacity-0' : 'translate-x-0 opacity-100'}`}
+                                    className="site-button site-button--primary w-full px-4 py-3 text-sm"
                                 >
-                                    {formPhase === 'idle' && 'Send enquiry'}
-                                    {formPhase === 'sending' && 'Sending...'}
-                                    {(formPhase === 'hiding' || formPhase === 'flying') && (
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5 shrink-0">
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                        </svg>
-                                    )}
+                                    {formPhase === 'sending' ? 'Sending enquiry…' : 'Send enquiry'}
                                 </button>
                             </div>
                         </form>
@@ -769,7 +749,7 @@ export default function HomeClient({ galleryItems, whatsappNumber, logo, process
             )}
 
             {/* Footer - Legal Info */}
-            <footer className="border-t-2 border-[#143D2E]/30 bg-gradient-to-br from-gray-50 to-[#f2f3ef] px-3 py-8 sm:px-6 lg:px-8">
+            <footer className="border-t border-[#143D2E]/20 bg-[#edf1eb] px-3 py-8 sm:px-6 lg:px-8">
                 <div className="mx-auto max-w-7xl">
                     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
                         {/* Company Info */}
